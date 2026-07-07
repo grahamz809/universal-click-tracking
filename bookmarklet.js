@@ -1,0 +1,518 @@
+/*
+ * Universal Click-Tracking Taxonomy Inspector
+ * Bookmarklet — Drag this into your bookmarks bar, click on any page
+ *
+ * What it does:
+ *   Injects a floating diagnostics panel on the current page.
+ *   Highlights every clickable element and shows which event from the
+ *   OHIO.edu Universal Click-Tracking Taxonomy would fire.
+ *
+ * Usage:
+ *   1. Copy the ENTIRE contents of this file
+ *   2. Create a new bookmark in your browser
+ *   3. Set the URL/Address to:  javascript:(function(){...paste here...})()
+ *   4. Click the bookmark on any page to run
+ *
+ * Families & Events covered:
+ *   Conversion:    generate_lead, event_rsvp, file_download
+ *   Engagement:    cta_button, cta_link, global_nav, contact_click, web_element
+ *   Discovery:     internal_search, custom_filter_search
+ *   Content&Media: news_content, video
+ *   Utility&Support: tool_interaction, chat, exit_link, 404
+ */
+
+(function() {
+  'use strict';
+
+  // ============================================================
+  // CONFIG
+  // ============================================================
+  const TAXONOMY = {
+    ohio_domain: 'ohio.edu',
+
+    // Rule set — ordered by priority (first match wins per element)
+    rules: [
+      // ---- CONVERSION ----
+      {
+        event: 'generate_lead',
+        family: 'Conversion',
+        match: function(el) {
+          if (el.tagName === 'FORM') return true;
+          if (el.matches('.form_button_submit, .slate_form, [data-form-type="inquiry"], [data-form-type="lead"]')) return true;
+          if (el.closest('form') && (el.type === 'submit' || el.matches('button[type="submit"], input[type="submit"]'))) return true;
+          return false;
+        },
+        params: function(el) {
+          var form = el.tagName === 'FORM' ? el : el.closest('form');
+          return {
+            form_name: form ? (form.name || form.id || form.getAttribute('aria-label') || 'unknown') : 'unknown',
+            form_id: form ? (form.id || 'no-id') : 'no-id',
+            vendor: form && form.id && form.id.indexOf('funnelback') !== -1 ? 'Funnelback' : 'Slate_internal',
+            form_submission_status: 'complete',
+            page_url: window.location.pathname
+          };
+        }
+      },
+      {
+        event: 'event_rsvp',
+        family: 'Conversion',
+        match: function(el) {
+          if (el.tagName !== 'A') return false;
+          var t = (el.textContent || el.innerText || '').trim().toLowerCase();
+          return /rsvp|register|confirm.*attend|add.*calendar|yes.*attend/.test(t);
+        },
+        params: function(el) {
+          return { cta_text: (el.textContent||el.innerText||'').trim(), link_click_url: el.href || '', page_url: window.location.pathname, web_element_location: getLocation(el) };
+        }
+      },
+      {
+        event: 'file_download',
+        family: 'Conversion',
+        match: function(el) {
+          if (el.tagName !== 'A') return false;
+          var href = el.href || '';
+          if (el.hasAttribute('download')) return true;
+          if (/\.(pdf|docx?|xlsx?|pptx?|zip|rar|7z)$/i.test(href)) return true;
+          return false;
+        },
+        params: function(el) {
+          var href = el.href || '';
+          return { file_name: href.split('/').pop() || 'unknown', file_extension: (href.match(/\.(\w+)$/)||[])[1]||'', link_click_url: href, page_url: window.location.pathname };
+        }
+      },
+
+      // ---- ENGAGEMENT ----
+      {
+        event: 'cta_button',
+        family: 'Engagement',
+        match: function(el) {
+          if (el.tagName !== 'A' && el.tagName !== 'BUTTON') return false;
+          // Check for button CSS classes
+          var classes = (el.className || '').toLowerCase();
+          if (/\b(button|btn)\b/.test(classes) || el.matches('a.button, button.button, [class*="button"], [class*="btn-"]')) return true;
+          // Check parent
+          if (el.parentElement && (/\b(button|btn)\b/).test((el.parentElement.className||'').toLowerCase())) return true;
+          return false;
+        },
+        params: function(el) {
+          return { cta_text: (el.textContent||el.innerText||'').trim().replace(/[➜\s]+$/,''), cta_type: (el.className||'').indexOf('green')!==-1?'primary':'secondary', link_click_url: el.href||'', page_url: window.location.pathname, web_element_location: getLocation(el) };
+        }
+      },
+      {
+        event: 'cta_link',
+        family: 'Engagement',
+        match: function(el) {
+          if (el.tagName !== 'A' || !el.href) return false;
+          var t = (el.textContent||el.innerText||'').trim().toLowerCase();
+          // Anchor jump-links, card links, text CTAs
+          if (/^(learn more|read more|view all|apply now|plan a visit|schedule|explore|browse)/.test(t)) return true;
+          if (el.matches('.card-link-content, .field--name-field-call-to-action-*, [class*="card"] a')) return true;
+          if (el.href.indexOf('#') > -1 && el.href.length > 1 && t.length > 0) return true;
+          return false;
+        },
+        params: function(el) {
+          return { cta_text: (el.textContent||el.innerText||'').trim(), link_click_url: el.href||'', page_url: window.location.pathname, web_element_location: getLocation(el) };
+        }
+      },
+      {
+        event: 'global_nav',
+        family: 'Engagement',
+        match: function(el) {
+          if (el.tagName !== 'A') return false;
+          // Inside nav elements, footer, breadcrumbs
+          if (el.closest('nav, [role="navigation"], footer, [aria-label*="breadcrumb"], .breadcrumb, .global-nav, .footer-nav, .quick-links, [class*="footer"]')) return true;
+          // Nav-like links
+          if (el.closest('header') && el.closest('ul') && el.parentElement && el.parentElement.tagName === 'LI') return true;
+          return false;
+        },
+        params: function(el) {
+          return { click_text: (el.textContent||el.innerText||'').trim(), link_click_url: el.href||'', page_url: window.location.pathname, web_element_location: el.closest('footer')?'footer':(el.closest('nav')?'main-nav':'aux-menu') };
+        }
+      },
+      {
+        event: 'contact_click',
+        family: 'Engagement',
+        match: function(el) {
+          if (el.tagName !== 'A') return false;
+          var href = el.href || '';
+          if (/^tel:/.test(href)) return true;
+          if (/^mailto:/.test(href)) return true;
+          if (/\d{3}[\.-]\d{3}[\.-]\d{4}/.test(el.textContent||'')) return true;
+          if (/@/.test(el.textContent||'') && /\.(edu|com|org)/.test(el.textContent||'')) return true;
+          return false;
+        },
+        params: function(el) {
+          var href = el.href || '';
+          return { contact_type: href.indexOf('tel:')===0?'phone':(href.indexOf('mailto:')===0?'email':'address'), contact_info: (el.textContent||el.innerText||'').trim(), link_click_url: href, page_url: window.location.pathname };
+        }
+      },
+      {
+        event: 'web_element',
+        family: 'Engagement',
+        match: function(el) {
+          // Accordions, tabs, spotlights, carousels, captions, expand/collapse
+          if (el.tagName === 'BUTTON' && /expand|collapse|accordion|tab|toggle|show more|show less/i.test(el.textContent||'')) return true;
+          if (el.matches('[aria-expanded], [data-toggle], .accordion*, .tab*, .carousel*, [class*="caption"] button, .checkbox-filter, .fact-card, .image-tile')) return true;
+          // Carousel prev/next
+          if (el.matches('[class*="carousel"], [aria-label*="previous"], [aria-label*="next"]')) return true;
+          return false;
+        },
+        params: function(el) {
+          return { web_element_name: getElementName(el), web_element_location: getLocation(el), cta_text: (el.textContent||el.innerText||'').trim().substring(0,50), page_url: window.location.pathname };
+        }
+      },
+
+      // ---- DISCOVERY ----
+      {
+        event: 'internal_search',
+        family: 'Discovery',
+        match: function(el) {
+          if (el.tagName === 'FORM' && (el.action||'').indexOf('search') !== -1) return true;
+          if (el.type === 'submit' && el.closest('form') && ((el.closest('form').action||'').indexOf('search') !== -1)) return true;
+          if (el.matches('[class*="search"] button, [class*="search"] input[type="submit"], [aria-label*="search"] button')) return true;
+          return false;
+        },
+        params: function(el) {
+          var form = el.closest('form');
+          var query = form ? (new FormData(form).get('query') || form.querySelector('input[type="search"], input[name*="query"]')?.value || '') : '';
+          return { internal_search_query: query, page_url: window.location.pathname, web_element_location: getLocation(el) };
+        }
+      },
+      {
+        event: 'custom_filter_search',
+        family: 'Discovery',
+        match: function(el) {
+          if (el.matches('[data-module*="filter"], [data-module*="finder"], [class*="filter"], [class*="finder"], .program-finder')) return true;
+          if (el.closest('[data-module*="filter"], [data-module*="finder"], .program-finder')) return true;
+          return false;
+        },
+        params: function(el) {
+          return { filterArr: '', site_selector: 'program-finder', page_url: window.location.pathname };
+        }
+      },
+
+      // ---- CONTENT & MEDIA ----
+      {
+        event: 'news_content',
+        family: 'Content & Media',
+        match: function(el) {
+          if (el.tagName !== 'A') return false;
+          if (el.closest('.news-listing, .view-news, .featured-stories, .ohio-today-card, [class*="news"], [class*="story"], article, [class*="blog"]')) return true;
+          var t = (el.textContent||'').trim().toLowerCase();
+          if (/view all stories|more news|view more news|more stories/i.test(t)) return true;
+          return false;
+        },
+        params: function(el) {
+          return { story_title: (el.textContent||'').trim().replace(/\s+/g,' ').substring(0,100), link_click_url: el.href||'', page_url: window.location.pathname, web_element_location: getLocation(el) };
+        }
+      },
+      {
+        event: 'video',
+        family: 'Content & Media',
+        match: function(el) {
+          if (el.tagName === 'IFRAME' && /youtube|youtu\.be|vimeo/.test(el.src||'')) return true;
+          if (el.closest('[class*="video"]') || el.matches('[class*="video"], [aria-label*="video"], [aria-label*="play"]')) return true;
+          if (/play video|watch video|pause/i.test(el.textContent||'')) return true;
+          return false;
+        },
+        params: function(el) {
+          return { video_action: (el.textContent||'').toLowerCase().indexOf('pause')!==-1?'pause':'play', video_src: el.src || el.href || '', page_url: window.location.pathname };
+        }
+      },
+
+      // ---- UTILITY & SUPPORT ----
+      {
+        event: 'tool_interaction',
+        family: 'Utility & Support',
+        match: function(el) {
+          if (el.matches('[data-tool], [class*="calculator"], [class*="tool"], .interactive-tool')) return true;
+          if (el.closest('[data-tool], [class*="calculator"], .interactive-tool')) return true;
+          return false;
+        },
+        params: function(el) {
+          return { tool_name: el.className || el.id || 'unknown', tool_purpose: '', page_url: window.location.pathname };
+        }
+      },
+      {
+        event: 'chat',
+        family: 'Utility & Support',
+        match: function(el) {
+          if (el.matches('[class*="chat"], [aria-label*="chat"], [data-chat], #chat, [id*="chat"]')) return true;
+          if (el.closest('[class*="chat"], [id*="chat"]')) return true;
+          if (/open chat|chat/i.test(el.textContent||'') && el.tagName === 'BUTTON') return true;
+          return false;
+        },
+        params: function(el) {
+          return { chat_action: 'open', chat_department: (el.getAttribute('data-department')||''), page_url: window.location.pathname };
+        }
+      },
+      {
+        event: 'exit_link',
+        family: 'Utility & Support',
+        match: function(el) {
+          if (el.tagName !== 'A' || !el.href) return false;
+          try {
+            var hostname = new URL(el.href).hostname;
+            // Not an exit if it's same domain
+            if (hostname === window.location.hostname) return false;
+            // Not an exit for internal search
+            if (hostname.indexOf('search.ohio.edu') !== -1) return false;
+            return true;
+          } catch(e) { return false; }
+        },
+        params: function(el) {
+          return { anchor_text: (el.textContent||el.innerText||'').trim(), link_click_url: el.href||'', page_url: window.location.pathname, web_element_location: getLocation(el) };
+        }
+      },
+      {
+        event: '404',
+        family: 'Utility & Support',
+        match: function(el) {
+          return false; // Fired on page load, not element click
+        },
+        params: function(el) {
+          return { page_url: window.location.pathname, page_title: document.title };
+        }
+      }
+    ]
+  };
+
+  // ============================================================
+  // HELPERS
+  // ============================================================
+  function getLocation(el) {
+    if (!el) return 'body';
+    var parent = el.closest('[class*="hero"], header, footer, nav, main, aside, [class*="sidebar"], [class*="body"]');
+    if (!parent) return 'body';
+    var cls = parent.className || '';
+    if (cls.indexOf('hero') !== -1) return 'hero';
+    if (parent.tagName === 'FOOTER') return 'footer';
+    if (parent.tagName === 'NAV' || parent.tagName === 'HEADER') return 'main-nav';
+    return 'body';
+  }
+
+  function getElementName(el) {
+    var id = el.id || '';
+    var cls = (el.className || '').substring(0,30);
+    return id || cls || el.tagName.toLowerCase();
+  }
+
+  function matchElement(el) {
+    for (var i = 0; i < TAXONOMY.rules.length; i++) {
+      var rule = TAXONOMY.rules[i];
+      try {
+        if (rule.match(el)) {
+          return { event: rule.event, family: rule.family, params: rule.params(el) };
+        }
+      } catch(e) { continue; }
+    }
+    return null;
+  }
+
+  function classifyPage() {
+    var title = document.title.toLowerCase();
+    if (title.indexOf('page not found') !== -1 || title.indexOf('404') !== -1) {
+      return { event: '404', family: 'Utility & Support', params: { page_url: window.location.pathname, page_title: document.title } };
+    }
+    return null;
+  }
+
+  // ============================================================
+  // UI
+  // ============================================================
+  var panel, overlay, inspectedEl;
+
+  function buildPanel() {
+    if (document.getElementById('hermes-taxonomy-panel')) return;
+
+    panel = document.createElement('div');
+    panel.id = 'hermes-taxonomy-panel';
+    panel.style.cssText = 'position:fixed;top:10px;right:10px;width:420px;max-height:90vh;overflow-y:auto;background:#1e1e2e;color:#cdd6f4;font-family:system-ui,-apple-system,sans-serif;font-size:13px;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:999999;padding:0;';
+
+    var header = document.createElement('div');
+    header.style.cssText = 'background:#313244;padding:12px 16px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #cba6f7;';
+    header.innerHTML = '<span style="font-weight:700;font-size:14px;color:#cba6f7;">🎯 Universal Click Tracker</span>' +
+      '<div><button id="hermes-close-btn" style="background:#45475a;border:none;color:#cdd6f4;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;">✕ Close</button></div>';
+    panel.appendChild(header);
+
+    var body = document.createElement('div');
+    body.id = 'hermes-panel-body';
+    body.style.cssText = 'padding:12px 16px;';
+
+    // Summary
+    var url = document.createElement('div');
+    url.style.cssText = 'margin-bottom:10px;padding:8px;background:#313244;border-radius:8px;word-break:break-all;';
+    url.innerHTML = '<div style="color:#a6adc8;font-size:11px;margin-bottom:2px;">📍 Page</div><div style="font-size:12px;font-weight:500;">' + window.location.hostname + window.location.pathname + '</div>';
+    body.appendChild(url);
+
+    // Instructions
+    var instr = document.createElement('div');
+    instr.style.cssText = 'margin-bottom:10px;padding:8px;background:#45475a;border-radius:8px;font-size:11px;color:#a6adc8;';
+    instr.innerHTML = '🖱️ Hover over any element on the page to see which event would fire. Click the element to inspect its proposed parameters.';
+    body.appendChild(instr);
+
+    // Count by family
+    var stats = document.createElement('div');
+    stats.id = 'hermes-stats';
+    stats.style.cssText = 'margin-bottom:10px;';
+    body.appendChild(stats);
+
+    // Event detail (shown on click)
+    var detail = document.createElement('div');
+    detail.id = 'hermes-detail';
+    detail.style.cssText = 'margin-bottom:10px;padding:8px;background:#313244;border-radius:8px;display:none;';
+    body.appendChild(detail);
+
+    // Legend
+    var legend = document.createElement('div');
+    legend.style.cssText = 'margin-top:6px;padding:6px 8px;background:#181825;border-radius:6px;font-size:10px;color:#6c7086;line-height:1.5;';
+    legend.innerHTML = 'Families: <span style="color:#f38ba8;">Conversion</span> · <span style="color:#89b4fa;">Engagement</span> · <span style="color:#a6e3a1;">Discovery</span> · <span style="color:#f9e2af;">Content</span> · <span style="color:#fab387;">Utility</span>';
+    body.appendChild(legend);
+
+    panel.appendChild(body);
+    document.body.appendChild(panel);
+
+    document.getElementById('hermes-close-btn').onclick = destroy;
+  }
+
+  function familyColor(family) {
+    var colors = {
+      'Conversion': '#f38ba8',
+      'Engagement': '#89b4fa',
+      'Discovery': '#a6e3a1',
+      'Content & Media': '#f9e2af',
+      'Utility & Support': '#fab387'
+    };
+    return colors[family] || '#cdd6f4';
+  }
+
+  function updateStats() {
+    var counts = {};
+    for (var i = 0; i < TAXONOMY.rules.length; i++) {
+      counts[TAXONOMY.rules[i].event] = 0;
+    }
+
+    var elements = document.querySelectorAll('a, button, input[type="submit"], form, [onclick], [role="button"]');
+    for (var j = 0; j < elements.length && j < 500; j++) {
+      var match = matchElement(elements[j]);
+      if (match) {
+        counts[match.event] = (counts[match.event] || 0) + 1;
+      }
+    }
+
+    var html = '<div style="color:#a6adc8;font-size:11px;margin-bottom:4px;">📊 Match Counts (top 500 elements scanned)</div><div style="display:flex;flex-wrap:wrap;gap:4px;">';
+    var familyOrder = ['Conversion','Engagement','Discovery','Content & Media','Utility & Support'];
+    var sortedEvents = {};
+    TAXONOMY.rules.forEach(function(r) {
+      if (!sortedEvents[r.family]) sortedEvents[r.family] = [];
+      sortedEvents[r.family].push(r.event);
+    });
+    familyOrder.forEach(function(fam) {
+      if (sortedEvents[fam]) {
+        sortedEvents[fam].forEach(function(evt) {
+          var c = counts[evt] || 0;
+          if (c > 0) {
+            html += '<span style="background:'+familyColor(fam)+'22;color:'+familyColor(fam)+';border:1px solid '+familyColor(fam)+'44;border-radius:4px;padding:2px 6px;font-size:10px;cursor:pointer;" title="'+fam+'">'+evt+': '+c+'</span>';
+          }
+        });
+      }
+    });
+    html += '</div>';
+    document.getElementById('hermes-stats').innerHTML = html;
+  }
+
+  function showDetail(match, el) {
+    var detail = document.getElementById('hermes-detail');
+    var html = '<div style="color:#a6adc8;font-size:11px;margin-bottom:4px;">🔍 Selected Element</div>';
+    html += '<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">';
+    html += '<span style="background:'+familyColor(match.family)+';color:#1e1e2e;border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;">'+match.event+'</span>';
+    html += '<span style="color:'+familyColor(match.family)+';font-size:11px;">'+match.family+'</span>';
+    html += '</div>';
+    html += '<div style="font-size:11px;color:#a6adc8;">Element: <span style="color:#cdd6f4;">&lt;'+(el.tagName||'').toLowerCase()+(el.id?'#'+el.id:'')+'&gt;</span></div>';
+    if (el.textContent) {
+      html += '<div style="font-size:11px;color:#a6adc8;margin-top:2px;">Text: <span style="color:#cdd6f4;">"'+(el.textContent||'').trim().substring(0,60)+'"</span></div>';
+    }
+    html += '<div style="margin-top:6px;font-size:11px;color:#a6adc8;">Parameters:</div>';
+    html += '<table style="font-size:11px;width:100%;border-collapse:collapse;margin-top:2px;">';
+    for (var key in match.params) {
+      if (match.params.hasOwnProperty(key)) {
+        var val = String(match.params[key] || '');
+        if (val.length > 40) val = val.substring(0,40)+'...';
+        html += '<tr><td style="padding:2px 4px;color:#6c7086;border-bottom:1px solid #313244;width:100px;">'+key+'</td><td style="padding:2px 4px;color:#cdd6f4;border-bottom:1px solid #313244;word-break:break-all;">'+val+'</td></tr>';
+      }
+    }
+    html += '</table>';
+    detail.innerHTML = html;
+    detail.style.display = 'block';
+  }
+
+  function handleHover(e) {
+    var el = e.target;
+    if (!el || el === panel || panel.contains(el)) return;
+
+    if (inspectedEl) {
+      inspectedEl.style.outline = '';
+    }
+
+    var match = matchElement(el);
+    if (match) {
+      el.style.outline = '2px solid ' + familyColor(match.family) + '80';
+      el.style.outlineOffset = '1px';
+      inspectedEl = el;
+      showDetail(match, el);
+    }
+  }
+
+  function handleClick(e) {
+    if (e.target === panel || panel.contains(e.target)) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    var match = matchElement(e.target);
+    if (match) {
+      showDetail(match, e.target);
+      console.log('🎯 Universal Click Tracker:', JSON.stringify(match, null, 2));
+    } else {
+      var detail = document.getElementById('hermes-detail');
+      detail.innerHTML = '<div style="color:#6c7086;font-size:11px;">No matching event for this element. It would likely fall through or require a rule addition.</div>';
+      detail.style.display = 'block';
+    }
+  }
+
+  function destroy() {
+    if (panel) { panel.remove(); panel = null; }
+    if (overlay) { overlay.remove(); overlay = null; }
+    if (inspectedEl) { inspectedEl.style.outline = ''; inspectedEl = null; }
+    document.removeEventListener('mouseover', handleHover, true);
+    document.removeEventListener('click', handleClick, true);
+  }
+
+  // ============================================================
+  // INIT
+  // ============================================================
+  function init() {
+    buildPanel();
+
+    var pageEvent = classifyPage();
+    var body = document.getElementById('hermes-panel-body');
+    if (pageEvent) {
+      var alert = document.createElement('div');
+      alert.style.cssText = 'margin-bottom:10px;padding:8px;background:#f38ba822;border:1px solid #f38ba8;border-radius:8px;font-size:12px;color:#f38ba8;';
+      alert.innerHTML = '⚠️ This appears to be a 404 page — <strong>404</strong> event would fire on load.';
+      body.insertBefore(alert, body.firstChild.nextSibling);
+    }
+
+    updateStats();
+    document.addEventListener('mouseover', handleHover, true);
+    document.addEventListener('click', handleClick, true);
+
+    console.log('🎯 Universal Click Tracker active. Hover any element to see which event would fire.');
+    console.log('📋 Taxonomy: ' + TAXONOMY.rules.length + ' rules across 5 families');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();

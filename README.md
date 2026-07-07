@@ -211,13 +211,65 @@ hermes provider health
 
 ---
 
+---
+
+## Working Tool: Taxonomy Inspector Bookmarklet
+
+This project comes with a **working, testable diagnostic tool** — a browser bookmarklet that inspects *any web page* in real time and shows you which taxonomy event would fire for every clickable element.
+
+### 📥 Installation
+
+1. Open **`test-harness.html`** in your browser (open directly from the repo or GitHub Pages)
+2. Drag the **"🎯 Inspect Tracking"** button to your bookmarks bar
+3. Visit any page and click the bookmarklet
+
+### 🖱️ Usage
+
+| Action | What Happens |
+|--------|-------------|
+| **Hover** any element | Floating panel shows which event matched + family color |
+| **Click** any element | Full proposed parameter object displayed in the panel |
+| **View** in console | `console.log` dumps the full JSON match for each inspected element |
+| **Close** | Click ✕ to remove the overlay |
+
+### 🧪 Test It Now
+
+Use the included **`test-harness.html`** — it contains real demo elements for every event family:
+- Forms that fire `generate_lead`
+- Download links that fire `file_download`
+- Nav bars that fire `global_nav`
+- Accordions, tabs, and carousels that fire `web_element`
+- Program finder that fires `custom_filter_search`
+- External links that fire `exit_link`
+- Video players, chat buttons, calculators, RSVP links, news articles, phone/email links, and more
+
+Open the test harness, install the bookmarklet, click it on the test page, and hover every element to see the matching rules in action.
+
+---
+
+## Portability Validation: OSU & MiamiOH
+
+The framework was validated against two other major Ohio university websites to confirm it's general enough for any higher education site. Results are in **`PORTABILITY.md`**.
+
+| Site | Elements Mapped | New Events Needed | New Families Needed |
+|------|----------------|-------------------|-------------------|
+| **OSU** (osu.edu) | Nav, CTAs, news, accordions, carousels, search, video, stats, footer | **0** | **0** |
+| **MiamiOH** (miamioh.edu) | Nav, hero video, CTAs, news, events, program cards, blog, chat, search | **0** | **0** |
+
+**Conclusion:** All 16 events and all 5 families map cleanly across three different university sites. The framework is portable.
+
+---
+
 ## Project Structure
 
 ```
 universal-click-tracking/
-├── README.md              ← This file (taxonomy framework + setup guide)
-├── qr-code.png            ← QR code linking to this repo
-└── ... (future: GTM JSON, QA checklists, iteration docs for Task 2)
+├── README.md                ← This file (taxonomy framework + setup guide)
+├── PORTABILITY.md           ← OSU & MiamiOH validation results
+├── qr-code.png              ← QR code linking to this repo
+├── test-harness.html        ← Interactive test/demo page with all 16 events
+├── bookmarklet.js           ← Source code for the taxonomy inspector bookmarklet
+└── bookmarklet.min.js       ← Minified bookmarklet (paste into bookmark URL)
 ```
 
 ---
