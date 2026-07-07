@@ -4,7 +4,7 @@
 
 **Status:** DRAFT — awaiting review & sign-off before GTM implementation  
 **Target:** OHIO.edu GA4 Property (G-JR43SKW92E) · GTM Container (GTM-N7GZT99)  
-**Version:** 1.0.0  
+**Version:** 2.0.0  
 **Last Updated:** 2026-07-07
 
 ---
@@ -211,11 +211,59 @@ hermes provider health
 
 ---
 
+|---
+
+## Universal Capture & Fixed Location Detection (v2)
+
+The bookmarklet was redesigned in **v2** to fix every bug found during v1 testing and to implement an **every-link/every-element** catch-all strategy.
+
+### What Changed
+
+| v1 (16-param taxonomy) | v2 (3 universal params + catch-all) |
+|---|---|
+| 16 event-specific parameters (many duplicated) | 3 **universal parameters** on every match: `link_click_url`, `web_element_location`, `click_text` |
+| Element location guessed from CSS class heuristics | Location detection uses **OHIO web catalog naming** (breadcrumb, main-nav, aux-menu, hero, footer, body) |
+| Links not matching a specific rule were ignored | **Catch-all:** every link → `cta_link`, every button → `web_element` |
+| Panel stayed blank when elements had same type but different text | **Fixed:** panel updates on every unique element+text combo |
+| Breadcrumbs labeled "main-nav", main-nav labeled "aux-menu" | **Fixed:** priority-based location detection (breadcrumb → aux-menu → main-nav → hero → footer → body) |
+| No export | **📥 CSV export** button in the panel — downloads all matches grouped by family/trigger |
+| No CSS selector shown | **CSS selector output** for every captured element |
+
+### The 3 Universal Parameters
+
+| Parameter | Description | Source |
+|---|---|---|
+| `link_click_url` | The link/form action URL (empty if not applicable) | `el.href`, `form.action`, or empty |
+| `web_element_location` | Page region — always present | Priority scan: breadcrumb → aux-menu → main-nav → hero → footer → body |
+| `click_text` | Truncated text content (max 150 chars) | `el.textContent` trimmed, whitespace-normalized |
+
+### Location Detection Priority (Fixed)
+
+The `web_element_location` is determined by walking up from the hovered element through its ancestors, checking each for known Drupal/OHIO markup signals:
+
+1. **breadcrumb** — `aria-label*=breadcrumb`, class contains `breadcrumb` or `top-confined-breadcrumb`
+2. **aux-menu** — class `aux-menu`, `aux-menu-links`, `search-desktop` id, `header-top` id
+3. **main-nav** — `main-menu` id, class `menu-item menu-level-1`, `logoSpanContent` id
+4. **hero** — class contains `hero`
+5. **footer** — `footer` tag, `global-footer` id, class contains `footer`
+6. **body** — default for everything else
+
+### Catch-All Coverage
+
+The catch-all ensures **every interactive element on the page** is captured:
+
+- **All `<a>` links** not matched by a specific rule → `cta_link` (Engagement)
+- **All `<button>` elements** not matched → `web_element` (Engagement)
+- **All `<input>` elements**, `[onclick]`, `[role="button"]`, `[tabindex]` (not -1/-2) → `web_element`
+- **40+ OHIO catalog elements** detected by class name: collapsible-headings, fact-card, faq, card-link, image-tile, tab-container, anchored-spotlight, hero-image, image-gallery, icon-tile, promo-box, topic-preview, fast-fact, timeline, video-gallery, contact-us, featured-media, explore-tab, large-quick-link, quick-link, jump-link, image-slideshow, social-media-icon, image-text-overlay, calendar-event, news, program-finder, cta-button, and more
+
+Edge cases like `search.ohio.edu` subdomain links are excluded from `exit_link` (they're internal search, not an exit).
+
 ---
 
-## Working Tool: Taxonomy Inspector Bookmarklet
+## Working Tool: Taxonomy Inspector Bookmarklet v2
 
-This project comes with a **working, testable diagnostic tool** — a browser bookmarklet that inspects *any web page* in real time and shows you which taxonomy event would fire for every clickable element.
+This project comes with a **working, testable diagnostic tool v2** — a browser bookmarklet that inspects *any web page* in real time, showing which taxonomy event would fire for **every** interactive element with its 3 universal parameters, CSS selector, and family context.
 
 ### 📥 Installation
 
@@ -227,23 +275,27 @@ This project comes with a **working, testable diagnostic tool** — a browser bo
 
 | Action | What Happens |
 |--------|-------------|
-| **Hover** any element | Floating panel shows which event matched + family color |
-| **Click** any element | Full proposed parameter object displayed in the panel |
-| **View** in console | `console.log` dumps the full JSON match for each inspected element |
+| **Hover** any element | Floating panel shows event, family, CSS selector, and 3 universal params (`link_click_url`, `web_element_location`, `click_text`) |
+| **Click** any element | Console logs full JSON match + CSS selector + event/params |
+| **📥 CSV** button | Downloads a CSV of every matched element, grouped by `web_element_location` |
+| **🔄 Refresh** button | Re-scans the page and updates match counts |
 | **Close** | Click ✕ to remove the overlay |
 
 ### 🧪 Test It Now
 
-Use the included **`test-harness.html`** — it contains real demo elements for every event family:
+Use the included **`test-harness.html`** — it contains real demo elements for every event family plus **OHIO web element coverage** (fact cards, card links, breadcrumb demo, etc.):
+
 - Forms that fire `generate_lead`
 - Download links that fire `file_download`
-- Nav bars that fire `global_nav`
+- Nav bars that fire `global_nav` (with proper breadcrumb/main-nav/aux-menu/footer detection)
 - Accordions, tabs, and carousels that fire `web_element`
 - Program finder that fires `custom_filter_search`
 - External links that fire `exit_link`
-- Video players, chat buttons, calculators, RSVP links, news articles, phone/email links, and more
+- Video players, chat buttons, calculators, RSVP links, news articles, phone/email links
+- **Fact cards** and **card links** (OHIO catalog components)
+- **Breadcrumb demo** with proper location display
 
-Open the test harness, install the bookmarklet, click it on the test page, and hover every element to see the matching rules in action.
+Open the test harness, install the bookmarklet, click it on the test page, and hover every element to see the matching rules in action. Verify location detection: breadcrumb links show "breadcrumb", nav links show "main-nav", footer links show "footer".
 
 ---
 
@@ -264,12 +316,12 @@ The framework was validated against two other major Ohio university websites to 
 
 ```
 universal-click-tracking/
-├── README.md                ← This file (taxonomy framework + setup guide)
+├── README.md                ← This file (taxonomy framework + v2 bookmarklet guide)
 ├── PORTABILITY.md           ← OSU & MiamiOH validation results
 ├── qr-code.png              ← QR code linking to this repo
-├── test-harness.html        ← Interactive test/demo page with all 16 events
-├── bookmarklet.js           ← Source code for the taxonomy inspector bookmarklet
-└── bookmarklet.min.js       ← Minified bookmarklet (paste into bookmark URL)
+├── test-harness.html        ← Interactive test/demo page with all events + OHIO catalog elements
+├── bookmarklet.js           ← Source code for the taxonomy inspector bookmarklet (v2)
+└── bookmarklet.min.js       ← Minified bookmarklet (22KB — paste into bookmark URL)
 ```
 
 ---
