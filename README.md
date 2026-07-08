@@ -92,11 +92,13 @@ The framework uses a "catch-all" rule at the end of its matching logic. This ens
 
 > **You do NOT need to download Hermes Agent, Node.js, or any other software to use this bookmarklet.** Just follow the steps below.
 
-### Quick Install (Drag to Bookmarks)
+### Quick Install — Drag to Bookmarks (recommended)
 
-**Step 1:** Open the [`engagement-first-framework.html`](engagement-first-framework.html) page from this repository in your browser.
+**Step 1:** Open the [`engagement-first-framework.html`](engagement-first-framework.html) page in your browser (click the link to view the page on GitHub, or download the file and open it locally).
 
-**Step 2:** Find the large **"🎯 Launch Framework Tool"** link on that page.
+> ⚠️ **Important:** You need to open the HTML file in your browser — viewing the raw source on GitHub will not show the bookmarklet link correctly. If you're on GitHub, click the link above, then click the **"View raw"** button or download the file and open it from your computer.
+
+**Step 2:** Find the large **"🎯 Launch Framework Tool"** link on the page.
 
 **Step 3:** Drag that link up to your browser's bookmarks bar and drop it there.
 
@@ -104,7 +106,7 @@ The framework uses a "catch-all" rule at the end of its matching logic. This ens
 
 That's it. A panel will appear on the right side of the page showing the tracking data for every interactive element.
 
-### Alternative Install (Manual Bookmark)
+### Alternative Install — Manual Bookmark
 
 If dragging doesn't work in your browser:
 
@@ -112,11 +114,13 @@ If dragging doesn't work in your browser:
 
 **Step 2:** Give it a name like "OHIO Tracking Tool."
 
-**Step 3:** Open the [`engagement-first-framework.html`](engagement-first-framework.html) page and scroll to the code block that starts with `javascript:`. Select and copy the entire code.
+**Step 3:** Open the [`engagement-first-framework.html`](engagement-first-framework.html) page in your browser (not the raw source — the JavaScript needs to run to populate the code block). The code block below the link will show the full `javascript:` code once the page loads.
 
-**Step 4:** Paste that code into the bookmark's URL field and save.
+**Step 4:** Click inside the code block box, press Cmd+A (Mac) or Ctrl+A (Windows) to select all the text, then copy it.
 
-**Step 5:** Visit any page and click the bookmarklet.
+**Step 5:** Paste that code into the bookmark's URL field and save.
+
+**Step 6:** Visit any page and click the bookmarklet.
 
 ---
 
