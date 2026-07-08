@@ -1,116 +1,133 @@
-# QA Bookmarklet — Visual Trigger Inspection Tool
+# 🔍 OHIO Inspector — Quick Visual Coverage Tool
 
-> **⚠️ This section is incomplete.** The QA bookmarklet's source file has not been added to the repo yet. The documentation below covers the purpose and workflow, but the install method, JSON-loading UI, and panel layout need to be confirmed from the actual source. See "How to Contribute" at the bottom.
+## What It Does
 
----
+The **OHIO Inspector** is a lightweight, standalone visual scanner. When you click it on any OHIO.edu page, it instantly draws colored outlines around every interactive element it can classify and shows a floating panel with an event-type legend and element counts. Hover any outlined element to see its event name, text content, and page location in a tooltip.
 
-## What This Tool Is For
+This is an **alternative view** to the Taxonomy Inspector bookmarklet (documented in the main README):
 
-The Taxonomy Inspector bookmarklet (documented in the main README) tells you what *should* fire on an element based on the taxonomy rules. The **QA Bookmarklet** tells you what a *specific GTM container's JSON config* says will fire.
+| Tool | Approach | Best For |
+|------|----------|----------|
+| **Taxonomy Inspector** | Full interactive panel with capture, CSV export, Airtable sync | Deep auditing, building a framework, exporting data |
+| **OHIO Inspector** | Quick one-pass visual scan with colored outlines and hover tooltips | A fast "show me everything at once" visual check |
 
-In other words:
-
-| Tool | Question it answers |
-|------|-------------------|
-| **Taxonomy Inspector** | "What event does the framework THINK this element should be?" |
-| **QA Bookmarklet** | "What does MY ACTUAL GTM CONFIG say will fire on this element?" |
-
-They're complementary. Use the Taxonomy Inspector during planning and auditing. Use the QA Bookmarklet after you've generated a GTM JSON (from the GENERATE-TRIGGERS workflow) and want to visually verify that the triggers will land on the right elements before importing to production.
-
-**This is a supplementary visual QA tool — it does NOT replace GTM Preview mode.** GTM Preview mode is still the official verification step before publishing. This tool gives marketers a quick sanity check without needing to navigate GTM's interface.
+They use **different matching rules** — the OHIO Inspector has a simpler set (8 event types) compared to the full Taxonomy Inspector (16 events). Results may differ slightly. Use the tool that matches your workflow.
 
 ---
 
-## How It's Different From the Taxonomy Inspector
+## How It Works
 
-- **Taxonomy Inspector:** Uses built-in matching rules. No external file needed. Works offline. Shows what *should* happen based on the framework design.
-- **QA Bookmarklet:** Requires you to load a GTM JSON file (the one you generated or exported). Shows what your *actual GTM config* will do. Can't work offline — needs the JSON file.
-- Both use the same **install method** (drag to bookmarks bar / paste code snippet).
+Once you click the bookmarklet, the tool:
+
+1. **Scans** every link, button, form, and collapsible element on the page
+2. **Classifies** each one using built-in matching rules against 8 event types
+3. **Outlines** every matched element with a colored border (each event type has its own color)
+4. **Shows a panel** in the top-right corner with the event legend and element counts
+5. **Displays a tooltip** when you hover over any outlined element, showing:
+   - The event name (bold, in the event's color)
+   - The element's visible text (up to 60 characters)
+   - The HTML tag (e.g., `a[href]`, `button`)
+   - The page location (e.g., "footer", "hero", "main-menu")
+
+The 8 event types and their colors:
+
+| Event | Color | Outline Color |
+|-------|-------|--------------|
+| `cta_button` | Green | `#00694E` |
+| `cta_link` | Blue | `#2964FF` |
+| `global_nav` | Purple | `#9C27B0` |
+| `contact_click` | Orange | `#FF9800` |
+| `web_element` | Gray | `#607D8B` |
+| `generate_lead` | Red | `#D32F2F` |
+| `internal_search` | Teal | `#008080` |
+| `exit_link` | Pink | `#E91E63` |
+
+Elements that don't match any rule are left alone (no outline).
 
 ---
 
 ## Installation
 
-> **Installation details depend on the actual source file.** The QA bookmarklet will use either:
-> - The same loader approach as the Taxonomy Inspector (tiny ~200-char script fetching from CDN), or
-> - A standalone `javascript:` URL
+The OHIO Inspector is a **standalone bookmarklet**. You install it the same way as the Taxonomy Inspector — drag a link to your bookmarks bar, or paste a code snippet.
 
-**[PLACEHOLDER — Confirm with developer:]**
-- Is the install method identical to the Taxonomy Inspector (one drag)?
-- Or does it use a separate bookmarklet URL?
-- What is the bookmarklet label (e.g., "🎯 QA Triggers")?
+### Quick Install — Drag to Bookmarks
+
+**Step 1:** Open the [`engagement-first-framework.html`](engagement-first-framework.html) page in your browser.
+
+**Step 2:** Find the **"🔍 OHIO Inspector"** link on that page.
+
+**Step 3:** Drag that link up to your bookmarks bar.
+
+**Step 4:** Visit any OHIO.edu page and click the bookmarklet.
+
+### Alternative Install — Manual Bookmark
+
+Copy this snippet and paste it into a new bookmark's URL field:
+
+```
+javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/grahamz809/universal-click-tracking@main/qa-inspector.min.js';document.body.appendChild(s);})();
+```
+
+**Step 1:** Right-click your bookmarks bar and choose "Add Page" or "New Bookmark."
+
+**Step 2:** Give it a name like "OHIO Inspector."
+
+**Step 3:** Copy the code block above (select it, press Cmd+C / Ctrl+C).
+
+**Step 4:** Paste it into the bookmark's URL field and save.
+
+**Step 5:** Visit any page and click the bookmarklet.
 
 ---
 
 ## Step-by-Step Usage
 
-> **The exact UI and button names below are assumptions based on the general pattern.** The actual steps will be updated once the source file is added to the repo.
+### Step 1: Click the Bookmarklet
 
-### Step 1: Load Your GTM JSON File
+Navigate to any OHIO.edu page and click the "OHIO Inspector" bookmark in your bookmarks bar. The page will briefly flash as all matched elements are outlined with colored borders.
 
-After clicking the QA Bookmarklet on any OHIO.edu page, a panel appears. **[Confirm the actual mechanism:]**
+### Step 2: Read the Panel
 
-- **Does the tool show a file picker / "Choose File" button?** (Upload a `.json` file from your computer)
-- **Does it have a text area to paste JSON into?** (Copy-paste from GTM export)
-- **Does it load from a URL / localStorage?**
+A panel appears in the top-right corner showing:
 
-**[PLACEHOLDER — Update after source review]**
+- **Total elements tracked** — how many elements on this page matched a rule
+- **Legend** — each event type with its color swatch and element count
 
-### Step 2: Browse the Page
+Use the counts to quickly see which event types are most common on the current page.
 
-Once the JSON is loaded, hover over any element on the page. The panel shows:
+### Step 3: Hover to Inspect
 
-- **Trigger name(s)** — Which GTM triggers from your JSON would fire on this element
-- **Event name** — The GA4 event name associated with each trigger
-- **Matched rule** — Which CSS selector or condition in the JSON matched this element
-- **Unmatched elements** — Elements on the page with no matching GTM trigger (potential gaps)
+Move your mouse over any outlined element. A tooltip appears above it showing:
 
-**[SCREENSHOT: QA panel showing trigger match for a navigation link — call out trigger name, event name, matched rule]**
+- **Event name** — which event type it matched (bold, colored)
+- **Element text** — the visible text (or "(icon)" if empty)
+- **CSS info** — the HTML tag (e.g., `a[href]` for links)
+- **Page location** — where on the page it sits (e.g., "footer", "hero", "main-menu")
 
-### Step 3: Review Coverage
+The tooltip follows your mouse and disappears when you move away.
 
-The panel also shows a summary of:
-- Total triggers loaded from the JSON
-- Total elements matched on the current page
-- Elements with no match (possible gaps in your GTM config)
-- Elements matched by multiple triggers (possible overlap)
+### Step 4: Close the Panel
 
-Use this to quickly spot:
-- **Missing coverage:** An element you expect to be tracked shows "no match" → you may have forgotten to create a trigger for it
-- **Overlap:** An element matches multiple triggers → you may have duplicate conditions
-
-### Step 4: Iterate
-
-If you find issues, go back to your GTM config, fix the triggers, re-export the JSON, reload it in the QA tool, and check again. This loop is faster than repeatedly entering GTM Preview mode during development.
+Click the **✕** in the panel's header to close it. The colored outlines remain until you refresh the page or click the bookmarklet again (which re-scans).
 
 ---
 
-## When to Use Which Tool
+## When to Use This vs. the Taxonomy Inspector
 
-| Situation | Tool |
-|-----------|------|
-| I'm auditing a page to see what the taxonomy would suggest | Taxonomy Inspector |
-| I've generated a GTM JSON and want to check triggers before import | QA Bookmarklet |
-| I'm in GTM Preview mode and need the definitive answer | GTM Preview (not either bookmarklet) |
-| I want to quickly check if an element has any matching trigger | Either tool, but QA is more precise |
-| I need to export a framework to CSV | Taxonomy Inspector |
-
----
-
-## ⚠️ Important
-
-- **The QA Bookmarklet reads your JSON file.** It does NOT contact GTM's servers. Your container config stays on your machine.
-- **This is a sanity check, not a replacement for GTM Preview.** GTM Preview mode actually runs the container and shows real tag-firing data — that's the final step before publishing.
-- **Outdated JSON = outdated results.** If you change your GTM container after exporting the JSON, re-export and reload the QA tool to stay in sync.
+| Situation | Recommended Tool |
+|-----------|-----------------|
+| I want a quick visual scan of all elements on one page | OHIO Inspector |
+| I need to capture specific elements and export to CSV | Taxonomy Inspector |
+| I want to see the full 16-event taxonomy classification | Taxonomy Inspector |
+| I just need a fast overview of what's on the page | OHIO Inspector |
+| I need to sync data to Airtable | Taxonomy Inspector |
+| I want to check if elements consistently match across pages | Either tool |
 
 ---
 
-## How to Contribute / Complete This Documentation
+## Important Notes
 
-To finish this page, the repo needs:
-
-1. **The QA bookmarklet source file** — Add it to the repo (e.g., `qa-bookmarklet.js` and `qa-bookmarklet.min.js`)
-2. **Confirm the JSON format** — The GENERATE-TRIGGERS workflow outputs standard GTM container export JSON. If the QA bookmarklet expects a different schema (a custom subset or flattened format), let me know so I can add a conversion step
-3. **Screenshots** of the QA panel in action for the documentation
-
-Once those are in place, I can update this file with exact install steps, UI details, and screenshots.
+- **This tool uses its own matching rules.** It has 8 event types — a subset of the full 16-event taxonomy. Results are directional and may differ from the Taxonomy Inspector.
+- **The tooltip appears above the element.** On elements near the top of the page, it may be partially cut off. Scroll the element lower on the page if needed.
+- **Colored outlines persist** until the page is refreshed or the bookmarklet is clicked again (which re-scans).
+- **Not a replacement for GTM testing.** This tool shows you what a simplified rule set thinks elements are. It does not load or test your actual GTM container configuration. Always use GTM Preview mode before publishing.

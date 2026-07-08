@@ -238,4 +238,4 @@ The AI will return two things:
 
 ## Open Questions
 
-> **If you plan to use these generated triggers with a QA bookmarklet (a visual inspection tool that reads a GTM JSON and shows what would fire per element), the JSON format matters.** The AI above generates standard GTM container export JSON. If your QA bookmarklet uses a different format, let me know and I'll add a conversion step.
+> **If you plan to use these generated triggers with a visual inspection tool, note:** The OHIO Inspector bookmarklet (`qa-inspector.min.js`) is a standalone visual scanner with its own built-in matching rules — it does **not** load GTM JSON files or external configurations. The GENERATE-TRIGGERS prompt above outputs standard GTM container export JSON, which must be imported into GTM via Admin > Import Container to take effect. There is no separate "QA JSON" format needed.
