@@ -37,41 +37,133 @@
   /** Detect the page region an element belongs to */
   function getLocation(el) {
     if (!el) return 'body';
-    // Walk up ancestors checking for known containers
-    var p = el;
-    while (p && p.nodeType === 1) {
-      var tag = p.tagName.toLowerCase();
-      var cls = (p.className || '').toLowerCase();
-      var aria = (p.getAttribute('aria-label') || '').toLowerCase();
-      var role = (p.getAttribute('role') || '').toLowerCase();
+    // Priority-ordered location detection — mirrors GTM's web_element_location variable
+    var href = el.href || el.action || '';
+    if (href.indexOf('#tab') !== -1) return 'nav-tab';
+    if (href.indexOf('.navigate-ohio-links') !== -1) return 'navigate-ohio-links-mobile';
 
-      // Breadcrumb &#8212; nav[aria-label*="breadcrumb"] or class breadcrumb
-      if (aria.indexOf('breadcrumb') !== -1) return 'breadcrumb';
-      if (cls.indexOf('breadcrumb') !== -1 || cls.indexOf('top-confined-breadcrumb') !== -1) return 'breadcrumb';
+    // Form/button ID checks for special cases
+    var formId = el.getAttribute ? el.getAttribute('form') : '';
+    if (formId === 'form_749eb3ef-eb5d-4c02-ad4e-4494209f68d2') return 'pop-up';
+    if (el.closest && el.closest('form#form_749eb3ef-eb5d-4c02-ad4e-4494209f68d2')) return 'pop-up';
+    if (el.outerHTML && el.outerHTML.indexOf('form_749eb3ef-eb5d-4c02-ad4e-4494209f68d2') !== -1) return 'pop-up';
+    if (href.indexOf('button#statement-toggle') !== -1 || href.indexOf('.privacy-statement a') !== -1) return 'rfi-privacy-statement';
+    if (href === '#' || (href.indexOf('#') !== -1 && href.indexOf('some-unique-id') === -1)) return 'jump-link';
 
-      // Aux menu &#8212; top header utility links
-      if (cls.indexOf('aux-menu') !== -1 || cls.indexOf('aux-menu-links') !== -1) return 'aux-menu';
-      if (p.id && p.id.indexOf('header-top') !== -1) return 'aux-menu';
-      if (p.id === 'search-desktop') return 'aux-menu';
+    // DOM-based location rules — ordered by priority (first match wins)
+    if (el.closest && el.closest('#global-footer')) return 'footer';
+    if (el.closest && el.closest('#left-navigation')) return 'left-navigation';
+    if (el.closest && el.closest('.cta-row, .cta-container')) return 'become-a-bobcat';
+    if (el.closest && el.closest('#block-ohio-theme-ohiotoday li.logo-list-element a')) return 'ohio-today-logo';
+    if (el.closest && el.closest('.lookbook-header')) return 'lookbook-header';
+    if (el.closest && el.closest('#main-menu')) return 'main-menu';
+    if (el.closest && el.closest('.social-icons a.icons--link')) return 'social-row';
+    if (el.closest && el.closest('nav.breadcrumb ol li a')) return 'breadcrumbs';
+    if (el.closest && el.closest('#search-desktop, #search-mobile')) return 'top-green-bar-search';
+    if (el.closest && el.closest('button#closeSearch')) return 'top-green-bar-search-close';
+    if (el.closest && el.closest('.top-green-bar, .aux-menu')) return 'top-green-bar';
+    if (el.closest && el.closest('form.funnelback-block-search-form input.form-radio')) return 'top-green-bar-search-radio';
+    if (el.closest && el.closest('ul.top-social a')) return 'top-green-bar-social';
+    if (el.closest && el.closest('.majors-row')) return 'majors-row';
+    if (el.closest && el.closest('.colleges-row')) return 'colleges-row';
+    if (el.closest && el.closest('#featured-experience')) return 'featured-experience';
+    if (el.closest && el.closest('section.facts-section a.info-link')) return 'facts-info-link';
+    if (el.closest && el.closest('.facts-container')) return 'facts-container';
+    if (el.closest && el.closest('.locations-row')) return 'locations-row';
+    if (el.closest && el.closest('.news-row, .news-intro .news-link a.action')) return 'news-row';
+    if (el.closest && el.closest('.events-link a.action, .event-feed .event-link a')) return 'events-link';
+    if (el.closest && el.closest('.social-row')) return 'social-row';
+    if (el.closest && el.closest('.section-expander')) return 'section-expander';
+    if (el.closest && el.closest('div.gallery-wrapper')) return 'image-gallery';
+    if (el.closest && el.closest('.hero-text, .hero-title, .hero-subtitle, .lsh-hero .lsh-cta a.button, .hero-wrapper')) return 'hero';
+    if (el.closest && el.closest('.special-statement')) return 'special-statement-bar';
+    if (el.closest && el.closest('.ohio-table-sortable')) return 'sortable-table';
+    if (el.closest && el.closest('.promo-box')) return 'promo-box';
+    if (el.closest && el.closest('.explore-tabs, a.explore-tabs--tab.active')) return 'explore-tabs';
+    if (el.closest && el.closest('.ohio_image_overlay_body')) return 'image-overlay';
+    if (el.closest && el.closest('.topic-preview, .topic-preview a.button.green')) return 'topic-preview';
+    if (el.closest && el.closest('.event-feed')) return 'event-feed';
+    if (el.closest && el.closest('#ogo-study-away-programs a.card.svelte-1byw2gh')) return 'ogo-program-link';
+    if (el.closest && el.closest('.featured-media--large-image-wrapper, .featured-media a.button.green')) return 'featured-media';
+    if (el.closest && el.closest('#block-ohio-theme-ohiotoday li.menu-item > a')) return 'main-menu';
+    if (el.closest && el.closest('.story-listing-item')) return 'story-listing';
+    if (el.closest && el.closest('.related-story-link')) return 'related-story-link';
+    if (el.closest && el.closest('#experience-details #experience-supplement .field--name-field-industry-focus-tag .field__item a')) return 'experience-tag';
+    if (el.closest && el.closest('a[id^="taxonomy-term"]')) return 'ohio-story-tag';
+    if (el.closest && el.closest('.quicklinks--wrapper')) return 'quick-links';
+    if (el.closest && el.closest('.card-links')) return 'card-links';
+    if (el.closest && el.closest('li.pager__item > a, .pager__item')) return 'pager';
+    if (el.closest && el.closest('div#related-experiences a')) return 'experience-card-related';
+    if (el.closest && el.closest('.view-experience-directory')) return 'experience-card';
+    if (el.closest && el.closest('#experience-data')) return 'experience-details-link';
+    if (el.closest && el.closest('.social-icons')) return 'social-icons';
+    if (el.closest && el.closest('.tile, .tiles--small a.tile')) return 'tile';
+    if (el.closest && el.closest('a.reference')) return 'ohio-in-the-news';
+    if (el.closest && el.closest('.program-finder')) return 'program-finder';
+    if (el.closest && el.closest('.image-tiles, .image-tiles--item')) return 'image-tiles';
+    if (el.closest && el.closest('.icons--link')) return 'icon';
+    if (el.closest && el.closest('#funnelback-block-search-form')) return 'top-green-bar-search';
+    if (el.closest && el.closest('.anchored-spotlights-container')) return 'anchored-spotlights';
+    if (el.closest && el.closest('.collapsible-heading')) return 'collapsible-headings';
+    if (el.closest && el.closest('.collapse-h6, .collapse-h5, .collapse-h4, .collapse-h3, .collapse-h2')) return 'old-collapse-heading';
+    if (el.closest && el.closest('summary.faq-button, .faq-icon, .faq-question')) return 'faq';
+    if (el.closest && el.closest('.archives-row a')) return 'ot-archives-row';
+    if (el.closest && el.closest('ul.top-feature-story')) return 'ot-top-feature-story';
+    if (el.closest && el.closest('a.green-scenes-story')) return 'ot-green-scenes-story';
+    if (el.closest && el.closest('.ohio-today-footer')) return 'ot-footer';
+    if (el.closest && el.closest('ul.feature-stories')) return 'ot-feature-story';
+    if (el.closest && el.closest('a.alumni-news-story')) return 'ot-alumni-news';
+    if (el.closest && el.closest('.subscribe-row a')) return 'ot-subscribe-row';
+    if (el.closest && el.closest('.ohio-today-logo')) return 'ot-logo';
+    if (el.closest && el.closest('ul.share-links a, ul.footer-share-links')) return 'ot-share-links';
+    if (el.closest && el.closest('.tag-link')) return 'ot-popular-topics';
+    if (el.closest && el.closest('.search-results__link')) return 'search-ohio-edu';
+    if (el.closest && el.closest('.experience-grid')) return 'experience-grid';
+    if (el.closest && el.closest('.view-profiles input.form-checkbox, .view-profiles #edit-submit-profiles')) return 'directory-search';
+    if (el.closest && el.closest('#header-top #logo > a > img')) return 'global-ohio-logo';
+    if (el.closest && el.closest('#calendar-tabs')) return 'calendar-tabs';
+    if (el.closest && el.closest('.expert-callout a')) return 'experts-callout';
+    if (el.closest && el.closest('.personal-links a')) return 'personal-links';
+    if (el.closest && el.closest('a.profile-card')) return 'profile-card';
+    if (el.closest && el.closest('.program-link, .programs-row, div.view.view-programs-non-standard a')) return 'program-link';
+    if (el.closest && el.closest('section.facts-section')) return 'facts-section';
+    if (el.closest && el.closest('.video-embed-field-provider-youtube iframe')) return 'video';
+    if (el.closest && el.closest('button.arrow.next')) return 'image-slideshow-arrows';
+    if (el.closest && el.closest('a.fact[class*="background--"]')) return 'fact-card';
+    if (el.closest && el.closest('.fast-facts a')) return 'fast-facts';
+    if (el.closest && el.closest('form#form_749eb3ef-eb5d-4c02-ad4e-4494209f68d2')) return 'pop-up';
+    if (el.closest && el.closest('div.ad-lp-hero-form.request-info-form.slate#rfi, .request-info-form#rfi')) return 'slate-rfi';
+    if (el.closest && el.closest('.top-navigation')) return 'main-menu-catalogs';
+    if (el.closest && el.closest('#acalog-navigation')) return 'left-navigation';
+    if (el.closest && el.closest('.appsel-option-header')) return 'ugrd-appsel';
+    if (el.closest && el.closest('.foodpro-container')) return 'food-menu';
+    if (el.closest && el.closest('.hero-video-container')) return 'hero-video';
+    if (el.closest && el.closest('div#logoSpaceContent a')) return 'site-name';
+    if (el.closest && el.closest('.community-popover-button, #community-popover-panel')) return 'forever-community';
+    if (el.closest && el.closest('.alert-more-info')) return 'alert';
+    if (el.closest && el.closest('#ogo-study-away-programs')) return 'ogo-study-away';
+    if (el.closest && el.closest('.all-programs-search-link')) return 'program-link-view-all';
+    if (el.closest && el.closest('.graduate-program-finder-links')) return 'grad-program-finder-link';
+    if (el.closest && el.closest('.gifts-row')) return 'gifts-row';
+    if (el.closest && el.closest('.visit-app-row')) return 'visit-application-row';
+    if (el.closest && el.closest('.affordability-row')) return 'affordability-row';
+    if (el.closest && el.closest('.value-row')) return 'value-row';
+    if (el.closest && el.closest('.learn-row')) return 'learn-row';
+    if (el.closest && el.closest('.pride-row')) return 'pride-row';
+    if (el.closest && el.closest('.academics-row')) return 'academics-row';
+    if (el.closest && el.closest('.community-row')) return 'community-row';
+    if (el.closest && el.closest('section.tabs-container')) return 'tabs-container';
+    if (el.closest && el.closest('#mainContentContainer app-home form')) return 'compensation-estimator';
+    if (el.closest && el.closest('#snowstop')) return 'snow-stop';
+    if (el.closest && el.closest('#snowstart')) return 'snow-start';
+    if (el.closest && el.closest('a.button.green, a.button.white, a.button.moss')) return 'button';
 
-      // Main nav &#8212; the primary megamenu
-      if (p.id === 'main-menu') return 'main-nav';
-      if (cls.indexOf('menu-item menu-level-1') !== -1) return 'main-nav';
-      if (p.id === 'logoSpaceContent') return 'main-nav';
+    // Breadcrumb via aria-label (fallback for non-standard markup)
+    if (el.closest && el.closest('[aria-label*="breadcrumb"]')) return 'breadcrumb';
 
-      // Hero area
-      if (cls.indexOf('hero') !== -1) return 'hero';
-
-      // Footer
-      if (tag === 'footer' || p.id === 'global-footer' || cls.indexOf('footer') !== -1) return 'footer';
-
-      // Header (but not interior elements already caught by aux-menu/main-nav)
-      if (tag === 'header') return 'header';
-
-      p = p.parentElement;
-    }
     return 'body';
   }
+
 
   /** Generate a CSS selector path for an element */
   function getCSSSelector(el) {

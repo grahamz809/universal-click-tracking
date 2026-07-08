@@ -26,7 +26,7 @@ The export includes these columns:
 | `Event` | The suggested event name from the taxonomy (e.g., `cta_link`, `generate_lead`, `global_nav`) |
 | `CSS Selector` | The CSS selector that uniquely identifies this element on the page |
 | `link_click_url` | The URL the link points to, or the form action URL, or empty |
-| `web_element_location` | Where on the page the element sits (breadcrumb, main-nav, aux-menu, hero, footer, body) |
+| `web_element_location` | Where on the page the element sits. Uses standardized labels from the GTM variable (e.g., `hero`, `footer`, `main-menu`, `top-green-bar`, `news-row`, `faq`, `card-links`, `explore-tabs`, `program-finder`, `social-row`, `breadcrumbs`, plus 70+ OHIO-specific location names) |
 | `click_text` | The visible text of the element |
 | `Page URL` | The page where this element was captured |
 | `tag` | The HTML tag name (a, button, input, form, etc.) |
@@ -41,6 +41,8 @@ The export includes these columns:
 Copy the entire prompt block below. Replace `[PASTE YOUR EXCEL DATA HERE]` with your actual data (paste the rows from your CSV export). Then send it to Claude or ChatGPT.
 
 > **Important:** Paste the raw data as tab-separated or comma-separated rows. If you're copying from Excel, select all the data rows (not the header row) and paste them. The AI needs to see the actual element values to generate correct trigger conditions.
+>
+> **About `web_element_location`:** The location values in your data come from a standardized GTM variable with ~80 OHIO-specific rules (e.g., `main-menu`, `top-green-bar`, `news-row`, `faq`, `card-links`, `explore-tabs`, `program-finder`, `hero`, `footer`, `breadcrumbs`, `become-a-bobcat`, `social-row`, etc.). These names are stable and consistent across pages. Use them as-is when building GTM variables — do not rename or simplify them.
 
 ---
 
@@ -107,7 +109,14 @@ For every row in the input data:
 4. **Build the trigger condition** using the CSS selector as the main matching
    rule. Where possible, also add a page path condition based on the Page URL
    so the trigger only fires on relevant pages.
-5. **Flag any row where the Event column value does not cleanly match one of
+5. **For `web_element_location`, use the value from the spreadsheet as-is.**
+   These are standardized GTM location labels (e.g., `main-menu`, `hero`,
+   `top-green-bar`, `news-row`, `faq`, `card-links`, `program-finder`,
+   `social-row`, `breadcrumbs`, etc.). Do not rename or simplify them —
+   they match an existing GTM Custom Variable with ~80 rules. Include a
+   `web_element_location` variable in the GA4 event parameters that mirrors
+   this value.
+6. **Flag any row where the Event column value does not cleanly match one of
    the 16 taxonomy events listed above.** Put these in a review list. The human
    needs to decide whether to rename the event, create a new event (rare), or
    reassign to a different existing event.
@@ -138,9 +147,12 @@ Each trigger should:
 - Be named clearly: e.g., "Trigger - cta_link - Learn More - Admissions"
 
 ### Variables
-Include any custom variables needed for event parameters (click text, URL,
-location, etc.) as Built-In Variable references or custom JavaScript
-variables where necessary.
+
+Include the following GTM variables for event parameters:
+
+- **Built-In Variables:** Click Element, Click URL, Click Text, Page Path (enable these in GTM if not already enabled)
+- **Custom Variable:** `web_element_location` — use the standardized location label from the spreadsheet data. Create a GTM Custom JavaScript Variable that mirrors the existing ~80-rule location detection logic. Reference it as `{{web_element_location}}` in the generated JSON.
+- Include any other custom variables needed for event-specific parameters (click text, link URL, form name, etc.) as Built-In Variable references or simple lookup variables.
 
 ### JSON Structure
 
