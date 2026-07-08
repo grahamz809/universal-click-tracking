@@ -1,286 +1,280 @@
-# 🎯 Universal Click-Tracking Event Taxonomy
+# 🎯 Engagement-First Framework: Universal Click Tracking for OHIO.edu
 
-## Intent-First Measurement Framework for OHIO.edu
+## What This Is
 
-**Status:** ✅ Working — taxonomy inspector bookmarklet v2 is live and tested  
-**Target:** OHIO.edu GA4 Property (G-JR43SKW92E) · GTM Container (GTM-N7GZT99)  
-**Version:** 2.1.0  
-**Last Updated:** 2026-07-08
+This is a ready-to-use **click-tracking framework** for Ohio University's website. Instead of setting up tracking rules one page at a time, this framework gives you a consistent, repeatable system that works across every page on OHIO.edu. It's named "engagement-first" because it organizes every click by what the user is *trying to do* — not by what element they clicked on.
 
----
+The framework comes with a **bookmarklet tool** — a small button you install in your web browser. Click it on any page, and it shows you in real time exactly which tracking event would fire for every link, button, and interactive element on that page. You can capture those elements, export them to a spreadsheet, or push them to Airtable for team collaboration.
 
-## Why This Exists
-
-This is the **foundational decision layer** for a universal click-tracking GTM deployment on OHIO.edu. Instead of hard-coding triggers page-by-page or element-by-element, we define an **intent-first taxonomy** — naming events for *what the user is trying to do*, not for what DOM element they clicked.
-
-This approach:
-
-- **Eliminates duplicate/overlapping tags** (the same "Apply Now" button isn't tracked by 3 competing triggers)
-- **Makes reporting meaningful** (analysts can filter by intent, not by CSS class)
-- **Is portable** (the same trigger patterns work on any page, any section)
-- **Simplifies QA** (~16 well-defined events vs. 100+ ad-hoc triggers)
-
-The taxonomy is organized into exactly **5 families**, named for user intent. Every interaction on OHIO.edu maps to one of these five buckets, and no sixth family is added.
+You do **not** need to download any software, write any code, or set up any development tools to use the bookmarklet. Just add it to your bookmarks bar and start inspecting pages.
 
 ---
 
-## The Five Families
+## The Five Families (User Intent Model)
 
-| # | Family | Intent | Example Events |
-|---|--------|--------|----------------|
-| 1 | **Conversion** | "I completed a goal" | generate_lead, event_rsvp, file_download |
-| 2 | **Engagement** | "I interacted with content" | cta_button, cta_link, global_nav, contact_click, web_element |
-| 3 | **Discovery** | "I'm looking for something" | internal_search, custom_filter_search |
-| 4 | **Content & Media** | "I consumed something" | news_content, video |
-| 5 | **Utility & Support** | "I need help or tools" | tool_interaction, chat, exit_link, 404 |
+Every click on OHIO.edu fits into one of five categories. These are called **families**, and they're named for the user's intent:
 
----
+| # | Family | What the user is doing | Example events |
+|---|--------|----------------------|----------------|
+| 1 | **Conversion** | Completing a goal | Submitting an inquiry form, RSVPing for an event, downloading a PDF viewbook |
+| 2 | **Engagement** | Interacting with content | Clicking a CTA button or link, using site navigation, contacting OHIO, opening an accordion or tab |
+| 3 | **Discovery** | Looking for something | Using the site search, filtering programs in the program finder |
+| 4 | **Content & Media** | Consuming content | Reading a news article, watching a video |
+| 5 | **Utility & Support** | Getting help or using a tool | Using the net price calculator, opening live chat, clicking an external link, landing on a 404 page |
 
-## Full Framework Table
-
-### 1. Conversion Family
-
-| Event Name | Matching Rule | Trigger Type | Variables Captured | Notes / Edge Cases |
-|---|---|---|---|---|
-| `generate_lead` | CSS: `.form_button_submit`, `.slate_form`, form elements with `#funnelback-block-search-form`, or data attributes like `[data-form-type="inquiry"]` | Form Submission / Click | `form_name`, `form_id`, `vendor` (Slate_internal \| Wiley \| Net_Natives), `form_submission_status` (complete \| abandoned), `empty_fields`, `page_url`, `web_element_location`, `site_name` | **Junk-drawer alert:** Keep separate from general form interactions. Only fire on true goal completions (RFI, inquiry, application start/confirm). Abandonment tracking requires additional form-field focus/blur listeners — optional at launch. Forms in iframes (Net Natives/Slate-hosted) require cross-origin message listeners if native DOM access is blocked. |
-| `event_rsvp` | Text matching: "RSVP", "Register", "Confirm", "Yes, I'll attend" OR CSS: `.rsvp-link`, `[data-event-rsvp]` | Click — All Elements | `cta_text`, `link_click_url`, `page_url`, `web_element_location` | **Currently paused** — reactivate when event RSVP module is live. Also fires on "Add to Calendar" button clicks. |
-| `file_download` | URL pattern: `\.(pdf|docx|xlsx|pptx|zip)$` OR link attributes: `[download]`, or explicit `data-tracking="download"` | Click — Just Links | `file_name` (extracted from URL), `file_extension`, `file_size` (if available in data attr), `link_click_url`, `page_url`, `web_element_location` | **Junk-drawer rescue:** File downloads were at risk of being lost in `web_element` or `cta_link`. They're their own Conversion event because downloading a viewbook/brochure/application is a goal-completion signal (the user is gathering materials to apply). PDFs that are supplementary content (syllabi, policies) still fire this event — intent is measured downstream, not filtered at trigger. |
-
-### 2. Engagement Family
-
-| Event Name | Matching Rule | Trigger Type | Variables Captured | Notes / Edge Cases |
-|---|---|---|---|---|
-| `cta_button` | CSS class contains `button` AND one of: `green`, `white`, `form-jump`, `primary`, `secondary` OR parent selector identifying styled button containers (.hero-cta, .button-wrapper) | Click — All Elements | `cta_goal` (drive_enrollment \| donation \| energize_stakeholders), `cta_type` (primary \| secondary), `cta_text`, `button_type`, `link_click_url`, `page_url`, `site_name`, `web_element_location` | Styled buttons in hero, body sections, and sticky footers. Distinguish from `cta_link` by the presence of the `button` CSS class. Social media icon links (`.social-icons`, `i.circle.fa`) are captured here when they use button styling. |
-| `cta_link` | Inline text links inside card components (`.card-link-content`, `.field--name-field-call-to-action-*`), jump links (`#anchor`), quicklink items, "Learn more" links, or link text patterns like "➜" | Click — Just Links | `cta_goal`, `cta_text`, `link_click_url`, `page_url`, `web_element_location`, `cta_type`, `site_selector` | Covers text links that are CTAs but not styled as buttons. Includes "Learn more about this statistic", "Apply to Ohio University today ➜", "Not sure? Browse all our degrees & programs". Jump links (#rfi, #form) are included — their scroll-to behavior is a CTA action, not navigation. |
-| `global_nav` | Links within: `nav` elements, `[role="navigation"]`, `.global-nav`, `footer` nav columns, breadcrumb lists, logo link, `.quick-links` dropdown, `.info-for` dropdown | Click — Just Links | `click_text`, `link_click_url`, `page_url`, `site_name`, `web_element_location` (main-nav \| aux-menu \| footer \| breadcrumb \| logo), `mobile_click` (true \| false via viewport detection) | Includes ALL nav levels — main nav, section sub-nav (Apply, Visit, Costs & Aid under Admissions), footer resource links, breadcrumbs, logo home link. Apply/Give/Visit in the utility bar: these are nav links, not CTAs. **Edge case:** Mega-menu sub-items that are also CTAs (e.g., "Apply Now" inside a dropdown) should still fire `global_nav` — the nav context is the primary intent. |
-| `contact_click` | URL pattern: `^tel:` \| `^mailto:` \| link text containing phone number regex (\d{3}[\.-]\d{3}[\.-]\d{4}) \| `.address-link` \| text matching email regex \| Google Maps URLs | Click — Just Links | `contact_type` (phone \| email \| address), `contact_info` (the actual number/email/address), `link_click_url` (the tel:/mailto:/maps URL), `page_url`, `site_name`, `web_element_location` | **Edge case:** This is NOT exit_link — the user is contacting OHIO, not leaving the site. Mailto: links open the user's email client (a system app), not an external website. Phone numbers (tel:) dial natively. Address links go to Google Maps — these are contact methods, not exits. |
-| `web_element` | CSS: `.accordion`, `.paragraph--type--accordion`, `[data-component-id*="accordion"]`, `.faq-toggle`, `.spotlight`, `.tab-container`, `.nav-tabs`, `.image-tile`, caption expand buttons, `.field--name-field-caption`, `.fact-card`, accordion trigger elements, `.checkbox-filter` | Click — All Elements | `web_element_name` (accordion \| tab \| spotlight \| image-tile \| fact-card \| caption \| checkbox), `web_element_location`, `web_element_impression` (true/false via scroll), `accordion` (section label), `checkbox_status` (checked \| unchecked for filters), `cta_text` (element label), `page_url`, `site_name` | **Junk-drawer watch:** This is the catch-all for non-navigational, non-CTA UI interactions. NOT for file downloads, CTAs, nav, or contact methods. If an element doesn't fit any other engagement event, it goes here — but every new instance should be reviewed to make sure it doesn't deserve its own event. Caption expand/collapse buttons, "Learn More About Athens, OH caption" toggles, stat counter animations — these are all `web_element`. |
-
-### 3. Discovery Family
-
-| Event Name | Matching Rule | Trigger Type | Variables Captured | Notes / Edge Cases |
-|---|---|---|---|---|
-| `internal_search` | Form: `[action*="search.ohio.edu"]`, `[action*="funnelback"]`, `input[name="query"]` or `input[type="search"]` within site chrome + `form[action*="ohio.edu/search"]` | Form Submission / Click | `internal_search_query`, `internal_search_link_click` (selected result URL/id), `filterArr` (active filters, comma-separated), `site_selector` (search scope), `page_url`, `web_element_location` | Fires on form submit (search query entered) AND on result click (which result was chosen). **Zero-result tracking:** If the results page contains "no results" or "0 results" text, fire with an empty/null `internal_search_link_click` and add a `zero_results: true` variable. This is critical for content gap analysis. The header Search button (`aria-label="Search"`) expands the search form — that's a `web_element` event, not yet a search. |
-| `custom_filter_search` | CSS: `.program-finder`, `[data-module="program-finder"]`, `.academic-program-search`, `.graduate-program-filter`, `.experience-ohio-filter`, `.go-global-filter`, `.directory-filter` | Click / Form Submission / Change | `internal_search_query` (if text input), `internal_search_link_click` (result clicked), `filterArr` (selected filter tags), `site_selector` (Experience Ohio \| Graduate Programs \| GoGlobal \| Directory), `page_url`, `web_element_location` | Covers the "What are you interested in studying?" textbox on the homepage, the degree program search, Experience Ohio tool, GoGlobal filters, and directory lookup tools. Each filter change fires separately (not debounced) so analysts can see full filter journey. |
-
-### 4. Content & Media Family
-
-| Event Name | Matching Rule | Trigger Type | Variables Captured | Notes / Edge Cases |
-|---|---|---|---|---|
-| `news_content` | Links within: `.news-listing`, `.view-news-articles`, `[data-content-type="news"]`, `.featured-stories`, `.ohio-today-card`, story cards, article grid items, category/tag filter links, news search form | Click — Just Links | `story_title`, `publication_date`, `click_text`, `link_click_url`, `cta_type`, `search_term_news`, `search_category_news`, `search_story-tag_news`, `page_url`, `web_element_location` | News story card clicks, "View All Stories" links, topic/category navigation, news search, pagination through story lists. Category filter (Topics, Colleges & Campuses, University Community, Magazine) — each filter click fires this event. Story tag clicks on individual article pages also captured here. |
-| `video` | YouTube iframes: `iframe[src*="youtube.com"]`, `iframe[src*="youtu.be"]`, OR video players with `[data-video-id]`, `.video-embed`, JWPlayer/YouTube JS API hooks | YouTube JS API / Custom Event Listener | `video_action` (play \| pause \| progress \| complete), `video_src`, `video_title`, `video_current_time` (seconds), `video_duration` (seconds), `video_percent` (25 \| 50 \| 75 \| 100), `page_url`, `site_name`, `web_element_location` | **Junk-drawer rescue:** Must capture progress milestones, not just play/complete. Use YouTube IFrame API to fire at 25%, 50%, 75%, and 100%. The hero video on the homepage and the "Watch full video" button — the play button press is a `web_element` or separate interaction; actual video playback tracking is this event. Pause/unpause should also fire `video_action: pause`. Auto-playing videos on scroll-in should fire `video_action: play` with a `video_autoplay: true` parameter. |
-
-### 5. Utility & Support Family
-
-| Event Name | Matching Rule | Trigger Type | Variables Captured | Notes / Edge Cases |
-|---|---|---|---|---|
-| `tool_interaction` | CSS: `.net-price-calculator`, `[data-tool="calculator"]`, `.salary-calculator`, `.interactive-tool`, iframe hosting a web app, `[data-module="interactive"]` | Click / Form Submission / Custom Event | `tool_name`, `tool_purpose`, `cta_goal`, `page_url`, `web_element_location`, `employee_type` (if HR tool) | Net Price Calculator, salary projection tools, interactive degree planners, HR tools. Distinguish from `generate_lead` — tools don't represent a goal completion on their own; they're support utilities that help the user decide. |
-| `chat` | CSS: `[data-chat-widget]`, `button[aria-label*="chat"]`, `.chat-button`, `.live-chat`, `.symphony-chat`, `#tidio-chat`, any button that opens a chat widget | Click — All Elements | `chat_action` (open \| send \| minimize \| close), `chat_message` (if available), `chat_department`, `page_url`, `web_element_location` | **Junk-drawer rescue:** Chat was at risk of being lumped into `web_element` or `cta_button`. It deserves its own event because it's a distinct support pathway with different KPIs (first response time, resolution rate). The "Open chat" button on every page fires `chat_action: open`. Chat messages require widget-specific JS API — start with open/close tracking; message content requires deeper integration. |
-| `exit_link` | URL host does not match `ohio.edu` (or approved subdomains). Regex: `^(?!.*\.ohio\.edu).*$` PLUS explicit allowed list exclusion (catmail.ohio.edu, ohiobobcats.com, ohio.forums.com, etc. are exits — they're different properties) | Click — Just Links | `anchor_text`, `link_click_url` (full external URL), `web_element_location`, `page_url`, `site_name` | **Edge case:** `catmail.ohio.edu`, `ohiobobcats.com`, `ohio.forums.com`, `give.ohio.edu` (if hosted externally), and search.ohio.edu (search is not exit — it's an internal search under Discovery). Links with `target="_blank"` that stay within ohio.edu are NOT exits. "Opens in a new window" icon (➚) is not the signal — the hostname is. |
-| `404` | Triggered on page load where `document.title` contains "Page not found" OR HTTP status header 404 OR URL match pattern: `/404`, `/?404`, or event fired from CMS/page-not-found template | Page View / Custom Event | `page_url` (the path that 404'd), `referrer_url` (where they came from), `page_title` | Fires once per 404 page view. If the page has a search bar suggesting corrections, a `internal_search` event may follow — that's a separate event. Useful for redirect mapping and broken link identification. |
+Every tracked interaction maps to exactly one of these five families. No more, no less. This keeps your analytics reporting clean and your tracking configuration manageable.
 
 ---
 
-## Open Questions & Decisions
+## The 16 Events — Complete Reference
 
-These need review and sign-off before moving to GTM implementation:
+### 1. Conversion Family — "I completed a goal"
 
-| # | Question | Proposed Resolution | Status |
-|---|----------|-------------------|--------|
-| 1 | **`file_download` vs. `cta_link` for PDF CTAs** — Some PDF links are styled as CTA buttons (e.g., "Download Viewbook"). Should these fire both `cta_button` + `file_download`, or just `file_download`? | **Proposed:** Fire only `file_download`. The CTA styling is presentation; the user intent is to download (a Conversion action). Firing both would inflate metrics. | ⬜ Pending |
-| 2 | **Link to OHIO subdomains** — `catmail.ohio.edu` (student email) and `ohiobobcats.com` (athletics) — are these `exit_link` or `global_nav`? | **Proposed:** `exit_link` — they are different properties with separate GA4 tracking. Catmail is a Google Workspace app, not managed through the same GTM container. | ⬜ Pending |
-| 3 | **Mailto/tel contact clicks** — Are these `contact_click` (Engagement) or `exit_link` (Utility)? | **Proposed:** `contact_click` (Engagement). The user is contacting OHIO, not "leaving" the experience. Protip: this reframes the metric positively for stakeholders. | ⬜ Pending |
-| 4 | **Video autoplay tracking** — Hero video auto-plays on homepage load. Should `video_action: play` fire on autoplay (scroll-triggered), or only on explicit user play? | **Proposed:** Fire on autoplay with a `video_autoplay: true` parameter, so analysts can filter. Also fire on explicit play separately. This way we see total plays vs. intentional plays. | ⬜ Pending |
-| 5 | **Accordion/FAQ expand events** — Each accordion section click fires `web_element`. Should it fire on both expand AND collapse? | **Proposed:** Fire on both, with an `accordion_state: expanded | collapsed` parameter. Collapse events are useful for measuring content engagement depth (users who expand and collapse are actively reading). | ⬜ Pending |
-| 6 | **Chat message content** — Should chat message text be captured as a variable? This adds PII risk. | **Proposed:** Capture only the fact that a message was sent (`chat_action: send`), not the message content. Chat department (pre-chat survey) is OK if available as a non-PII variable. | ⬜ Pending |
-| 7 | **Filter change debouncing** — The `custom_filter_search` event fires on each filter change. Should we debounce to fire only after X ms of inactivity, or fire every change? | **Proposed:** Fire every change (no debounce). Preserves the full filter journey for analysis. Reporting can always aggregate; you can't un-fire an event. | ⬜ Pending |
-| 8 | **404 page with search suggestion** — The 404 page has a search box. If a user hits 404 and immediately searches, should we fire `404` AND `internal_search`? | **Proposed:** Yes, both. They're separate intents — one is "I hit a dead end" and the other is "I'm looking for something specific." The `referrer_url` on the 404 event will point to the broken link source. | ⬜ Pending |
-| 9 | **Mobile vs. Desktop distinction** — `mobile_click` on `global_nav` uses viewport width detection. Should this be applied to all events as a universal variable, or only on nav? | **Proposed:** Add `mobile_viewport: true | false` as a universal variable to ALL events. Consistent device detection across all families simplifies reporting. | ⬜ Pending |
-| 10 | **Engagement value scoring** — The existing reference schema mentions `engagement_value` (1-5). Should we implement this as a computed variable in GTM, or calculate it in GA4/ Looker Studio? | **Proposed:** Compute in GA4 via event-scoped custom metrics or Looker Studio. GTM should focus on raw data capture, not score calculation. | ⬜ Pending |
+| Event Name | What it tracks | How it's matched | Key data captured |
+|------------|---------------|-----------------|-------------------|
+| `generate_lead` | Form submissions for inquiries, applications, or requests for information | Detected by form CSS classes (`.form_button_submit`, `.slate_form`) or data attributes like `[data-form-type="inquiry"]` | Form name, form ID, vendor platform (Slate, Wiley, Net Natives), submission status |
+| `event_rsvp` | RSVP, registration, or "Confirm attendance" button clicks | Text matching: "RSVP", "Register", "Confirm", "Yes, I'll attend" or CSS classes like `.rsvp-link` | CTA text, link URL, page location |
+| `file_download` | Downloads of PDFs, Word docs, Excel files, or ZIP archives | URL ends in `.pdf`, `.docx`, `.xlsx`, `.pptx`, `.zip` or link has a `[download]` attribute | File name, file extension, link URL |
 
----
+### 2. Engagement Family — "I interacted with content"
 
-## Setting Up the Development Environment
+| Event Name | What it tracks | How it's matched | Key data captured |
+|------------|---------------|-----------------|-------------------|
+| `cta_button` | Styled CTA buttons (green, white, primary, secondary) | CSS class contains `button` AND one of the style classes | CTA goal (enrollment, donation, stakeholder), CTA type (primary/secondary), CTA text |
+| `cta_link` | Text links that act as calls to action | Card links, "Learn more" links, jump links (`#anchor`), text containing "➜" | CTA text, link URL, page location |
+| `global_nav` | Main navigation, utility menus, breadcrumbs, footer links | Links inside `<nav>` elements, breadcrumb lists, footer columns, logo link | Click text, link URL, location (main-nav, aux-menu, footer, breadcrumb) |
+| `contact_click` | Phone, email, and address interactions | `tel:` links, `mailto:` links, phone number patterns, Google Maps URLs | Contact type (phone/email/address), contact info |
+| `web_element` | UI components like accordions, tabs, info popovers, expand/collapse buttons | CSS classes: `.accordion`, `.tab-container`, `.faq-toggle`, `.fact-card`, `.checkbox-filter`, and more | Element name (accordion, tab, caption, etc.), page location |
 
-This project was built using **Hermes Agent**, a tool-assisted AI agent. If you need to replicate or contribute to this work, the project requires:
+### 3. Discovery Family — "I'm looking for something"
 
-### Prerequisites
+| Event Name | What it tracks | How it's matched | Key data captured |
+|------------|---------------|-----------------|-------------------|
+| `internal_search` | Site search submissions and result clicks | Forms with `search.ohio.edu` or `funnelback` in the action URL, search input fields | Search query, clicked result, active filters |
+| `custom_filter_search` | Program finder, Experience Ohio, GoGlobal, and directory filters | CSS classes: `.program-finder`, `.filter`, `[data-module="program-finder"]` | Search query (if text input), active filter tags, site section |
 
-- **Node.js** (for `npx terser` during rebuilds)
-- A web browser (Chrome recommended for full Clipboard API support)
-- The **`test-harness.html`** file from this repo
+### 4. Content & Media Family — "I consumed something"
 
-### Rebuilding the Bookmarklet
+| Event Name | What it tracks | How it's matched | Key data captured |
+|------------|---------------|-----------------|-------------------|
+| `news_content` | News article clicks, "View All Stories", category/tag filters | Links inside news listings, story cards, article grids, news search forms | Story title, click text, news category, search terms |
+| `video` | Video playback actions (play, pause, progress) | YouTube or Vimeo iframes, video player elements, "Play video" buttons | Video action (play/pause/progress/complete), video title, progress percent |
 
-After editing `bookmarklet.js`, rebuild the minified version:
+### 5. Utility & Support Family — "I need help or tools"
 
-```bash
-cd universal-click-tracking
-npx terser bookmarklet.js --compress --mangle -o bookmarklet.min.js
-```
+| Event Name | What it tracks | How it's matched | Key data captured |
+|------------|---------------|-----------------|-------------------|
+| `tool_interaction` | Interactive tools like calculators and planners | CSS classes: `.net-price-calculator`, `.calculator`, `.interactive-tool`, `[data-tool]` | Tool name, tool purpose |
+| `chat` | Opening, sending messages in, or closing a chat widget | CSS classes or aria labels containing "chat", chat widget buttons | Chat action (open/send/minimize/close) |
+| `exit_link` | Clicks on links that leave OHIO.edu | Link hostname doesn't match `ohio.edu` (catmail.ohio.edu and ohiobobcats.com are also exits) | Anchor text, full external URL, page location |
+| `404` | When a visitor lands on a page that doesn't exist | Page title contains "Page not found" or HTTP status is 404 | The broken URL, the referring page |
 
-This automatically updates the base64-encoded version in `test-harness.html`. You'll need to re-drag the bookmarklet link from the test harness to your bookmarks bar after each rebuild.
+### Three Universal Parameters (every event captures these)
 
----
+Every single match, no matter which family or event, always includes these three pieces of information:
 
-## How to Review & Approve
-
-### For Stakeholders / Reviewers
-
-1. **Read the framework table above.** Each event has a clear matching rule, trigger type, and variable list.
-2. **Check the "Junk-drawer" flags.** Review any items marked "Junk-drawer rescue" — these are events we intentionally pulled out of catch-all buckets to give them proper treatment.
-3. **Review the Open Questions.** Each pending decision needs a response. Unresolved questions block Task 2 (GTM implementation).
-4. **Sign off by:**
-   - [Commenting on the GitHub Issue](#) (once opened)
-   - OR adding an approval comment to this pull request
-   - OR checking the box in the project tracking document
-
-### Approval Gate
-
-**Task 2 (GTM JSON Generation, Import & QA) will not begin until:**
-- ✅ The framework table has been reviewed and explicitly approved
-- ✅ All open questions/decisions have been resolved and reflected in the table
-- ✅ This README (including the Hermes setup section) is published and accessible
-
----
-
-|---
-
-## Universal Capture & Fixed Location Detection (v2)
-
-The bookmarklet was redesigned in **v2** to fix every bug found during v1 testing and to implement an **every-link/every-element** catch-all strategy.
-
-### What Changed
-
-| v1 (16-param taxonomy) | v2 (3 universal params + catch-all) |
-|---|---|
-| 16 event-specific parameters (many duplicated) | 3 **universal parameters** on every match: `link_click_url`, `web_element_location`, `click_text` |
-| Element location guessed from CSS class heuristics | Location detection uses **OHIO web catalog naming** (breadcrumb, main-nav, aux-menu, hero, footer, body) |
-| Links not matching a specific rule were ignored | **Catch-all:** every link → `cta_link`, every button → `web_element` |
-| Panel stayed blank when elements had same type but different text | **Fixed:** panel updates on every unique element+text combo |
-| Breadcrumbs labeled "main-nav", main-nav labeled "aux-menu" | **Fixed:** priority-based location detection (breadcrumb → aux-menu → main-nav → hero → footer → body) |
-| No export | **📥 CSV export** button in the panel — opens a dialog with Copy to Excel or Download .csv |
-| No CSS selector shown | **CSS selector output** for every captured element |
-
-### The 3 Universal Parameters
-
-| Parameter | Description | Source |
-|---|---|---|
-| `link_click_url` | The link/form action URL (empty if not applicable) | `el.href`, `form.action`, or empty |
-| `web_element_location` | Page region — always present | Priority scan: breadcrumb → aux-menu → main-nav → hero → footer → body |
-| `click_text` | Truncated text content (max 150 chars) | `el.textContent` trimmed, whitespace-normalized |
-
-### Location Detection Priority (Fixed)
-
-The `web_element_location` is determined by walking up from the hovered element through its ancestors, checking each for known Drupal/OHIO markup signals:
-
-1. **breadcrumb** — `aria-label*=breadcrumb`, class contains `breadcrumb` or `top-confined-breadcrumb`
-2. **aux-menu** — class `aux-menu`, `aux-menu-links`, `search-desktop` id, `header-top` id
-3. **main-nav** — `main-menu` id, class `menu-item menu-level-1`, `logoSpanContent` id
-4. **hero** — class contains `hero`
-5. **footer** — `footer` tag, `global-footer` id, class contains `footer`
-6. **body** — default for everything else
+- **`link_click_url`** — The URL the link points to (or the form's action URL, or empty for buttons that don't navigate)
+- **`web_element_location`** — Where on the page the element is located. Detected automatically: breadcrumb → aux-menu → main-nav → hero → footer → body
+- **`click_text`** — The visible text of the element (up to 150 characters)
 
 ### Catch-All Coverage
 
-The catch-all ensures **every interactive element on the page** is captured:
+The framework uses a "catch-all" rule at the end of its matching logic. This ensures **every** interactive element on the page is captured:
 
-- **All `<a>` links** not matched by a specific rule → `cta_link` (Engagement)
-- **All `<button>` elements** not matched → `web_element` (Engagement)
-- **All `<input>` elements**, `[onclick]`, `[role="button"]`, `[tabindex]` (not -1/-2) → `web_element`
-- **40+ OHIO catalog elements** detected by class name: collapsible-headings, fact-card, faq, card-link, image-tile, tab-container, anchored-spotlight, hero-image, image-gallery, icon-tile, promo-box, topic-preview, fast-fact, timeline, video-gallery, contact-us, featured-media, explore-tab, large-quick-link, quick-link, jump-link, image-slideshow, social-media-icon, image-text-overlay, calendar-event, news, program-finder, cta-button, and more
-
-Edge cases like `search.ohio.edu` subdomain links are excluded from `exit_link` (they're internal search, not an exit).
+- Any link not matched by a specific rule → fires `cta_link` (Engagement)
+- Any button not matched → fires `web_element` (Engagement)
+- Any input field, `[onclick]` element, or `[role="button"]` element → fires `web_element`
+- Plus 40+ OHIO-specific element types detected by CSS class names (fact cards, card links, image tiles, tab containers, spotlight panels, promo boxes, topic previews, video galleries, contact blocks, social media icons, and more)
 
 ---
 
-## Working Tool: Taxonomy Inspector Bookmarklet
+## Install the Bookmarklet Tool
 
-This project comes with a **working, testable diagnostic tool** — a browser bookmarklet that inspects *any web page* in real time, showing which taxonomy event would fire for **every** interactive element with its 3 universal parameters, CSS selector, and family context.
+> **You do NOT need to download Hermes Agent, Node.js, or any other software to use this bookmarklet.** Just follow the steps below.
 
-### 📥 Installation
+### Quick Install (Drag to Bookmarks)
 
-1. Open **`test-harness.html`** in your browser (open directly from the repo or GitHub Pages)
-2. Drag the **"🎯 Inspect Tracking"** link to your bookmarks bar
-3. Visit any page and click the bookmarklet
+**Step 1:** Open the [`engagement-first-framework.html`](engagement-first-framework.html) page from this repository in your browser.
 
-### 🖱️ Usage
+**Step 2:** Find the large **"🎯 Launch Framework Tool"** link on that page.
 
-| Action | What Happens |
-|--------|-------------|
-| **Hover** any element | Floating panel shows event, family, CSS selector, and 3 universal params (`link_click_url`, `web_element_location`, `click_text`) |
-| **Click** any element | Adds it to the framework list; console logs full JSON match + CSS selector |
-| **CSV** button | Opens a dialog with the full dataset — **Copy to Excel** (pastes as a table with columns preserved) or **Download .csv** |
-| **Framework** button | Shows the captured element list grouped by family with remove buttons |
-| **Minimize** button | Collapses the panel to a compact header showing element count |
-| **Close** | Click ✕ to remove the overlay |
+**Step 3:** Drag that link up to your browser's bookmarks bar and drop it there.
 
-### 📤 CSV Export Dialog
+**Step 4:** Visit any page (try ohio.edu/admissions) and click the bookmarklet you just added.
 
-The CSV button opens a modal dialog with three ways to get data into Excel:
+That's it. A panel will appear on the right side of the page showing the tracking data for every interactive element.
 
-1. **Copy to Excel** — Writes a formatted HTML table + tab-separated data to your clipboard. Paste directly into Excel — columns are preserved automatically.
-2. **Download .csv** — Triggers a native save dialog (File System Access API) or a standard browser download. Open the `.csv` in Excel.
-3. **Manual copy** — The textarea is auto-selected. Press Cmd/Ctrl+C and paste into Excel, then use **Data > Text to Columns** with Tab delimiter if needed.
+### Alternative Install (Manual Bookmark)
 
-The dialog scans the full page (top 500 interactive elements) even if nothing was explicitly clicked, so you always get a complete framework export.
+If dragging doesn't work in your browser:
 
-### 🧪 Test It Now
+**Step 1:** Right-click your bookmarks bar and choose "Add Page" or "New Bookmark."
 
-Use the included **`test-harness.html`** — it contains real demo elements for every event family plus **OHIO web element coverage** (fact cards, card links, breadcrumb demo, etc.):
+**Step 2:** Give it a name like "OHIO Tracking Tool."
 
-- Forms that fire `generate_lead`
-- Download links that fire `file_download`  
-- Nav bars that fire `global_nav` (with proper breadcrumb/main-nav/aux-menu/footer detection)
-- Accordions, tabs, and carousels that fire `web_element`
-- Program finder that fires `custom_filter_search`
-- External links that fire `exit_link`
-- Video players, chat buttons, calculators, RSVP links, news articles, phone/email links
-- **Fact cards** and **card links** (OHIO catalog components)
-- **Breadcrumb demo** with proper location display
+**Step 3:** Open the [`engagement-first-framework.html`](engagement-first-framework.html) page and scroll to the code block that starts with `javascript:`. Select and copy the entire code.
 
-Open the test harness, install the bookmarklet, click it on the test page, and hover every element to see the matching rules in action. Verify location detection: breadcrumb links show "breadcrumb", nav links show "main-nav", footer links show "footer".
+**Step 4:** Paste that code into the bookmark's URL field and save.
+
+**Step 5:** Visit any page and click the bookmarklet.
 
 ---
 
-## Portability Validation: OSU & MiamiOH
+## Using the Bookmarklet — Step by Step
 
-The framework was validated against two other major Ohio university websites to confirm it's general enough for any higher education site. Results are in **`PORTABILITY.md`**.
+Once you've installed the bookmarklet and clicked it on a page, a floating panel appears on the right side of your screen. Here's everything you can do with it:
 
-| Site | Elements Mapped | New Events Needed | New Families Needed |
-|------|----------------|-------------------|-------------------|
-| **OSU** (osu.edu) | Nav, CTAs, news, accordions, carousels, search, video, stats, footer | **0** | **0** |
-| **MiamiOH** (miamioh.edu) | Nav, hero video, CTAs, news, events, program cards, blog, chat, search | **0** | **0** |
+### Step 1: Hover Over Elements
 
-**Conclusion:** All 16 events and all 5 families map cleanly across three different university sites. The framework is portable.
+Move your mouse over any link, button, or interactive element on the page. The panel updates instantly to show:
+
+- **Event name** — Which tracking event would fire (e.g., `cta_link`, `global_nav`, `file_download`)
+- **Family** — Which of the five families it belongs to
+- **CSS selector** — The technical reference for this element (useful for developers setting up tags)
+- **Three universal parameters** — `link_click_url`, `web_element_location`, and `click_text`
+
+[SCREENSHOT: hover panel showing event details for a "Learn More" link on ohio.edu/admissions — call out the event name, family, and three parameters]
+
+Each element also gets a colored outline on the page so you can see exactly which element you're inspecting. The outline color matches its family (red for Conversion, blue for Engagement, green for Discovery, yellow for Content & Media, orange for Utility & Support).
+
+### Step 2: Click to Capture
+
+When you click on an element, it's added to your **framework list**. The panel's header updates to show how many elements you've captured (e.g., "Framework (7)"). You can click as many elements as you want — the list keeps growing.
+
+Each captured element stores:
+- Its event name and family
+- The full CSS selector (so developers can find it later)
+- The three universal parameters (link URL, location, click text)
+
+[SCREENSHOT: panel with several elements captured, showing the Framework count in the header]
+
+### Step 3: View the Framework List
+
+Click the **Framework** button in the panel's header. This opens a view showing all your captured elements grouped by family, with remove buttons if you want to delete any. Click **Framework** again to return to the hover view.
+
+[SCREENSHOT: Framework view showing grouped elements with remove buttons]
+
+### Step 4: Export to Excel or CSV
+
+Click the **CSV** button. This opens an export dialog with three ways to get your data:
+
+**Option A — Copy to Excel (recommended):** Click "Copy to Excel." The data is written to your clipboard as a formatted table. Open Excel and paste (Cmd+V / Ctrl+V). The columns appear automatically — no extra steps needed.
+
+**Option B — Download .csv:** Click "Download .csv." Your browser will either show a native Save dialog (letting you pick the filename and location) or download the file directly. Open the `.csv` in Excel.
+
+**Option C — Manual copy:** The dialog includes a text box with all the data pre-selected. Press Cmd+C (Mac) or Ctrl+C (Windows) to copy it, then paste into Excel. If the columns don't separate automatically, use Excel's **Data > Text to Columns** feature and choose Tab as the delimiter.
+
+The dialog automatically scans the entire page (up to 500 interactive elements), so you get a complete export even if you didn't click anything yet.
+
+[SCREENSHOT: the CSV export dialog showing the Copy to Excel and Download .csv buttons]
+
+### Step 5: Minimize or Close
+
+- Click the **–** button to minimize the panel to a compact header. This is useful when you want to see the page underneath. Click **+** to restore it.
+- Click the **✕** button to close the panel entirely. All your captured elements are cleared when you close it.
 
 ---
 
-## Project Structure
+## Syncing Captured Elements to Airtable
+
+You can push your captured framework data directly to an Airtable base for team collaboration, review, or further processing.
+
+### Setting Up Airtable
+
+**Step 1: Create or open an Airtable base.** If you don't have one yet, create a new base at [airtable.com](https://airtable.com). You can name it something like "OHIO Click Tracking Framework."
+
+**Step 2: Create your table columns.** Make sure your table has at minimum these fields (column names must match exactly):
+
+- `Event` (Single line text)
+- `Family` (Single line text)
+- `CSS Selector` (Single line text or Long text)
+- `link_click_url` (URL or Single line text)
+- `web_element_location` (Single line text)
+- `click_text` (Single line text)
+- `Page URL` (URL or Single line text)
+
+**Step 3: Get your Base ID.** Go to [airtable.com/api](https://airtable.com/api), select your base, and find the Base ID in the URL or the API documentation. It looks like `appXXXXXXXXXXXXXX`.
+
+**Step 4: Generate a Personal Access Token.** Go to [airtable.com/create/tokens](https://airtable.com/create/tokens), click "Create token," give it a name (like "OHIO Tracking Sync"), and add these scopes: `data.records:write` and `data.records:read`. Select the base you created in Step 2.
+
+**Step 5: Configure the tool.** In the bookmarklet panel, click the **Airtable** icon or button (or look for the "Airtable Setup" option). Enter:
+
+- Your **API key** (the Personal Access Token from Step 4)
+- Your **Base ID** (from Step 3)
+- Your **Table name** (the name of your table from Step 2)
+
+**Step 6: Sync your data.** With elements already captured in your framework list, click the **Sync to Airtable** button. Each captured element is sent as a new row in your Airtable table. A progress indicator shows how many records were successfully synced.
+
+### Downloading the Complete Framework
+
+Once your data is in Airtable, you can:
+
+- **Export to CSV** directly from Airtable (click your table's name → Download CSV)
+- **Share the Airtable base** with your team for collaborative review
+- **Connect Airtable to other tools** like Looker Studio or Google Sheets for reporting
+
+Alternatively, use the **CSV Export Dialog** described in Step 4 above to download a `.csv` file at any time, without needing Airtable.
+
+---
+
+## Portability: Works on Any Higher Education Site
+
+The framework was tested on two other major Ohio university websites to confirm it works outside OHIO.edu:
+
+- **Ohio State University (osu.edu):** Every element — navigation, CTAs, news cards, accordions, search, video, footer — mapped cleanly to the 16 events. Zero new events or families needed.
+- **Miami University (miamioh.edu):** Same result. Hero video, stat counters, blog cards, program cards, events — all fit within the existing framework.
+
+**Conclusion:** This framework is designed for any higher education website. If it works across Ohio University, Ohio State, and Miami University, it will work for you.
+
+---
+
+## Project Files
 
 ```
 universal-click-tracking/
-├── README.md                ← This file (taxonomy framework + bookmarklet guide)
-├── PORTABILITY.md           ← OSU & MiamiOH validation results
-├── qr-code.png              ← QR code linking to this repo
-├── test-harness.html        ← Interactive test/demo page with all events + OHIO catalog elements
-├── bookmarklet.js           ← Source code for the taxonomy inspector bookmarklet
-├── bookmarklet.min.js       ← Minified bookmarklet (~40KB — paste into bookmark URL)
-└── taxonomy-map.js          ← Generated taxonomy mapping for GTM (from gen_taxonomy_map.py)
+├── README.md                          ← This file
+├── engagement-first-framework.html    ← Install page + interactive demo (open in browser)
+├── PORTABILITY.md                     ← OSU & MiamiOH validation details
+├── qr-code.png                        ← QR code for this repository
+├── bookmarklet.js                     ← Source code for the bookmarklet tool
+├── bookmarklet.min.js                 ← Minified bookmarklet (ready to use)
+└── taxonomy-map.js                    ← Taxonomy mapping used for tag generation
 ```
 
 ---
 
-## QR Code
+## For Developers: Editing the Bookmarklet
 
-Scan this to open this repository on GitHub:
+> The steps in this section are **only needed if you want to modify the bookmarklet's source code and rebuild it.** If you just want to use the tool, skip this section — the bookmarklet works as-is from the install page above.
 
-![QR Code](qr-code.png)
+### What is Hermes Agent?
 
-*(QR code generated — see `qr-code.png` in this repo)*
+Hermes Agent is the AI tool that was used to build this project. It's a development assistant that helps write and debug code through conversation. You don't need Hermes Agent to **use** the bookmarklet, but if you want to edit the source JavaScript and rebuild the minified version, you'll need:
 
----
+- **Node.js** (a JavaScript runtime that includes `npx`)
+- A web browser (Chrome is recommended for full Clipboard API support)
 
-## License
+### How to Rebuild
 
-This framework is developed for Ohio University's marketing analytics team.
+The bookmarklet lives in two files:
+- **`bookmarklet.js`** — The human-readable source code (edit this one)
+- **`bookmarklet.min.js`** — The compressed, minified version (the browser runs this)
+
+After making changes to `bookmarklet.js`, rebuild the minified version by running this command from the project folder:
+
+```bash
+npx terser bookmarklet.js --compress --mangle -o bookmarklet.min.js
+```
+
+This command also updates the base64-encoded version embedded in `engagement-first-framework.html`, so the install page stays in sync. After rebuilding, you (or anyone using the tool) will need to re-drag the bookmarklet link from the install page to get the updated version.
+
+### Hermes Agent Configuration Used for This Project
+
+If you want to replicate the development environment that built this project, these are the settings used:
+
+- **Provider:** OpenCode Zen
+- **Model:** deepseek-v4-flash-free
+- **Base URL:** https://opencode.ai/zen/v1
+- **API mode:** chat_completions
+
+This was configured in Hermes Agent's `~/.hermes/config.yaml` file and is shown here for reference only. You can use any code editor or development workflow to modify the bookmarklet source.

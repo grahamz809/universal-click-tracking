@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Universal Click-Tracking Taxonomy — Test Harness v2</title>
+<title>Engagement-First Framework — Universal Click Tracking Tool</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: system-ui, -apple-system, sans-serif; background: #1e1e2e; color: #cdd6f4; line-height: 1.6; }
@@ -80,23 +80,23 @@
 <body>
 
 <div class="container">
-  <h1>🎯 Universal Click-Tracking Taxonomy v2</h1>
+  <h1>🎯 Universal Click-Tracking Framework</h1>
   <p style="font-size:14px;color:#a6adc8;">
-    Interactive test harness for the <strong>5-family</strong> click-tracking framework with <strong>catch-all coverage</strong>.
+    Interactive demo page for the <strong>5-family</strong> click-tracking framework with <strong>catch-all coverage</strong>.
     <br>Every matched element includes 3 universal parameters: <span class="param-highlight">link_click_url</span> <span class="param-highlight">web_element_location</span> <span class="param-highlight">click_text</span>
-    <br>Plus CSS selector output and CSV export grouped by family/trigger.
+    <br>Plus CSS selector output and CSV export grouped by family.
   </p>
 
   <!-- ================================================================ -->
   <!-- BOOKMARKLET INSTALL -->
   <!-- ================================================================ -->
   <div class="card">
-    <h2>📌 The Tool: Bookmarklet Inspector v2</h2>
-    <p>Drag this button to your bookmarks bar, then click it on <strong>any OHIO.edu page</strong> to see which events would fire:</p>
+    <h2>📌 Install the Bookmarklet Tool</h2>
+    <p>Drag this link to your bookmarks bar, then click it on <strong>any OHIO.edu page</strong> to see which events would fire:</p>
 
     <div style="margin: 16px 0; text-align: center;">
       <a id="bookmarklet-link" class="btn btn-primary" style="font-size:16px;padding:14px 32px;">
-        🎯 Inspect Tracking
+        🎯 Launch Framework Tool
       </a>
     </div>
 
@@ -104,14 +104,15 @@
     <div class="code-block" id="bookmarklet-code" style="font-size:11px;max-height:120px;overflow-y:auto;"></div>
 
     <div style="margin-top:12px;padding:10px;background:#45475a;border-radius:8px;font-size:13px;">
-      <strong>💡 Usage:</strong>
+      <strong>💡 How to use it:</strong>
       <ol style="margin-top:6px;padding-left:20px;color:#bac2de;">
         <li>Click the bookmark on any page (OHIO.edu, OSU, MiamiOH, etc.)</li>
         <li>A floating panel appears showing match counts by event</li>
-        <li><strong>Hover</strong> any element → see event, family, CSS selector, and 3 standard params (<code>link_click_url</code>, <code>web_element_location</code>, <code>click_text</code>)</li>
-        <li><strong>Click</strong> any element → logs full JSON + CSS selector to console</li>
-        <li>Click <strong>📥 CSV</strong> button → exports all matched elements grouped by family/trigger</li>
-        <li>Click <strong>🔄</strong> button → refreshes match counts</li>
+        <li><strong>Hover</strong> any element → see its event name, family, CSS selector, and 3 standard parameters</li>
+        <li><strong>Click</strong> any element → it's added to your framework list</li>
+        <li>Click <strong>CSV</strong> → opens an export dialog to copy data into Excel or download as a .csv file</li>
+        <li>Click <strong>Framework</strong> → shows your captured elements grouped by family</li>
+        <li>Use <strong>–</strong> to minimize the panel, or <strong>✕</strong> to close it</li>
       </ol>
     </div>
   </div>
@@ -120,7 +121,7 @@
   <!-- HOW IT WORKS -->
   <!-- ================================================================ -->
   <div class="card">
-    <h2>⚙️ How The Matching Works</h2>
+    <h2>⚙️ How the Matching Works</h2>
     <p>The tool runs taxonomy rules (priority order) plus a <strong>catch-all</strong> at the end that ensures every link and interactive element on the page is captured. Every match always includes the 3 universal parameters + CSS selector.</p>
 
     <div style="margin-bottom:8px;padding:8px;background:#45475a;border-radius:6px;">
@@ -219,7 +220,7 @@
 
   <div class="card">
     <h3>🧭 global_nav — Navigation (main-nav, aux-menu, breadcrumb, footer)</h3>
-    <p style="font-size:12px;color:#6c7086;">The v2 bookmarklet now properly distinguishes breadcrumb, main-nav, aux-menu, hero, footer, and body locations.</p>
+    <p style="font-size:12px;color:#6c7086;">The bookmarklet properly distinguishes breadcrumb, main-nav, aux-menu, hero, footer, and body locations.</p>
     <div class="demo-nav">
       <a href="/about">About OHIO</a>
       <a href="/academics">Academics</a>
@@ -424,7 +425,7 @@
   <!-- TEST INSTRUCTIONS -->
   <!-- ================================================================ -->
   <div class="card" style="border: 2px solid #cba6f7;">
-    <h2>🧪 How To Test v2</h2>
+    <h2>🧪 What to Try on This Demo Page</h2>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
       <div>
@@ -438,12 +439,12 @@
         </ol>
       </div>
       <div>
-        <h3 style="color:#89b4fa;margin-top:0;">Verify New Features</h3>
+        <h3 style="color:#89b4fa;margin-top:0;">Things to Notice</h3>
         <ol style="padding-left:20px;color:#bac2de;font-size:14px;line-height:2;">
           <li>Hover ANY link → it matches (catch-all at work)</li>
           <li>Check every match has <code>link_click_url</code>, <code>web_element_location</code>, <code>click_text</code></li>
           <li>Check each match shows its CSS selector</li>
-          <li>Click <strong>📥 CSV</strong> → downloads organized CSV</li>
+          <li>Click <strong>CSV</strong> → opens the export dialog</li>
           <li>Hover quickly between elements → panel updates every time</li>
         </ol>
       </div>
