@@ -65,7 +65,7 @@ The Framework Inspector is a **standalone bookmarklet**. You install it the same
 Copy this snippet and paste it into a new bookmark's URL field:
 
 ```
-javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/grahamz809/universal-click-tracking@main/qa-inspector.min.js';document.body.appendChild(s);})();
+javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/grahamz809/universal-click-tracking@57575fe/qa-inspector.min.js';document.body.appendChild(s);})();
 ```
 
 **Step 1:** Right-click your bookmarks bar and choose "Add Page" or "New Bookmark."
