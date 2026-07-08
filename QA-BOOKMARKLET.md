@@ -1,17 +1,17 @@
-# 🔍 OHIO Inspector — Quick Visual Coverage Tool
+# 🔍 Framework Inspector — Quick Visual Coverage Tool
 
 ## What It Does
 
-The **OHIO Inspector** is a lightweight, standalone visual scanner. When you click it on any OHIO.edu page, it instantly draws colored outlines around every interactive element it can classify and shows a floating panel with an event-type legend and element counts. Hover any outlined element to see its event name, text content, and page location in a tooltip.
+The **Framework Inspector** is a lightweight, standalone visual scanner. When you click it on any OHIO.edu page, it instantly draws colored outlines around every interactive element it can classify and shows a floating panel with an event-type legend and element counts. Hover any outlined element to see its event name, text content, and page location in a tooltip.
 
 This is an **alternative view** to the Taxonomy Inspector bookmarklet (documented in the main README):
 
 | Tool | Approach | Best For |
 |------|----------|----------|
 | **Taxonomy Inspector** | Full interactive panel with capture, CSV export, Airtable sync | Deep auditing, building a framework, exporting data |
-| **OHIO Inspector** | Quick one-pass visual scan with colored outlines and hover tooltips | A fast "show me everything at once" visual check |
+| **Framework Inspector** | Quick one-pass visual scan with colored outlines and hover tooltips | A fast "show me everything at once" visual check |
 
-They use **different matching rules** — the OHIO Inspector has a simpler set (8 event types) compared to the full Taxonomy Inspector (16 events). Results may differ slightly. Use the tool that matches your workflow.
+They use **different matching rules** — the Framework Inspector has a simpler set (8 event types) compared to the full Taxonomy Inspector (16 events). Results may differ slightly. Use the tool that matches your workflow.
 
 ---
 
@@ -48,13 +48,13 @@ Elements that don't match any rule are left alone (no outline).
 
 ## Installation
 
-The OHIO Inspector is a **standalone bookmarklet**. You install it the same way as the Taxonomy Inspector — drag a link to your bookmarks bar, or paste a code snippet.
+The Framework Inspector is a **standalone bookmarklet**. You install it the same way as the Taxonomy Inspector — drag a link to your bookmarks bar, or paste a code snippet.
 
 ### Quick Install — Drag to Bookmarks
 
 **Step 1:** Open the [`engagement-first-framework.html`](engagement-first-framework.html) page in your browser.
 
-**Step 2:** Find the **"🔍 OHIO Inspector"** link on that page.
+**Step 2:** Find the **"🔍 Framework Inspector"** link on that page.
 
 **Step 3:** Drag that link up to your bookmarks bar.
 
@@ -70,7 +70,7 @@ javascript:(function(){var s=document.createElement('script');s.src='https://cdn
 
 **Step 1:** Right-click your bookmarks bar and choose "Add Page" or "New Bookmark."
 
-**Step 2:** Give it a name like "OHIO Inspector."
+**Step 2:** Give it a name like "Framework Inspector."
 
 **Step 3:** Copy the code block above (select it, press Cmd+C / Ctrl+C).
 
@@ -84,7 +84,7 @@ javascript:(function(){var s=document.createElement('script');s.src='https://cdn
 
 ### Step 1: Click the Bookmarklet
 
-Navigate to any OHIO.edu page and click the "OHIO Inspector" bookmark in your bookmarks bar. The page will briefly flash as all matched elements are outlined with colored borders.
+Navigate to any OHIO.edu page and click the "Framework Inspector" bookmark in your bookmarks bar. The page will briefly flash as all matched elements are outlined with colored borders.
 
 ### Step 2: Read the Panel
 
@@ -116,10 +116,10 @@ Click the **✕** in the panel's header to close it. The colored outlines remain
 
 | Situation | Recommended Tool |
 |-----------|-----------------|
-| I want a quick visual scan of all elements on one page | OHIO Inspector |
+| I want a quick visual scan of all elements on one page | Framework Inspector |
 | I need to capture specific elements and export to CSV | Taxonomy Inspector |
 | I want to see the full 16-event taxonomy classification | Taxonomy Inspector |
-| I just need a fast overview of what's on the page | OHIO Inspector |
+| I just need a fast overview of what's on the page | Framework Inspector |
 | I need to sync data to Airtable | Taxonomy Inspector |
 | I want to check if elements consistently match across pages | Either tool |
 

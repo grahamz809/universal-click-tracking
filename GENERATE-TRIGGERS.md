@@ -1,12 +1,12 @@
 # Generate GTM Triggers from Captured Framework Data
 
-This guide walks you through taking the elements you captured with the Taxonomy Inspector bookmarklet and turning them into actual GTM (Google Tag Manager) triggers — ready to import into your container.
+This guide walks you through taking the elements you captured with the Click Tracker Framework bookmarklet and turning them into actual GTM (Google Tag Manager) triggers — ready to import into your container.
 
 ---
 
 ## What You'll Need
 
-- **Your exported data** — a CSV or Excel file with columns for Family, Event, CSS Selector, `link_click_url`, `web_element_location`, `click_text`, and Page URL (exported from the Taxonomy Inspector bookmarklet's CSV dialog)
+- **Your exported data** — a CSV or Excel file with columns for Family, Event, CSS Selector, `link_click_url`, `web_element_location`, `click_text`, and Page URL (exported from the Click Tracker Framework bookmarklet's CSV dialog)
 - **Access to Claude or ChatGPT** (or any LLM that can output JSON) — this will generate the GTM trigger configuration
 - **Access to your GTM container** (for the final import step)
 
@@ -14,7 +14,7 @@ This guide walks you through taking the elements you captured with the Taxonomy 
 
 ## Step 1: Export Your Captured Elements
 
-Open the Taxonomy Inspector bookmarklet on any OHIO.edu page. If you already have elements in your framework list, click **CSV** → **Copy to Excel** or **Download .csv**.
+Open the Click Tracker Framework bookmarklet on any OHIO.edu page. If you already have elements in your framework list, click **CSV** → **Copy to Excel** or **Download .csv**.
 
 If you haven't captured any elements yet, the dialog automatically scans the page and exports everything anyway (up to 500 interactive elements). So you can go straight to export without clicking individual elements.
 

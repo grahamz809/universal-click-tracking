@@ -98,7 +98,7 @@ The bookmarklet is a tiny **loader** (~200 characters) that fetches the full too
 
 **Step 1:** Open the [`engagement-first-framework.html`](engagement-first-framework.html) page in your browser.
 
-**Step 2:** Drag the **"🎯 Launch Framework Tool"** link up to your bookmarks bar.
+**Step 2:** Drag the **"🎯 Click Tracker Framework"** link up to your bookmarks bar.
 
 **Step 3:** Visit any page (try ohio.edu/admissions) and click the bookmarklet.
 
@@ -238,14 +238,14 @@ The framework was tested on two other major Ohio university websites to confirm 
 universal-click-tracking/
 ├── README.md                          ← This file
 ├── GENERATE-TRIGGERS.md              ← Workflow: turn captured elements into GTM triggers
-├── QA-BOOKMARKLET.md                 ← OHIO Inspector: quick visual coverage scan tool
+├── QA-BOOKMARKLET.md                 ← Framework Inspector: quick visual coverage scan tool
 ├── engagement-first-framework.html    ← Install page + interactive demo (open in browser)
 ├── PORTABILITY.md                     ← OSU & MiamiOH validation details
 ├── qr-code.png                        ← QR code for this repository
-├── bookmarklet.js                     ← Source code for the Taxonomy Inspector bookmarklet
-├── bookmarklet.min.js                 ← Minified Taxonomy Inspector (served via CDN)
-├── qa-inspector.js                    ← Source code for the OHIO Inspector bookmarklet
-├── qa-inspector.min.js                ← Minified OHIO Inspector (served via CDN)
+├── bookmarklet.js                     ← Source code for the Click Tracker Framework bookmarklet
+├── bookmarklet.min.js                 ← Minified Click Tracker Framework (served via CDN)
+├── qa-inspector.js                    ← Source code for the Framework Inspector bookmarklet
+├── qa-inspector.min.js                ← Minified Framework Inspector (served via CDN)
 └── taxonomy-map.js                    ← Taxonomy mapping used for GTM tag generation
 ```
 

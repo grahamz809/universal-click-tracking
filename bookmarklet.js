@@ -1222,7 +1222,7 @@
       'user-select:none;'
     ].join('');
     hdr.innerHTML = [
-      '<span style="font-weight:600;font-size:13px;color:#a9b1d6;">Universal Click Tracker</span>',
+      '<span style="font-weight:600;font-size:13px;color:#a9b1d6;">Click Tracker Framework</span>',
       '<span style="font-size:10px;color:#565f89;background:#292e42;padding:1px 6px;border-radius:4px;">v2</span>',
       '<div style="display:flex;gap:3px;margin-left:auto;">',
       '<button id="hermes-framework-btn" style="background:#292e42;border:none;color:#bb9af7;border-radius:5px;padding:3px 8px;cursor:pointer;font-size:11px;">Framework</button>',
@@ -1560,8 +1560,8 @@
     document.addEventListener('mouseover', handleHover, true);
     document.addEventListener('click', handleClick, true);
 
-    console.log('[Universal Click Tracker] Active. Hover to inspect, click to add to framework.');
-    console.log('[Universal Click Tracker] ' + TAXONOMY.rules.length + ' taxonomy rules + catch-all coverage.');
+    console.log('[Click Tracker Framework] Active. Hover to inspect, click to add to framework.');
+    console.log('[Click Tracker Framework] ' + TAXONOMY.rules.length + ' taxonomy rules + catch-all coverage.');
   }
 
   if (document.readyState === 'loading') {
