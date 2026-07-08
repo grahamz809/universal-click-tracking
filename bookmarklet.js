@@ -36,132 +36,447 @@
 
   /** Detect the page region an element belongs to */
   function getLocation(el) {
-    if (!el) return 'body';
-    // Priority-ordered location detection — mirrors GTM's web_element_location variable
-    var href = el.href || el.action || '';
-    if (href.indexOf('#tab') !== -1) return 'nav-tab';
-    if (href.indexOf('.navigate-ohio-links') !== -1) return 'navigate-ohio-links-mobile';
+  var element=el
+  var path=window.location.pathname
+  var elementUrl=(el.href || el.action || '')
+  var label
 
-    // Form/button ID checks for special cases
-    var formId = el.getAttribute ? el.getAttribute('form') : '';
-    if (formId === 'form_749eb3ef-eb5d-4c02-ad4e-4494209f68d2') return 'pop-up';
-    if (el.closest && el.closest('form#form_749eb3ef-eb5d-4c02-ad4e-4494209f68d2')) return 'pop-up';
-    if (el.outerHTML && el.outerHTML.indexOf('form_749eb3ef-eb5d-4c02-ad4e-4494209f68d2') !== -1) return 'pop-up';
-    if (href.indexOf('button#statement-toggle') !== -1 || href.indexOf('.privacy-statement a') !== -1) return 'rfi-privacy-statement';
-    if (href === '#' || (href.indexOf('#') !== -1 && href.indexOf('some-unique-id') === -1)) return 'jump-link';
+  if(element.closest('#global-footer'))
+  { label = 'footer'
+  }
+  else if(elementUrl.includes('#tab'))
+  { label = 'nav-tab'
+  }
+  else if(elementUrl.includes('.navigate-ohio-links'))
+  { label = 'navigate-ohio-links-mobile'
+  }
+  else if(elementUrl.includes('button#statement-toggle'))
+  { label = 'rfi-privacy-statement'
+  }
+  else if(elementUrl.includes('.privacy-statement a'))
+  { label = 'rfi-privacy-statement'
+  }
+  else if(element.closest('#left-navigation'))
+  { label = 'left-navigation'
+  }
+  else if(element.closest('.cta-row'))
+  { label = 'Become a Bobcat, for life'
+  }
+  else if(element.closest('.cta-container'))
+  { label = 'Become a Bobcat, for life'
+  }
+  else if(element.closest('#block-ohio-theme-ohiotoday li.logo-list-element a'))
+  { label = 'ohio-today-logo'
+  }
+  else if(element.closest('.lookbook-header'))
+  { label = 'lookbook-header'
+  }
+  else if(element.closest('#main-menu'))
+  { label = 'main-menu'
+  }
+  else if(element.closest('.social-icons a.icons--link'))
+  { label = 'social-row'
+  }
+  else if(element.closest('nav.breadcrumb ol li a'))
+  { label = 'breadcrumbs'
+  }
+  else if (element.closest('#search-desktop, #search-mobile')) {
+    label = 'top-green-bar-search';
+  }
+  else if (element.closest('button#closeSearch')) 
+  {  label = 'top-green-bar-search-close';
+  }
+  else if(element.closest('.top-green-bar'))
+  { label = 'top-green-bar'
+  }
+  else if(element.closest('form.funnelback-block-search-form input.form-radio'))
+  { label = 'top-green-bar-search-radio-button'
+  }
+  else if(element.closest('ul.top-social a *'))
+  { label = 'top-green-bar-social-icons'
+  }
+  else if(element.closest('.aux-menu'))
+  { label = 'top-green-bar'
+  }
+  else if(element.closest('.majors-row'))
+  { label = 'majors-row'
+  }
+  else if(element.closest('.colleges-row'))
+  { label = 'colleges-row'
+  }
+  else if(element.closest('#featured-experience'))
+  { label = 'featured-experience'
+  }
+  else if(element.closest('section.facts-section a.info-link'))
+  { label = 'facts-container-info-link'
+  }
+  else if(element.closest('.facts-container'))
+  { label = 'facts-container'
+  }
+  else if(element.closest('.locations-row'))
+  { label = 'locations-row'
+  }
+  else if(element.closest('.news-row'))
+  { label = 'news-row'
+  }
+  else if(element.closest('.news-intro .news-link a.action'))
+  { label = 'news-row'
+  }
+  else if(element.closest('.events-link a.action'))
+  { label = 'events-link'
+  }
+  else if(element.closest('.event-feed .event-link a'))
+  { label = 'events-link'
+  }
+  else if(element.closest('.social-row'))
+  { label = 'social-row'
+  }
+  else if(element.closest('.section-expander'))
+  { label = 'section-expander'
+  }
+  else if(element.closest('div.gallery-wrapper *'))
+  { label = 'image-gallery'
+  }
+  else if(element.closest('.hero-text'))
+  { label = 'hero'
+  }
+  else if(element.closest('.hero-title'))
+  { label = 'hero'
+  }
+  else if(element.closest('.hero-subtitle'))
+  { label = 'hero'
+  }
+  else if(element.closest('.lsh-hero .lsh-cta a.button'))
+  { label = 'hero'
+  }
+  else if(element.closest('.special-statement'))
+  { label = 'special-statement-bar'
+  }
+  else if(element.closest('.ohio-table-sortable'))
+  { label = 'sortable-table'
+  }
+  else if(element.closest('.promo-box'))
+  { label = 'promo-box'
+  }
+  else if(element.closest('.explore-tabs'))
+  { label = 'explore-tabs'
+  }
+  else if(element.closest('.ohio_image_overlay_body'))
+  { label = 'image-overlay'
+  }
+  else if(element.closest('.topic-preview'))
+  { label = 'topic-preview'
+  }
+  else if(element.closest('.event-feed'))
+  { label = 'event-feed'
+  }
+  else if(element.closest('#ogo-study-away-programs a.card.svelte-1byw2gh'))
+  { label = 'ogo-study-away-program-link'
+  }
+  else if(element.closest('.featured-media--large-image-wrapper'))
+  { label = 'featured-media'
+  }
+  else if(element.closest('#block-ohio-theme-ohiotoday li.menu-item > a'))
+  { label = 'main-menu'
+  }
+  else if(element.closest('.story-listing-item'))
+  { label = 'story-listing'
+  }
+  else if(element.closest('.related-story-link'))
+  { label = 'related-story-link'
+  }
+  else if(element.closest('#experience-details #experience-supplement .field--name-field-industry-focus-tag .field__item a'))
+  { label = 'experience-tag'
+  }
+  else if(element.closest('a[id^="taxonomy-term"]'))
+  { label = 'ohio-story-tag'
+  }
+  else if(element.closest('.quicklinks--wrapper'))
+  { label = 'quick-links'
+  }
+  else if(element.closest('.card-links'))
+  { label = 'card-links'
+  }
+  else if(element.closest('li.pager__item > a'))
+  { label = 'pager'
+  }
+  else if(element.closest('div#related-experiences a'))
+  { label = 'experience-card-related'
+  }
+  else if(element.closest('.view-experience-directory'))
+  { label = 'experience-card'
+  }
+  else if(element.closest('#experience-data'))
+  { label = 'experience-details-link'
+  }
+  else if(element.closest('.social-icons'))
+  { label = 'social-icons'
+  }
+  else if(element.closest('.tile'))
+  { label = 'tile'
+  }
+  else if(element.closest('a.reference'))
+  { label = 'ohio-in-the-news'
+  }
+  else if(element.closest('.program-finder'))
+  { label = 'program-finder'
+  }
+  else if(element.closest('a.explore-tabs--tab.active'))
+  { label = 'explore-tabs'
+  }
+  else if(element.closest('.image-tiles'))
+  { label = 'image-tiles'
+  }
+  else if(element.closest('.image-tiles--item'))
+  { label = 'image-tiles'
+  }
+  else if(element.closest('.icons--link'))
+  { label = 'icon'
+  }
+  else if(element.closest('.topic-preview a.button.green'))
+  { label = 'topic-preview'
+  }
+  else if(element.closest('.tiles--small a.tile'))
+  { label = 'tile'
+  }
+  else if(element.closest('.featured-media a.button.green'))
+  { label = 'featured-media'
+  }
+  else if(element.closest('#funnelback-block-search-form'))
+  { label = 'top-green-bar-search'
+  }
+  else if(element.closest('.anchored-spotlights-container'))
+  { label = 'anchored-spotlights'
+  }
+  else if(element.closest('.collapsible-heading'))
+  { label = 'collapsible-headings'
+  }
+  else if(element.closest('.collapse-h6'))
+  { label = 'old-collapse-heading'
+  }
+  else if(element.closest('.collapse-h5'))
+  { label = 'old-collapse-heading'
+  }
+  else if(element.closest('.collapse-h4'))
+  { label = 'old-collapse-heading'
+  }
+  else if(element.closest('.collapse-h3'))
+  { label = 'old-collapse-heading'
+  }
+  else if(element.closest('.collapse-h2'))
+  { label = 'old-collapse-heading'
+  }
+  else if(element.closest('summary.faq-button section *'))
+  { label = 'faq'
+  }
+  else if(element.closest('summary.faq-button *'))
+  { label = 'faq'
+  }
+  else if(element.closest('.archives-row a'))
+  { label = 'OT-archives-row'
+  }
+  else if(element.closest('ul.top-feature-story'))
+  { label = 'OT-top-feature-story'
+  }
+  else if(element.closest('a.green-scenes-story'))
+  { label = 'OT-green-scenes-story'
+  }
+  else if(element.closest('.ohio-today-footer'))
+  { label = 'OT-footer'
+  }
+  else if(element.closest('ul.feature-stories'))
+  { label = 'OT-feature-story'
+  }
+  else if(element.closest('a.alumni-news-story'))
+  { label = 'OT-alumni-news-story'
+  }
+  else if(element.closest('.subscribe-row a'))
+  { label = 'OT-subscribe-row'
+  }
+  else if(element.closest('.ohio-today-logo'))
+  { label = 'OT-Logo'
+  }
+  else if(element.closest('ul.share-links a'))
+  { label = 'News-OT-share-links'
+  }
+  else if(element.closest('ul.footer-share-links'))
+  { label = 'News-OT-share-links-footer'
+  }
+  else if(element.closest('.tag-link'))
+  { label = 'OT-popular-topics'
+  }
+  else if(element.closest('.search-results__link'))
+  { label = 'search.ohio.edu'
+  }
+  else if(element.closest('.experience-grid'))
+  { label = 'experience-grid'
+  }
+  else if(element.closest('.view-profiles input.form-checkbox'))
+  { label = 'directory-search'
+  }
+  else if(element.closest('.view-profiles #edit-submit-profiles'))
+  { label = 'directory-search'
+  }
+  else if(element.closest('#header-top #logo > a > img'))
+  { label = 'global-OHIO-logo'
+  }
+  else if(element.closest('#calendar-tabs *:not(:empty)'))
+  { label = 'calendar-tabs'
+  }
+  else if(element.closest('.expert-callout a'))
+  { label = 'experts-callout'
+  }
+  else if(element.closest('.personal-links a'))
+  { label = 'personal-links'
+  }
+  else if(element.closest('a.profile-card'))
+  { label = 'profile-card'
+  }
+  else if(element.closest('#header-top button#search-mobile'))
+  { label = 'top-green-bar'
+  }
+  else if(element.closest('.program-link'))
+  { label = 'program-link'
+  }
+  else if(element.closest('section.facts-section'))
+  { label = 'facts-section'
+  }
+  else if(element.closest('.faq-icon'))
+  { label = 'faq'
+  }
+  else if(element.closest('.faq-question'))
+  { label = 'faq'
+  }
+  else if(element.closest('.video-embed-field-provider-youtube iframe'))
+  { label = 'video'
+  }
+  else if(element.closest('button.arrow.next'))
+  { label = 'image-slideshow-arrows'
+  }
+  else if(element.closest('a.fact[class*="background--"].quarter'))
+  { label = 'fact-card'
+  }
+  else if(element.closest('a.fact[class*="background--"].half'))
+  { label = 'fact-card'
+  }
+  else if(element.closest('.fast-facts a'))
+  { label = 'fast-facts'
+  }
+  else if (
+    (element.closest && element.closest('form#form_749eb3ef-eb5d-4c02-ad4e-4494209f68d2')) ||
+    (element.getAttribute && element.getAttribute('form') === 'form_749eb3ef-eb5d-4c02-ad4e-4494209f68d2') ||
+    (element.outerHTML && element.outerHTML.includes('form_749eb3ef-eb5d-4c02-ad4e-4494209f68d2'))
+  ) {
+    label = 'pop-up';
+  }
+  else if(element.closest('div.ad-lp-hero-form.request-info-form.slate#rfi'))
+  { label = 'slate_rfi'
+  }
+  else if(element.closest('.pager__item'))
+  { label = 'pager'
+  }
+  else if(element.closest('.top-navigation'))
+  { label = 'main-menu-catalogs'
+  }
+  else if(element.closest('#acalog-navigation'))
+  { label = 'left-navigation'
+  }
+  else if(element.closest('.appsel-option-header'))
+  { label = 'UGRD-appsel'
+  }
+  else if(element.closest('.foodpro-container'))
+  { label = 'food-menu'
+  }
+  else if(element.closest('.hero-video-container'))
+  { label = 'hero-video'
+  }
+  else if(element.closest('div#logoSpaceContent a'))
+  { label = 'site-name'
+  }
+  else if(element.closest('.community-popover-button'))
+  { label = 'forever-community'
+  }
+  else if(element.closest('#community-popover-panel'))
+  { label = 'forever-community'
+  }
+  else if(element.closest('.request-info-form#rfi'))
+  { label = 'RFI'
+  }
+  else if(element.closest('.alert-more-info'))
+  { label = 'alert'
+  }
+  else if(element.closest('.hero-wrapper'))
+  { label = 'hero'
+  }
+  else if(element.closest('#ogo-study-away-programs'))
+  { label = 'ogo-study-away-programs'
+  }
+  else if(element.closest('.programs-row'))
+  { label = 'program-link'
+  }
+  else if(element.closest('div.view.view-programs-non-standard a'))
+  { label = 'program-link'
+  }
+  else if(element.closest('.experiences-row'))
+  { label = 'experiences-row'
+  }
+  else if(element.closest('.all-programs-search-link'))
+  { label = 'program-link-view-all'
+  }
+  else if(element.closest('.graduate-program-finder-links'))
+  { label = 'graduate-program-finder-link'
+  }
+  else if(element.closest('.gifts-row'))
+  { label = 'gifts-row'
+  }
+  else if(element.closest('.visit-app-row'))
+  { label = 'visit-application-row'
+  }
+  else if(element.closest('.affordability-row'))
+  { label = 'affordability-row'
+  }
+  else if(element.closest('.value-row'))
+  { label = 'value-row'
+  }
+  else if(element.closest('.learn-row'))
+  { label = 'learn-row'
+  }
+  else if(element.closest('.pride-row'))
+  { label = 'pride-row'
+  }
+  else if(element.closest('.academics-row'))
+  { label = 'academics-row'
+  }
+  else if(element.closest('.community-row'))
+  { label = 'community-row'
+  }
+  else if(element.closest('section.tabs-container *'))
+  { label = 'tabs-container'
+  }
+  else if(element.closest('#mainContentContainer app-home form'))
+  { label = 'compensation-estimator'
+  }
+  else if(element.closest('#snowstop'))
+  { label = 'snow-stop'
+  }
+  else if(element.closest('#snowstart'))
+  { label = 'snow-start'
+  }
+  else if(element.closest('a.button.green'))
+  { label = 'button'
+  }
+  else if(element.closest('a.button.white'))
+  { label = 'button'
+  }
+  else if(element.closest('a.button.moss'))
+  { label = 'button'
+  }
+  else if (elementUrl === '#' || elementUrl.includes('#') && !elementUrl.includes('some-unique-id')) 
+  { label = 'jump-link'
+  }
+  else{ label = 'body'}
+  return label
 
-    // DOM-based location rules — ordered by priority (first match wins)
-    if (el.closest && el.closest('#global-footer')) return 'footer';
-    if (el.closest && el.closest('#left-navigation')) return 'left-navigation';
-    if (el.closest && el.closest('.cta-row, .cta-container')) return 'become-a-bobcat';
-    if (el.closest && el.closest('#block-ohio-theme-ohiotoday li.logo-list-element a')) return 'ohio-today-logo';
-    if (el.closest && el.closest('.lookbook-header')) return 'lookbook-header';
-    if (el.closest && el.closest('#main-menu')) return 'main-menu';
-    if (el.closest && el.closest('.social-icons a.icons--link')) return 'social-row';
-    if (el.closest && el.closest('nav.breadcrumb ol li a')) return 'breadcrumbs';
-    if (el.closest && el.closest('#search-desktop, #search-mobile')) return 'top-green-bar-search';
-    if (el.closest && el.closest('button#closeSearch')) return 'top-green-bar-search-close';
-    if (el.closest && el.closest('.top-green-bar, .aux-menu')) return 'top-green-bar';
-    if (el.closest && el.closest('form.funnelback-block-search-form input.form-radio')) return 'top-green-bar-search-radio';
-    if (el.closest && el.closest('ul.top-social a')) return 'top-green-bar-social';
-    if (el.closest && el.closest('.majors-row')) return 'majors-row';
-    if (el.closest && el.closest('.colleges-row')) return 'colleges-row';
-    if (el.closest && el.closest('#featured-experience')) return 'featured-experience';
-    if (el.closest && el.closest('section.facts-section a.info-link')) return 'facts-info-link';
-    if (el.closest && el.closest('.facts-container')) return 'facts-container';
-    if (el.closest && el.closest('.locations-row')) return 'locations-row';
-    if (el.closest && el.closest('.news-row, .news-intro .news-link a.action')) return 'news-row';
-    if (el.closest && el.closest('.events-link a.action, .event-feed .event-link a')) return 'events-link';
-    if (el.closest && el.closest('.social-row')) return 'social-row';
-    if (el.closest && el.closest('.section-expander')) return 'section-expander';
-    if (el.closest && el.closest('div.gallery-wrapper')) return 'image-gallery';
-    if (el.closest && el.closest('.hero-text, .hero-title, .hero-subtitle, .lsh-hero .lsh-cta a.button, .hero-wrapper')) return 'hero';
-    if (el.closest && el.closest('.special-statement')) return 'special-statement-bar';
-    if (el.closest && el.closest('.ohio-table-sortable')) return 'sortable-table';
-    if (el.closest && el.closest('.promo-box')) return 'promo-box';
-    if (el.closest && el.closest('.explore-tabs, a.explore-tabs--tab.active')) return 'explore-tabs';
-    if (el.closest && el.closest('.ohio_image_overlay_body')) return 'image-overlay';
-    if (el.closest && el.closest('.topic-preview, .topic-preview a.button.green')) return 'topic-preview';
-    if (el.closest && el.closest('.event-feed')) return 'event-feed';
-    if (el.closest && el.closest('#ogo-study-away-programs a.card.svelte-1byw2gh')) return 'ogo-program-link';
-    if (el.closest && el.closest('.featured-media--large-image-wrapper, .featured-media a.button.green')) return 'featured-media';
-    if (el.closest && el.closest('#block-ohio-theme-ohiotoday li.menu-item > a')) return 'main-menu';
-    if (el.closest && el.closest('.story-listing-item')) return 'story-listing';
-    if (el.closest && el.closest('.related-story-link')) return 'related-story-link';
-    if (el.closest && el.closest('#experience-details #experience-supplement .field--name-field-industry-focus-tag .field__item a')) return 'experience-tag';
-    if (el.closest && el.closest('a[id^="taxonomy-term"]')) return 'ohio-story-tag';
-    if (el.closest && el.closest('.quicklinks--wrapper')) return 'quick-links';
-    if (el.closest && el.closest('.card-links')) return 'card-links';
-    if (el.closest && el.closest('li.pager__item > a, .pager__item')) return 'pager';
-    if (el.closest && el.closest('div#related-experiences a')) return 'experience-card-related';
-    if (el.closest && el.closest('.view-experience-directory')) return 'experience-card';
-    if (el.closest && el.closest('#experience-data')) return 'experience-details-link';
-    if (el.closest && el.closest('.social-icons')) return 'social-icons';
-    if (el.closest && el.closest('.tile, .tiles--small a.tile')) return 'tile';
-    if (el.closest && el.closest('a.reference')) return 'ohio-in-the-news';
-    if (el.closest && el.closest('.program-finder')) return 'program-finder';
-    if (el.closest && el.closest('.image-tiles, .image-tiles--item')) return 'image-tiles';
-    if (el.closest && el.closest('.icons--link')) return 'icon';
-    if (el.closest && el.closest('#funnelback-block-search-form')) return 'top-green-bar-search';
-    if (el.closest && el.closest('.anchored-spotlights-container')) return 'anchored-spotlights';
-    if (el.closest && el.closest('.collapsible-heading')) return 'collapsible-headings';
-    if (el.closest && el.closest('.collapse-h6, .collapse-h5, .collapse-h4, .collapse-h3, .collapse-h2')) return 'old-collapse-heading';
-    if (el.closest && el.closest('summary.faq-button, .faq-icon, .faq-question')) return 'faq';
-    if (el.closest && el.closest('.archives-row a')) return 'ot-archives-row';
-    if (el.closest && el.closest('ul.top-feature-story')) return 'ot-top-feature-story';
-    if (el.closest && el.closest('a.green-scenes-story')) return 'ot-green-scenes-story';
-    if (el.closest && el.closest('.ohio-today-footer')) return 'ot-footer';
-    if (el.closest && el.closest('ul.feature-stories')) return 'ot-feature-story';
-    if (el.closest && el.closest('a.alumni-news-story')) return 'ot-alumni-news';
-    if (el.closest && el.closest('.subscribe-row a')) return 'ot-subscribe-row';
-    if (el.closest && el.closest('.ohio-today-logo')) return 'ot-logo';
-    if (el.closest && el.closest('ul.share-links a, ul.footer-share-links')) return 'ot-share-links';
-    if (el.closest && el.closest('.tag-link')) return 'ot-popular-topics';
-    if (el.closest && el.closest('.search-results__link')) return 'search-ohio-edu';
-    if (el.closest && el.closest('.experience-grid')) return 'experience-grid';
-    if (el.closest && el.closest('.view-profiles input.form-checkbox, .view-profiles #edit-submit-profiles')) return 'directory-search';
-    if (el.closest && el.closest('#header-top #logo > a > img')) return 'global-ohio-logo';
-    if (el.closest && el.closest('#calendar-tabs')) return 'calendar-tabs';
-    if (el.closest && el.closest('.expert-callout a')) return 'experts-callout';
-    if (el.closest && el.closest('.personal-links a')) return 'personal-links';
-    if (el.closest && el.closest('a.profile-card')) return 'profile-card';
-    if (el.closest && el.closest('.program-link, .programs-row, div.view.view-programs-non-standard a')) return 'program-link';
-    if (el.closest && el.closest('section.facts-section')) return 'facts-section';
-    if (el.closest && el.closest('.video-embed-field-provider-youtube iframe')) return 'video';
-    if (el.closest && el.closest('button.arrow.next')) return 'image-slideshow-arrows';
-    if (el.closest && el.closest('a.fact[class*="background--"]')) return 'fact-card';
-    if (el.closest && el.closest('.fast-facts a')) return 'fast-facts';
-    if (el.closest && el.closest('form#form_749eb3ef-eb5d-4c02-ad4e-4494209f68d2')) return 'pop-up';
-    if (el.closest && el.closest('div.ad-lp-hero-form.request-info-form.slate#rfi, .request-info-form#rfi')) return 'slate-rfi';
-    if (el.closest && el.closest('.top-navigation')) return 'main-menu-catalogs';
-    if (el.closest && el.closest('#acalog-navigation')) return 'left-navigation';
-    if (el.closest && el.closest('.appsel-option-header')) return 'ugrd-appsel';
-    if (el.closest && el.closest('.foodpro-container')) return 'food-menu';
-    if (el.closest && el.closest('.hero-video-container')) return 'hero-video';
-    if (el.closest && el.closest('div#logoSpaceContent a')) return 'site-name';
-    if (el.closest && el.closest('.community-popover-button, #community-popover-panel')) return 'forever-community';
-    if (el.closest && el.closest('.alert-more-info')) return 'alert';
-    if (el.closest && el.closest('#ogo-study-away-programs')) return 'ogo-study-away';
-    if (el.closest && el.closest('.all-programs-search-link')) return 'program-link-view-all';
-    if (el.closest && el.closest('.graduate-program-finder-links')) return 'grad-program-finder-link';
-    if (el.closest && el.closest('.gifts-row')) return 'gifts-row';
-    if (el.closest && el.closest('.visit-app-row')) return 'visit-application-row';
-    if (el.closest && el.closest('.affordability-row')) return 'affordability-row';
-    if (el.closest && el.closest('.value-row')) return 'value-row';
-    if (el.closest && el.closest('.learn-row')) return 'learn-row';
-    if (el.closest && el.closest('.pride-row')) return 'pride-row';
-    if (el.closest && el.closest('.academics-row')) return 'academics-row';
-    if (el.closest && el.closest('.community-row')) return 'community-row';
-    if (el.closest && el.closest('section.tabs-container')) return 'tabs-container';
-    if (el.closest && el.closest('#mainContentContainer app-home form')) return 'compensation-estimator';
-    if (el.closest && el.closest('#snowstop')) return 'snow-stop';
-    if (el.closest && el.closest('#snowstart')) return 'snow-start';
-    if (el.closest && el.closest('a.button.green, a.button.white, a.button.moss')) return 'button';
-
-    // Breadcrumb via aria-label (fallback for non-standard markup)
-    if (el.closest && el.closest('[aria-label*="breadcrumb"]')) return 'breadcrumb';
-
-    return 'body';
   }
 
 
