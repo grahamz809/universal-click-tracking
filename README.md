@@ -2,10 +2,10 @@
 
 ## Intent-First Measurement Framework for OHIO.edu
 
-**Status:** DRAFT — awaiting review & sign-off before GTM implementation  
+**Status:** ✅ Working — taxonomy inspector bookmarklet v2 is live and tested  
 **Target:** OHIO.edu GA4 Property (G-JR43SKW92E) · GTM Container (GTM-N7GZT99)  
-**Version:** 2.0.0  
-**Last Updated:** 2026-07-07
+**Version:** 2.1.0  
+**Last Updated:** 2026-07-08
 
 ---
 
@@ -100,93 +100,26 @@ These need review and sign-off before moving to GTM implementation:
 
 ---
 
-## Setting Up Hermes
+## Setting Up the Development Environment
 
-This project was built using **Hermes Agent**, a tool-assisted AI agent. If you need to replicate or contribute to this work in a Hermes session, follow these steps:
+This project was built using **Hermes Agent**, a tool-assisted AI agent. If you need to replicate or contribute to this work, the project requires:
 
 ### Prerequisites
 
-- **macOS** (this setup was tested on macOS 26.5.1)
-- **Git** (included with Xcode Command Line Tools)
-- A **GitHub personal access token** with `repo` scope (classic token)
+- **Node.js** (for `npx terser` during rebuilds)
+- A web browser (Chrome recommended for full Clipboard API support)
+- The **`test-harness.html`** file from this repo
 
-### Model Configuration
+### Rebuilding the Bookmarklet
 
-This project uses the following model/provider stack, configured in `~/.hermes/config.yaml`:
-
-```yaml
-model:
-  default: deepseek-v4-flash-free
-  provider: opencode-zen
-  base_url: https://opencode.ai/zen/v1
-  api_mode: chat_completions
-```
-
-**Provider:** OpenCode Zen (curated, pay-as-you-go model access)  
-**Model:** `deepseek-v4-flash-free` (free-tier, fast inference)
-
-### Installation
-
-1. **Install Hermes** (if not already installed):
-
-   Download the latest macOS `.dmg` from [https://hermes-agent.nousresearch.com](https://hermes-agent.nousresearch.com) or install via:
-
-   ```bash
-   brew install hermes-tui  # if available via Homebrew
-   ```
-
-   *Alternatively, if you built from source or use a managed install, the binary is typically at `/Applications/Hermes.app` or in your `$PATH`.*
-
-2. **Set up your Hermes profile**:
-
-   ```bash
-   hermes setup
-   # Follow the prompts to:
-   # - Choose a provider (set to 'opencode-zen' for this stack)
-   # - Enter your OpenCode Zen API key
-   # - Configure your default model
-   ```
-
-3. **Configure the model** (if not using the setup wizard):
-
-   ```bash
-   hermes config set model.default deepseek-v4-flash-free
-   hermes config set model.provider opencode-zen
-   ```
-
-4. **Verify the setup**:
-
-   ```bash
-   hermes model list
-   # Should show deepseek-v4-flash-free as available
-
-   hermes config show
-   # Confirm model.default = deepseek-v4-flash-free
-   # Confirm model.provider = opencode-zen
-   ```
-
-5. **Set up GitHub authentication** (for repository push/pull):
-
-   ```bash
-   git config --global user.name "Your Name"
-   git config --global user.email "your-email@example.com"
-
-   # Store your GitHub personal access token
-   git config --global credential.helper store
-   # Then do a test push — git will prompt for username and token
-   ```
-
-### Verifying Hermes is Working
+After editing `bookmarklet.js`, rebuild the minified version:
 
 ```bash
-# Send a test message
-hermes chat -m "Hello, is Hermes working?"
-# Expected: A friendly AI response confirming connectivity
-
-# Check provider connectivity
-hermes provider health
-# Expected: status = OK for opencode-zen
+cd universal-click-tracking
+npx terser bookmarklet.js --compress --mangle -o bookmarklet.min.js
 ```
+
+This automatically updates the base64-encoded version in `test-harness.html`. You'll need to re-drag the bookmarklet link from the test harness to your bookmarks bar after each rebuild.
 
 ---
 
@@ -226,7 +159,7 @@ The bookmarklet was redesigned in **v2** to fix every bug found during v1 testin
 | Links not matching a specific rule were ignored | **Catch-all:** every link → `cta_link`, every button → `web_element` |
 | Panel stayed blank when elements had same type but different text | **Fixed:** panel updates on every unique element+text combo |
 | Breadcrumbs labeled "main-nav", main-nav labeled "aux-menu" | **Fixed:** priority-based location detection (breadcrumb → aux-menu → main-nav → hero → footer → body) |
-| No export | **📥 CSV export** button in the panel — downloads all matches grouped by family/trigger |
+| No export | **📥 CSV export** button in the panel — opens a dialog with Copy to Excel or Download .csv |
 | No CSS selector shown | **CSS selector output** for every captured element |
 
 ### The 3 Universal Parameters
@@ -261,14 +194,14 @@ Edge cases like `search.ohio.edu` subdomain links are excluded from `exit_link` 
 
 ---
 
-## Working Tool: Taxonomy Inspector Bookmarklet v2
+## Working Tool: Taxonomy Inspector Bookmarklet
 
-This project comes with a **working, testable diagnostic tool v2** — a browser bookmarklet that inspects *any web page* in real time, showing which taxonomy event would fire for **every** interactive element with its 3 universal parameters, CSS selector, and family context.
+This project comes with a **working, testable diagnostic tool** — a browser bookmarklet that inspects *any web page* in real time, showing which taxonomy event would fire for **every** interactive element with its 3 universal parameters, CSS selector, and family context.
 
 ### 📥 Installation
 
 1. Open **`test-harness.html`** in your browser (open directly from the repo or GitHub Pages)
-2. Drag the **"🎯 Inspect Tracking"** button to your bookmarks bar
+2. Drag the **"🎯 Inspect Tracking"** link to your bookmarks bar
 3. Visit any page and click the bookmarklet
 
 ### 🖱️ Usage
@@ -276,17 +209,28 @@ This project comes with a **working, testable diagnostic tool v2** — a browser
 | Action | What Happens |
 |--------|-------------|
 | **Hover** any element | Floating panel shows event, family, CSS selector, and 3 universal params (`link_click_url`, `web_element_location`, `click_text`) |
-| **Click** any element | Console logs full JSON match + CSS selector + event/params |
-| **📥 CSV** button | Downloads a CSV of every matched element, grouped by `web_element_location` |
-| **🔄 Refresh** button | Re-scans the page and updates match counts |
+| **Click** any element | Adds it to the framework list; console logs full JSON match + CSS selector |
+| **CSV** button | Opens a dialog with the full dataset — **Copy to Excel** (pastes as a table with columns preserved) or **Download .csv** |
+| **Framework** button | Shows the captured element list grouped by family with remove buttons |
+| **Minimize** button | Collapses the panel to a compact header showing element count |
 | **Close** | Click ✕ to remove the overlay |
+
+### 📤 CSV Export Dialog
+
+The CSV button opens a modal dialog with three ways to get data into Excel:
+
+1. **Copy to Excel** — Writes a formatted HTML table + tab-separated data to your clipboard. Paste directly into Excel — columns are preserved automatically.
+2. **Download .csv** — Triggers a native save dialog (File System Access API) or a standard browser download. Open the `.csv` in Excel.
+3. **Manual copy** — The textarea is auto-selected. Press Cmd/Ctrl+C and paste into Excel, then use **Data > Text to Columns** with Tab delimiter if needed.
+
+The dialog scans the full page (top 500 interactive elements) even if nothing was explicitly clicked, so you always get a complete framework export.
 
 ### 🧪 Test It Now
 
 Use the included **`test-harness.html`** — it contains real demo elements for every event family plus **OHIO web element coverage** (fact cards, card links, breadcrumb demo, etc.):
 
 - Forms that fire `generate_lead`
-- Download links that fire `file_download`
+- Download links that fire `file_download`  
 - Nav bars that fire `global_nav` (with proper breadcrumb/main-nav/aux-menu/footer detection)
 - Accordions, tabs, and carousels that fire `web_element`
 - Program finder that fires `custom_filter_search`
@@ -316,12 +260,13 @@ The framework was validated against two other major Ohio university websites to 
 
 ```
 universal-click-tracking/
-├── README.md                ← This file (taxonomy framework + v2 bookmarklet guide)
+├── README.md                ← This file (taxonomy framework + bookmarklet guide)
 ├── PORTABILITY.md           ← OSU & MiamiOH validation results
 ├── qr-code.png              ← QR code linking to this repo
 ├── test-harness.html        ← Interactive test/demo page with all events + OHIO catalog elements
-├── bookmarklet.js           ← Source code for the taxonomy inspector bookmarklet (v2)
-└── bookmarklet.min.js       ← Minified bookmarklet (22KB — paste into bookmark URL)
+├── bookmarklet.js           ← Source code for the taxonomy inspector bookmarklet
+├── bookmarklet.min.js       ← Minified bookmarklet (~40KB — paste into bookmark URL)
+└── taxonomy-map.js          ← Generated taxonomy mapping for GTM (from gen_taxonomy_map.py)
 ```
 
 ---

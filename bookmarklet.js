@@ -1,15 +1,15 @@
 /*
  * Universal Click-Tracking Taxonomy Inspector v2
- * Bookmarklet — Drag this into your bookmarks bar, click on any ohio.edu page
+ * Bookmarklet &#8212; Drag this into your bookmarks bar, click on any ohio.edu page
  *
  * What it does:
  *   Injects a floating diagnostics panel on the current page.
  *   Highlights every interactive element and shows which event from the
  *   OHIO.edu Universal Click-Tracking Taxonomy would fire.
  *   Every matched element always includes:
- *     - link_click_url    → the href (or empty for buttons/forms)
- *     - web_element_location → where on the page (breadcrumb, main-nav, aux-menu, hero, footer, body)
- *     - click_text        → the visible text of the element
+ *     - link_click_url    -> the href (or empty for buttons/forms)
+ *     - web_element_location -> where on the page (breadcrumb, main-nav, aux-menu, hero, footer, body)
+ *     - click_text        -> the visible text of the element
  *   Also displays the CSS selector for GTM trigger setup.
  *   Exports all data as a CSV grouped by family/trigger.
  *
@@ -45,16 +45,16 @@
       var aria = (p.getAttribute('aria-label') || '').toLowerCase();
       var role = (p.getAttribute('role') || '').toLowerCase();
 
-      // Breadcrumb — nav[aria-label*="breadcrumb"] or class breadcrumb
+      // Breadcrumb &#8212; nav[aria-label*="breadcrumb"] or class breadcrumb
       if (aria.indexOf('breadcrumb') !== -1) return 'breadcrumb';
       if (cls.indexOf('breadcrumb') !== -1 || cls.indexOf('top-confined-breadcrumb') !== -1) return 'breadcrumb';
 
-      // Aux menu — top header utility links
+      // Aux menu &#8212; top header utility links
       if (cls.indexOf('aux-menu') !== -1 || cls.indexOf('aux-menu-links') !== -1) return 'aux-menu';
       if (p.id && p.id.indexOf('header-top') !== -1) return 'aux-menu';
       if (p.id === 'search-desktop') return 'aux-menu';
 
-      // Main nav — the primary megamenu
+      // Main nav &#8212; the primary megamenu
       if (p.id === 'main-menu') return 'main-nav';
       if (cls.indexOf('menu-item menu-level-1') !== -1) return 'main-nav';
       if (p.id === 'logoSpaceContent') return 'main-nav';
@@ -275,8 +275,8 @@
           if (el.matches('.card-link-content a, .field--name-field-call-to-action a, [class*="card"] a, .fact-content a')) return true;
           if (parentCls.indexOf('card') !== -1 || parentCls.indexOf('cta') !== -1 || parentCls.indexOf('cta-links') !== -1) return true;
 
-          // Actions — links with ➜, ,  arrows
-          if (/[➜]/.test(el.textContent || '')) return true;
+          // Actions &#8212; links with ➜, ,  arrows
+          if (/[\u279c\uf105\uf061]/.test(el.textContent || '')) return true;
 
           // Links inside info overlays/popovers
           if (parentCls.indexOf('info-link') !== -1 || cls.indexOf('info-link') !== -1) return true;
@@ -311,7 +311,7 @@
         family: 'Engagement',
         match: function(el) {
           if (el.tagName !== 'A') return false;
-          // Determine location — global_nav fires for nav-type elements
+          // Determine location &#8212; global_nav fires for nav-type elements
           var loc = getLocation(el);
           if (loc === 'main-nav' || loc === 'aux-menu' || loc === 'breadcrumb' || loc === 'footer') return true;
           // Links inside aria-navigation
@@ -460,6 +460,29 @@
         }
       },
 
+      // ---- CONTENT & MEDIA: content_element (broad pattern) ----
+      {
+        event: 'content_element',
+        family: 'Content & Media',
+        match: function(el) {
+          var cls = (el.className || '').toLowerCase();
+          var id = (el.id || '').toLowerCase();
+          var tag = el.tagName.toLowerCase();
+          if (tag === 'article') return true;
+          if (/content.hub/.test(cls) || /content.hub/.test(id)) return true;
+          if (/article/.test(cls) || /article/.test(id)) return true;
+          if (/news/.test(cls) || /news/.test(id)) return true;
+          return false;
+        },
+        params: function(el) {
+          return {
+            link_click_url: getLinkUrl(el),
+            web_element_location: getLocation(el),
+            click_text: getClickText(el)
+          };
+        }
+      },
+
       // ---- CONTENT & MEDIA: video ----
       {
         event: 'video',
@@ -557,7 +580,7 @@
     ]
   };
 
-  // ---- CATCH-ALL — Every other link or interactive element ----
+  // ---- CATCH-ALL &#8212; Every other link or interactive element ----
   // This ensures 100% coverage. Runs last in priority order.
   function catchAll(el) {
     // Assign to the most appropriate event
@@ -626,116 +649,649 @@
     return null;
   }
 
-  // ============================================================
-  // CSV EXPORT
-  // ============================================================
-  function downloadCSV() {
-    var rows = [];
-    // Header row
-    rows.push(['Family', 'Event', 'CSS Selector', 'link_click_url', 'web_element_location', 'click_text'].join(','));
+  // Infer element type from class names and tag
+  function inferElementType(el) {
+    var tag = (el.tagName || '').toLowerCase();
+    var cls = (el.className || '').toLowerCase();
+    var id = (el.id || '').toLowerCase();
 
+    if (tag === 'button') return 'button';
+    if (tag === 'img') return 'image';
+    if (tag === 'form') return 'form';
+    if (tag === 'nav' || /nav|menu/.test(cls)) return 'navigation';
+    if (tag === 'select' || /dropdown|select/.test(cls)) return 'dropdown';
+    if (tag === 'a' && /btn|button/.test(cls)) return 'button';
+
+    if (/tile/.test(cls)) return 'tile';
+    if (/card/.test(cls)) return 'card';
+    if (/accordion|accordian/.test(cls)) return 'accordion';
+    if (/tab/.test(cls) && !/table/.test(cls)) return 'tab';
+    if (/modal|popup|dialog|overlay/.test(cls)) return 'modal';
+    if (/banner|hero/.test(cls)) return 'banner';
+    if (/carousel|slider/.test(cls)) return 'carousel';
+    if (/search/.test(cls)) return 'search';
+    if (/icon/.test(cls)) return 'icon';
+    if (/badge/.test(cls)) return 'badge';
+    if (/pagination/.test(cls)) return 'pagination';
+    if (/breadcrumb/.test(cls)) return 'breadcrumb';
+    if (/sidebar/.test(cls)) return 'sidebar';
+    if (/social|share/.test(cls)) return 'social';
+    if (/video/.test(cls)) return 'video';
+    if (/footer/.test(cls)) return 'footer';
+    if (/header/.test(cls)) return 'header';
+    if (/list/.test(cls)) return 'list';
+    if (/tooltip/.test(cls)) return 'tooltip';
+    if (/progress/.test(cls)) return 'progress';
+    if (/table/.test(cls)) return 'table';
+    if (/map/.test(cls)) return 'map';
+    if (/audio/.test(cls)) return 'audio';
+    if (/pagination/.test(cls)) return 'pagination';
+    if (/form/.test(cls)) return 'form';
+
+    return '';
+  }
+
+  // Build params from the DOM even when no taxonomy rule matched
+  function buildGenericParams(el) {
+    return {
+      link_click_url: getLinkUrl(el),
+      web_element_location: getLocation(el),
+      click_text: getClickText(el),
+      page_url: window.location.href,
+      tag: (el.tagName || '').toLowerCase(),
+      element_id: el.id || '',
+      element_class: el.className || '',
+      inferred_type: inferElementType(el)
+    };
+  }
+
+  // ============================================================
+  // FRAMEWORK &#8212; selected elements for export / Airtable sync
+  // ============================================================
+  var frameworkItems = [];
+  var frameworkViewActive = false;
+
+  function csvEscape(v) {
+    var s = String(v || '');
+    if (s.indexOf(',') !== -1 || s.indexOf('"') !== -1 || s.indexOf('\n') !== -1) {
+      return '"' + s.replace(/"/g, '""') + '"';
+    }
+    return s;
+  }
+
+  function tsvEscape(v) {
+    var s = String(v || '');
+    if (s.indexOf('\t') !== -1 || s.indexOf('"') !== -1 || s.indexOf('\n') !== -1) {
+      return '"' + s.replace(/"/g, '""') + '"';
+    }
+    return s;
+  }
+
+  function htmlEscape(v) {
+    return String(v || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function buildTableHTML(header, items) {
+    var h = '<table>';
+    h += '<thead><tr>';
+    for (var i = 0; i < header.length; i++) { h += '<th>' + htmlEscape(header[i]) + '</th>'; }
+    h += '</tr></thead><tbody>';
+    for (var r = 0; r < items.length; r++) {
+      var item = items[r];
+      var row = [
+        item.family, item.event, item.cssSel,
+        item.params.link_click_url || '',
+        item.params.web_element_location || '',
+        item.params.click_text || '',
+        item.url || '',
+        item.params.tag || '',
+        item.params.element_id || '',
+        item.params.element_class || '',
+        item.params.inferred_type || ''
+      ];
+      h += '<tr>';
+      for (var c = 0; c < row.length; c++) { h += '<td>' + htmlEscape(String(row[c])) + '</td>'; }
+      h += '</tr>';
+    }
+    h += '</tbody></table>';
+    return h;
+  }
+
+  function showCSVDialog(csv, tsv, tableHTML, items, filename) {
+    var existing = document.getElementById('hermes-csv-modal');
+    if (existing) existing.remove();
+    var m = document.createElement('div');
+    m.id = 'hermes-csv-modal';
+    m.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.65);z-index:999999;display:flex;align-items:center;justify-content:center;';
+    var box = document.createElement('div');
+    box.style.cssText = 'background:#1a1b26;color:#c0caf5;border:1px solid #3b4261;border-radius:10px;padding:16px;max-width:850px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;font-family:sans-serif;font-size:13px;box-shadow:0 8px 30px rgba(0,0,0,0.6);';
+    box.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><strong style="font-size:14px;">' + filename + '</strong><span id="hermes-csv-close" style="cursor:pointer;color:#565f89;font-size:20px;line-height:18px;">&#215;</span></div><textarea readonly id="hermes-csv-textarea" style="flex:1;background:#24283b;color:#c0caf5;border:1px solid #3b4261;border-radius:4px;padding:8px;font-family:monospace;font-size:11px;width:800px;min-height:300px;resize:both;">' + csv.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</textarea><div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><button id="hermes-csv-copy3" style="background:#7dcfff;border:none;color:#1a1b26;border-radius:5px;padding:7px 16px;cursor:pointer;font-size:13px;">Copy to Excel</button><button id="hermes-csv-dl3" style="background:#73daca;border:none;color:#1a1b26;border-radius:5px;padding:7px 16px;cursor:pointer;font-size:13px;">Download .csv</button><span id="hermes-csv-status" style="color:#a9b1d6;font-size:12px;margin-left:4px;">Select text or use buttons above.</span></div>';
+    m.appendChild(box);
+    document.body.appendChild(m);
+    csvModal = m;
+    m.onclick = function(e) { if (e.target === m) { m.remove(); csvModal = null; } };
+    setTimeout(function() {
+      document.getElementById('hermes-csv-close').onclick = function(){ m.remove(); csvModal = null; };
+      document.getElementById('hermes-csv-textarea').onfocus = function(){ this.select(); };
+      document.getElementById('hermes-csv-copy3').onclick = function() {
+        var status = document.getElementById('hermes-csv-status');
+        status.textContent = 'Copying...';
+        try {
+          if (navigator.clipboard.write && window.ClipboardItem) {
+            navigator.clipboard.write([
+              new ClipboardItem({
+                'text/html': new Blob([tableHTML], {type: 'text/html'}),
+                'text/plain': new Blob([tsv], {type: 'text/plain'})
+              })
+            ]).then(function() {
+              status.textContent = 'Copied! Paste into Excel (columns preserved).';
+            }).catch(function(e) {
+              try {
+                navigator.clipboard.writeText(tsv);
+                status.textContent = 'Copied (plain text). Excel: paste & use Data > Text to Columns.';
+              } catch(e2) {
+                status.textContent = 'Copy blocked. Select text above and press Cmd/Ctrl+C.';
+              }
+            });
+          } else {
+            navigator.clipboard.writeText(tsv);
+            status.textContent = 'Copied (plain text). Excel: paste & use Data > Text to Columns.';
+          }
+        } catch(e) {
+          status.textContent = 'Copy failed. Select text above and press Cmd/Ctrl+C.';
+        }
+      };
+      document.getElementById('hermes-csv-dl3').onclick = function() {
+        var status = document.getElementById('hermes-csv-status');
+        status.textContent = 'Preparing download...';
+        var csvContent = '\uFEFF' + csv;
+        if (window.showSaveFilePicker) {
+          window.showSaveFilePicker({
+            suggestedName: filename,
+            types: [{description: 'CSV File', accept: {'text/csv': ['.csv']}}]
+          }).then(function(handle) {
+            return handle.createWritable().then(function(writable) {
+              return writable.write(csvContent).then(function() { return writable.close(); });
+            });
+          }).then(function() {
+            status.textContent = 'File saved! Open it in Excel.';
+          }).catch(function(e) {
+            if (e.name === 'AbortError') {
+              status.textContent = 'Save cancelled. Try Download or copy from textarea.';
+            } else {
+              status.textContent = 'Save dialog failed. Trying alternative...';
+              doBlobDownload();
+            }
+          });
+          return;
+        }
+        doBlobDownload();
+        function doBlobDownload() {
+          try {
+            var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function() {
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+              status.textContent = 'Download triggered. Check Downloads folder, open in Excel.';
+              var ta = document.getElementById('hermes-csv-textarea');
+              if (ta) { ta.focus(); ta.select(); }
+            }, 300);
+          } catch(e) {
+            status.textContent = 'Download blocked. Select text above, copy, paste into editor, save as .csv, open in Excel.';
+            var ta = document.getElementById('hermes-csv-textarea');
+            if (ta) { ta.focus(); ta.select(); }
+          }
+        }
+      };
+    }, 50);
+  }
+
+  function downloadCSV() {
+    var items = frameworkItems.length > 0 ? frameworkItems : scanAllElements();
+    if (items.length === 0) {
+      alert('No elements to export. Hover and click to build your framework, or close the panel to scan all page elements.');
+      return;
+    }
+    var header = ['Family','Event','CSS Selector','link_click_url','web_element_location','click_text','Page URL','tag','element_id','element_class','inferred_type'];
+    var csvRows = [];
+    csvRows.push(header.join(','));
+    var tsvRows = [];
+    tsvRows.push(header.join('\t'));
+    var tableHTML = buildTableHTML(header, items);
+    items.forEach(function(item) {
+      var row = [
+        item.family, item.event, item.cssSel,
+        item.params.link_click_url || '',
+        item.params.web_element_location || '',
+        item.params.click_text || '',
+        item.url || '',
+        item.params.tag || '',
+        item.params.element_id || '',
+        item.params.element_class || '',
+        item.params.inferred_type || ''
+      ];
+      csvRows.push(row.map(csvEscape).join(','));
+      tsvRows.push(row.map(tsvEscape).join('\t'));
+    });
+    var csv = csvRows.join('\n');
+    var tsv = tsvRows.join('\n');
+    var filename = 'tracking-framework-' + window.location.hostname + '-' + Date.now() + '.csv';
+    showCSVDialog(csv, tsv, tableHTML, items, filename);
+  }
+
+  function scanAllElements() {
+    var items = [];
     var elements = document.querySelectorAll('a[href], button, input[type="submit"], input[type="button"], form, [onclick], [role="button"], [tabindex]:not([tabindex="-1"]):not([tabindex="-2"])');
     var seen = {};
-
     for (var i = 0; i < elements.length; i++) {
       var el = elements[i];
-      // Skip elements inside the panel
       if (panel && panel.contains(el)) continue;
-      // Deduplicate: skip if same tag/href/text combination
       var key = el.tagName + '|' + (el.href || '') + '|' + getClickText(el);
       if (seen[key]) continue;
       seen[key] = true;
-
       var match = matchElement(el);
       if (match) {
-        var cssSel = getCSSSelector(el);
-        // Escape CSV values (wrap in quotes if contains comma or quote)
-        var row = [
-          match.family,
-          match.event,
-          cssSel,
-          match.params.link_click_url || '',
-          match.params.web_element_location || '',
-          match.params.click_text || ''
-        ].map(function(v) {
-          var s = String(v);
-          if (s.indexOf(',') !== -1 || s.indexOf('"') !== -1 || s.indexOf('\n') !== -1) {
-            return '"' + s.replace(/"/g, '""') + '"';
-          }
-          return s;
+        items.push({
+          family: match.family,
+          event: match.event,
+          cssSel: getCSSSelector(el),
+          params: match.params,
+          url: window.location.href
         });
-        rows.push(row.join(','));
+      }
+    }
+    return items;
+  }
+
+  function addToFramework(match, el) {
+    var cssSel = getCSSSelector(el);
+    for (var i = 0; i < frameworkItems.length; i++) {
+      if (frameworkItems[i].cssSel === cssSel) return false;
+    }
+    frameworkItems.push({
+      family: match.family,
+      event: match.event,
+      cssSel: cssSel,
+      params: match.params,
+      url: window.location.href,
+      timestamp: Date.now()
+    });
+    updateFrameworkCount();
+    return true;
+  }
+
+  function removeFromFramework(cssSel) {
+    frameworkItems = frameworkItems.filter(function(item) {
+      return item.cssSel !== cssSel;
+    });
+    updateFrameworkCount();
+  }
+
+  function updateFrameworkCount() {
+    var btn = document.getElementById('hermes-framework-btn');
+    if (btn) {
+      btn.textContent = frameworkItems.length > 0
+        ? 'Framework (' + frameworkItems.length + ')'
+        : 'Framework';
+    }
+  }
+
+  function showFrameworkPanel() {
+    frameworkViewActive = !frameworkViewActive;
+    if (frameworkViewActive) {
+      renderFrameworkView();
+    } else {
+      // Return to hover view &#8212; re-show current match if there is one
+      if (inspectedEl && currentMatch) {
+        showDetail(currentMatch, inspectedEl);
+      } else {
+        var detail = document.getElementById('hermes-detail');
+        if (detail) detail.innerHTML = '<div style="color:#565f89;font-size:11px;">Hover over an element on the page.</div>';
+      }
+    }
+  }
+
+  function renderFrameworkView() {
+    var detail = document.getElementById('hermes-detail');
+    if (!detail) return;
+
+    if (frameworkItems.length === 0) {
+      detail.innerHTML = '<div style="color:#565f89;font-size:11px;">No elements added yet. Hover an element, then click to add it to your framework.</div>';
+      return;
+    }
+
+    var html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">';
+    html += '<span style="color:#a9b1d6;font-size:12px;font-weight:600;">Framework (' + frameworkItems.length + ')</span>';
+    html += '<div style="display:flex;gap:3px;">';
+    html += '<button id="hermes-csv-btn" style="background:#292e42;border:none;color:#9ece6a;border-radius:5px;padding:3px 8px;cursor:pointer;font-size:11px;">CSV</button>';
+    html += '<button id="hermes-sync-btn" style="background:#292e42;border:none;color:#73daca;border-radius:5px;padding:3px 8px;cursor:pointer;font-size:11px;">Sync to Airtable</button>';
+    html += '<button id="hermes-at-config-btn" style="background:#292e42;border:none;color:#565f89;border-radius:5px;padding:3px 8px;cursor:pointer;font-size:11px;line-height:1;" title="Airtable Settings">Setup</button>';
+    html += '</div></div>';
+    html += '<table style="width:100%;border-collapse:collapse;font-size:11px;">';
+    html += '<tr style="color:#565f89;border-bottom:1px solid #2a2b3e;">';
+    html += '<th style="text-align:left;padding:3px 4px;font-weight:500;">Event</th>';
+    html += '<th style="text-align:left;padding:3px 4px;font-weight:500;">Family</th>';
+    html += '<th style="text-align:left;padding:3px 4px;font-weight:500;">CSS</th>';
+    html += '<th style="text-align:left;padding:3px 4px;font-weight:500;">Location</th>';
+    html += '<th style="width:20px;"></th>';
+    html += '</tr>';
+    frameworkItems.forEach(function(item) {
+      var fc = item.family ? familyColor(item.family) : '#6c7086';
+      var cssShort = item.cssSel.length > 30 ? item.cssSel.substring(0, 30) + '...' : item.cssSel;
+      var evt = item.event || '';
+      var fam = item.family || 'Uncategorized';
+      var loc = (item.params && item.params.web_element_location) || (item.params && item.params.element_class) || (item.params && item.params.tag) || '&#8212;';
+      html += '<tr style="border-bottom:1px solid #1f2035;">';
+      html += '<td style="padding:3px 4px;color:' + (evt ? '#c0caf5' : '#6c7086') + ';">' + (evt || '&#8212;') + '</td>';
+      html += '<td style="padding:3px 4px;color:' + fc + ';">' + fam + '</td>';
+      html += '<td style="padding:3px 4px;color:#565f89;font-family:monospace;font-size:10px;word-break:break-all;">' + cssShort + '</td>';
+      html += '<td style="padding:3px 4px;color:#565f89;">' + loc + '</td>';
+      html += '<td style="padding:3px 4px;"><button class="hermes-remove-btn" data-css="' + item.cssSel.replace(/"/g,'&quot;') + '" style="background:none;border:none;color:#f7768e;cursor:pointer;font-size:13px;padding:0;line-height:1;">&times;</button></td>';
+      html += '</tr>';
+    });
+    html += '</table>';
+
+    if (frameworkItems.length > 0) {
+      html += '<div style="margin-top:6px;padding:4px 6px;background:#1f2035;border-radius:4px;font-size:10px;color:#565f89;">';
+      html += 'Import this CSV into Google Sheets, or sync directly to Airtable.';
+      html += '</div>';
+    }
+
+    detail.innerHTML = html;
+
+    document.getElementById('hermes-csv-btn').onclick = downloadCSV;
+    document.getElementById('hermes-sync-btn').onclick = syncToAirtable;
+    var configBtn = document.getElementById('hermes-at-config-btn');
+    if (configBtn) configBtn.onclick = showAirtableSetup;
+    var removeBtns = detail.querySelectorAll('.hermes-remove-btn');
+    for (var i = 0; i < removeBtns.length; i++) {
+      (function(btn) {
+        btn.onclick = function() {
+          removeFromFramework(btn.getAttribute('data-css'));
+          renderFrameworkView();
+        };
+      })(removeBtns[i]);
+    }
+  }
+
+  function getAirtableConfig() {
+    return {
+      apiKey: localStorage.getItem('hermes_airtable_key') || '',
+      baseId: localStorage.getItem('hermes_airtable_base') || '',
+      tableName: localStorage.getItem('hermes_airtable_table') || ''
+    };
+  }
+
+  function setAirtableConfig(apiKey, baseId, tableName) {
+    if (apiKey) localStorage.setItem('hermes_airtable_key', apiKey);
+    if (baseId) localStorage.setItem('hermes_airtable_base', baseId);
+    if (tableName) localStorage.setItem('hermes_airtable_table', tableName);
+  }
+
+  function syncToAirtable() {
+    var config = getAirtableConfig();
+    if (!config.apiKey || !config.baseId || !config.tableName) {
+      showAirtableSetup();
+      return;
+    }
+
+    if (frameworkItems.length === 0) {
+      alert('No framework items to sync. Add some elements first.');
+      return;
+    }
+
+    var totalItems = frameworkItems.length;
+    var btn = document.getElementById('hermes-sync-btn');
+    if (btn) btn.textContent = 'Syncing 0/' + totalItems + '...';
+
+    var success = 0;
+    var failed = 0;
+    var pending = totalItems;
+
+    function updateSyncProgress() {
+      if (btn) {
+        btn.textContent = 'Syncing ' + (success + failed) + '/' + totalItems + '...';
       }
     }
 
-    var csv = rows.join('\n');
-    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = 'click-tracker-export-' + window.location.hostname + '-' + Date.now() + '.csv';
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    function checkDone() {
+      pending--;
+      if (pending === 0) {
+        if (btn) {
+          btn.textContent = 'Done (' + success + '/' + totalItems + ')';
+        }
+        setTimeout(function() {
+          if (btn && frameworkViewActive) btn.textContent = 'Sync to Airtable';
+        }, 3000);
+      }
+    }
+
+    frameworkItems.forEach(function(item) {
+      var fields = {
+        'Event': item.event,
+        'Family': item.family,
+        'CSS Selector': item.cssSel,
+        'element_class': item.params.element_class || '',
+        'link_click_url': item.params.link_click_url || '',
+        'web_element_location': item.params.web_element_location || '',
+        'click_text': item.params.click_text || '',
+        'Page URL': item.url || ''
+      };
+      // Airtable rejects the entire record if a field name doesn't match.
+      // Create columns in your table to match the fields above (exact names).
+
+      fetch('https://api.airtable.com/v0/' + config.baseId + '/' + encodeURIComponent(config.tableName), {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + config.apiKey,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ fields: fields })
+      }).then(function(resp) {
+        if (resp.ok) { success++; updateSyncProgress(); checkDone(); }
+        else {
+          failed++;
+          updateSyncProgress();
+          checkDone();
+          resp.text().then(function(body) {
+            var msg = 'Sync error: HTTP ' + resp.status + ' - see console';
+            try {
+              var j = JSON.parse(body);
+              if (j.error && j.error.message) msg = j.error.message;
+            } catch(e) {}
+            if (btn) btn.textContent = msg;
+            setTimeout(function() {
+              if (btn && frameworkViewActive) btn.textContent = 'Sync to Airtable';
+            }, 6000);
+          });
+        }
+      }).catch(function(err) {
+        failed++;
+        updateSyncProgress();
+        checkDone();
+        if (btn) btn.textContent = 'Network error - check console';
+        setTimeout(function() {
+          if (btn && frameworkViewActive) btn.textContent = 'Sync to Airtable';
+        }, 6000);
+      });
+    });
+  }
+
+  function showAirtableSetup() {
+    var config = getAirtableConfig();
+    var detail = document.getElementById('hermes-detail');
+    if (!detail) return;
+
+    frameworkViewActive = true;
+
+    var html = '<div style="color:#a9b1d6;font-size:12px;font-weight:600;margin-bottom:8px;">Airtable Settings</div>';
+    html += '<div style="font-size:11px;color:#565f89;margin-bottom:8px;line-height:1.4;">Enter your Airtable credentials once. They are saved in your browser and reused on future syncs.</div>';
+
+    html += '<div style="margin-bottom:6px;">';
+    html += '<label style="display:block;font-size:11px;color:#565f89;margin-bottom:2px;">Personal Access Token</label>';
+    html += '<input id="hermes-at-key" type="text" value="' + (config.apiKey || '') + '" placeholder="patXXXXXXX..." style="width:100%;padding:5px 8px;background:#13131f;border:1px solid #2a2b3e;border-radius:4px;color:#c0caf5;font-size:12px;box-sizing:border-box;">';
+    html += '</div>';
+
+    html += '<div style="margin-bottom:6px;">';
+    html += '<label style="display:block;font-size:11px;color:#565f89;margin-bottom:2px;">Base ID</label>';
+    html += '<input id="hermes-at-base" type="text" value="' + (config.baseId || '') + '" placeholder="appXXXXXXXXXXXXXX" style="width:100%;padding:5px 8px;background:#13131f;border:1px solid #2a2b3e;border-radius:4px;color:#c0caf5;font-size:12px;box-sizing:border-box;">';
+    html += '</div>';
+
+    html += '<div style="margin-bottom:10px;">';
+    html += '<label style="display:block;font-size:11px;color:#565f89;margin-bottom:2px;">Table Name</label>';
+    html += '<input id="hermes-at-table" type="text" value="' + (config.tableName || '') + '" placeholder="e.g. Tracking Framework" style="width:100%;padding:5px 8px;background:#13131f;border:1px solid #2a2b3e;border-radius:4px;color:#c0caf5;font-size:12px;box-sizing:border-box;">';
+    html += '</div>';
+
+    html += '<div style="font-size:10px;color:#565f89;line-height:1.5;margin-bottom:8px;padding:6px;background:#1a1b26;border-radius:4px;">';
+    html += '<div style="font-weight:600;margin-bottom:2px;">Your table needs these columns:</div>';
+    html += '<code style="color:#9ece6a;">Event</code>, <code style="color:#7aa2f7;">Family</code>, <code style="color:#e0af68;">CSS Selector</code>, <code style="color:#f7768e;">link_click_url</code>, <code style="color:#bb9af7;">web_element_location</code>, <code style="color:#73daca;">click_text</code>, <code style="color:#ff9e64;">Page URL</code>';
+    html += '<div style="color:#565f89;margin-top:3px;">Extra params (<code>tag</code>, <code>inferred_type</code>, etc.) are auto-added as columns &#8212; or ignored if they don\'t exist.</div>';
+    html += '</div>';
+
+    html += '<div style="display:flex;gap:6px;">';
+    html += '<button id="hermes-at-save-btn" style="flex:1;background:#7aa2f7;border:none;color:#1a1b26;border-radius:5px;padding:6px 10px;cursor:pointer;font-size:12px;font-weight:600;">Save &amp; Sync</button>';
+    if (config.apiKey) {
+      html += '<button id="hermes-at-clear-btn" style="background:#f7768e18;border:1px solid #f7768e44;color:#f7768e;border-radius:5px;padding:6px 10px;cursor:pointer;font-size:11px;">Clear</button>';
+    }
+    html += '<button id="hermes-at-back-btn" style="background:#292e42;border:none;color:#565f89;border-radius:5px;padding:6px 10px;cursor:pointer;font-size:11px;">Back</button>';
+    html += '</div>';
+
+    detail.innerHTML = html;
+
+    document.getElementById('hermes-at-save-btn').onclick = function() {
+      var key = document.getElementById('hermes-at-key').value.trim();
+      var base = document.getElementById('hermes-at-base').value.trim();
+      var table = document.getElementById('hermes-at-table').value.trim();
+      if (!key || !base || !table) { alert('All three fields are required.'); return; }
+      setAirtableConfig(key, base, table);
+      // Re-run sync
+      syncToAirtable();
+    };
+
+    var clearBtn = document.getElementById('hermes-at-clear-btn');
+    if (clearBtn) {
+      clearBtn.onclick = function() {
+        localStorage.removeItem('hermes_airtable_key');
+        localStorage.removeItem('hermes_airtable_base');
+        localStorage.removeItem('hermes_airtable_table');
+        showAirtableSetup();
+      };
+    }
+
+    document.getElementById('hermes-at-back-btn').onclick = function() {
+      renderFrameworkView();
+    };
   }
 
   // ============================================================
   // UI
   // ============================================================
-  var panel, overlay, inspectedEl, currentMatch;
+  var panel, overlay, inspectedEl, currentMatch, csvModal;
 
   function buildPanel() {
     if (document.getElementById('hermes-taxonomy-panel')) return;
 
     panel = document.createElement('div');
     panel.id = 'hermes-taxonomy-panel';
-    panel.style.cssText = 'position:fixed;top:10px;right:10px;width:440px;max-height:90vh;overflow-y:auto;background:#1e1e2e;color:#cdd6f4;font-family:system-ui,-apple-system,sans-serif;font-size:13px;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:999999;padding:0;';
+    panel.style.cssText = [
+      'position:fixed;top:12px;right:12px;width:420px;max-height:88vh;',
+      'overflow-y:auto;overflow-x:hidden;',
+      'background:#1a1b26;color:#c0caf5;',
+      'font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;',
+      'font-size:12px;line-height:1.5;',
+      'border-radius:10px;',
+      'border:1px solid #2a2b3e;',
+      'box-shadow:0 12px 40px rgba(0,0,0,0.5);',
+      'z-index:999999;padding:0;'
+    ].join('');
 
-    var header = document.createElement('div');
-    header.style.cssText = 'background:#313244;padding:12px 16px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #cba6f7;';
-    header.innerHTML = '<span style="font-weight:700;font-size:14px;color:#cba6f7;">🎯 Universal Click Tracker v2</span>' +
-      '<div style="display:flex;gap:4px;">' +
-      '<button id="hermes-export-btn" style="background:#45475a;border:none;color:#a6e3a1;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px;">📥 CSV</button>' +
-      '<button id="hermes-reload-btn" style="background:#45475a;border:none;color:#f9e2af;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px;">🔄</button>' +
-      '<button id="hermes-close-btn" style="background:#45475a;border:none;color:#cdd6f4;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;">✕</button>' +
-      '</div>';
-    panel.appendChild(header);
+    var hdr = document.createElement('div');
+    hdr.style.cssText = [
+      'display:flex;align-items:center;gap:6px;',
+      'padding:10px 14px;',
+      'background:#1f2035;',
+      'border-bottom:1px solid #2a2b3e;',
+      'border-radius:10px 10px 0 0;',
+      'user-select:none;'
+    ].join('');
+    hdr.innerHTML = [
+      '<span style="font-weight:600;font-size:13px;color:#a9b1d6;">Universal Click Tracker</span>',
+      '<span style="font-size:10px;color:#565f89;background:#292e42;padding:1px 6px;border-radius:4px;">v2</span>',
+      '<div style="display:flex;gap:3px;margin-left:auto;">',
+      '<button id="hermes-framework-btn" style="background:#292e42;border:none;color:#bb9af7;border-radius:5px;padding:3px 8px;cursor:pointer;font-size:11px;">Framework</button>',
+      '<button id="hermes-export-btn" style="background:#292e42;border:none;color:#73daca;border-radius:5px;padding:3px 8px;cursor:pointer;font-size:11px;">CSV</button>',
+      '<button id="hermes-min-btn" style="background:transparent;border:none;color:#565f89;border-radius:5px;padding:3px 8px;cursor:pointer;font-size:13px;line-height:1;">&#8212;</button><button id="hermes-close-btn" style="background:transparent;border:none;color:#565f89;border-radius:5px;padding:3px 8px;cursor:pointer;font-size:15px;line-height:1;">&times;</button>',
+      '</div>'
+    ].join('');
+    panel.appendChild(hdr);
 
     var body = document.createElement('div');
     body.id = 'hermes-panel-body';
-    body.style.cssText = 'padding:12px 16px;';
+    body.style.cssText = 'padding:10px 14px;overflow-y:auto;max-height:calc(100vh - 200px);';
 
-    // URL
-    var url = document.createElement('div');
-    url.style.cssText = 'margin-bottom:10px;padding:8px;background:#313244;border-radius:8px;word-break:break-all;';
-    url.innerHTML = '<div style="color:#a6adc8;font-size:11px;margin-bottom:2px;">📍 Page</div><div style="font-size:12px;font-weight:500;">' + window.location.hostname + window.location.pathname + '</div>';
-    body.appendChild(url);
+    // URL bar
+    var urlBar = document.createElement('div');
+    urlBar.style.cssText = [
+      'margin-bottom:8px;padding:6px 10px;',
+      'background:#1f2035;border-radius:6px;',
+      'font-size:11px;color:#565f89;',
+      'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'
+    ].join('');
+    urlBar.textContent = window.location.hostname + window.location.pathname;
+    body.appendChild(urlBar);
 
     // Instructions
-    var instr = document.createElement('div');
-    instr.style.cssText = 'margin-bottom:8px;padding:6px 8px;background:#45475a;border-radius:8px;font-size:11px;color:#a6adc8;';
-    instr.innerHTML = '🖱️ Hover any element → shows event, CSS selector, and 3 standard parameters. Click to log to console. Click 📥 CSV to export all matches.';
-    body.appendChild(instr);
+    var hint = document.createElement('div');
+    hint.style.cssText = [
+      'margin-bottom:8px;padding:6px 10px;',
+      'background:#1f2035;border-radius:6px;',
+      'font-size:11px;color:#565f89;line-height:1.4;'
+    ].join('');
+    hint.textContent = 'Hover any element to see its tracking classification. Click on it to add to your framework sheet.';
+    body.appendChild(hint);
 
-    // Count by family
+    // Stats area
     var stats = document.createElement('div');
     stats.id = 'hermes-stats';
     stats.style.cssText = 'margin-bottom:8px;';
     body.appendChild(stats);
 
-    // Hover detail (replaced on every hover)
+    // Detail area (replaced on hover or framework view)
     var detail = document.createElement('div');
     detail.id = 'hermes-detail';
-    detail.style.cssText = 'margin-bottom:8px;padding:8px;background:#313244;border-radius:8px;';
-    detail.innerHTML = '<div style="color:#6c7086;font-size:11px;">Hover over an element on the page to inspect it.</div>';
+    detail.style.cssText = [
+      'margin-bottom:8px;padding:8px 10px;',
+      'background:#1f2035;border-radius:6px;',
+      'min-height:40px;'
+    ].join('');
+    detail.innerHTML = '<div style="color:#565f89;font-size:11px;">Hover over an element on the page.</div>';
     body.appendChild(detail);
 
-    // Legend
+
+    // Legend footer
     var legend = document.createElement('div');
-    legend.style.cssText = 'margin-top:4px;padding:6px 8px;background:#181825;border-radius:6px;font-size:10px;color:#6c7086;line-height:1.5;';
-    legend.innerHTML = 'Families: <span style="color:#f38ba8;">Conversion</span> · <span style="color:#89b4fa;">Engagement</span> · <span style="color:#a6e3a1;">Discovery</span> · <span style="color:#f9e2af;">Content</span> · <span style="color:#fab387;">Utility</span>';
+    legend.style.cssText = [
+      'padding:5px 10px;background:#13131f;border-radius:6px;',
+      'font-size:10px;color:#565f89;line-height:1.6;'
+    ].join('');
+    legend.innerHTML = [
+      '<span style="color:#f7768e;">Conversion</span>',
+      ' <span style="color:#2a2b3e;">&middot;</span> ',
+      '<span style="color:#7aa2f7;">Engagement</span>',
+      ' <span style="color:#2a2b3e;">&middot;</span> ',
+      '<span style="color:#9ece6a;">Discovery</span>',
+      ' <span style="color:#2a2b3e;">&middot;</span> ',
+      '<span style="color:#e0af68;">Content & Media</span>',
+      ' <span style="color:#2a2b3e;">&middot;</span> ',
+      '<span style="color:#ff9e64;">Utility & Support</span>'
+    ].join('');
     body.appendChild(legend);
 
     panel.appendChild(body);
@@ -743,21 +1299,58 @@
 
     document.getElementById('hermes-close-btn').onclick = destroy;
     document.getElementById('hermes-export-btn').onclick = downloadCSV;
-    document.getElementById('hermes-reload-btn').onclick = updateStats;
+    document.getElementById('hermes-framework-btn').onclick = showFrameworkPanel;
+
+    // Minimize/Restore
+    var minBtn = document.getElementById('hermes-min-btn');
+    var panelBody = document.getElementById('hermes-panel-body');
+    var hdr = panel.querySelector('div:first-child');
+    var minimized = false;
+    minBtn.onclick = function(e) {
+      e.stopPropagation();
+      minimized = !minimized;
+      if (minimized) {
+        panelBody.style.display = 'none';
+        panel.style.height = hdr.offsetHeight + 'px';
+        panel.style.overflow = 'hidden';
+        minBtn.textContent = '+';
+        minBtn.title = 'Restore panel';
+        var countSpan = document.getElementById('hermes-min-count');
+        if (!countSpan) {
+          countSpan = document.createElement('span');
+          countSpan.id = 'hermes-min-count';
+          countSpan.style.cssText = 'font-size:10px;color:#565f89;margin-left:auto;';
+          hdr.insertBefore(countSpan, hdr.querySelector('div:last-child'));
+        }
+        countSpan.textContent = frameworkItems.length + ' tracked';
+      } else {
+        panelBody.style.display = '';
+        panel.style.height = '';
+        panel.style.overflow = '';
+        minBtn.textContent = String.fromCharCode(8212);
+        minBtn.title = 'Minimize panel';
+        var cs = document.getElementById('hermes-min-count');
+        if (cs) cs.textContent = '';
+        if (frameworkViewActive) renderFrameworkView();
+      }
+    };
   }
 
   function familyColor(family) {
     var colors = {
-      'Conversion': '#f38ba8',
-      'Engagement': '#89b4fa',
-      'Discovery': '#a6e3a1',
-      'Content & Media': '#f9e2af',
-      'Utility & Support': '#fab387'
+      'Conversion': '#f7768e',
+      'Engagement': '#7aa2f7',
+      'Discovery': '#9ece6a',
+      'Content & Media': '#e0af68',
+      'Utility & Support': '#ff9e64'
     };
-    return colors[family] || '#cdd6f4';
+    return colors[family] || '#c0caf5';
   }
 
   function updateStats() {
+    var countEl = document.getElementById('hermes-min-count');
+    if (countEl) countEl.textContent = frameworkItems.length + ' tracked';
+
     var counts = {};
     TAXONOMY.rules.forEach(function(r) {
       counts[r.event] = 0;
@@ -774,7 +1367,7 @@
       }
     }
 
-    var html = '<div style="color:#a6adc8;font-size:11px;margin-bottom:4px;">📊 Match Counts (top 500 elements)</div><div style="display:flex;flex-wrap:wrap;gap:4px;">';
+    var html = '<div style="color:#565f89;font-size:11px;margin-bottom:4px;">Matches (top 500 elements)</div><div style="display:flex;flex-wrap:wrap;gap:4px;">';
     var familyOrder = ['Conversion', 'Engagement', 'Discovery', 'Content & Media', 'Utility & Support'];
     var sortedEvents = {};
     TAXONOMY.rules.forEach(function(r) {
@@ -786,25 +1379,31 @@
         sortedEvents[fam].forEach(function(evt) {
           var c = counts[evt] || 0;
           if (c > 0) {
-            html += '<span style="background:' + familyColor(fam) + '22;color:' + familyColor(fam) + ';border:1px solid ' + familyColor(fam) + '44;border-radius:4px;padding:2px 6px;font-size:10px;cursor:default;" title="' + fam + '">' + evt + ': ' + c + '</span>';
+            html += '<span style="background:' + familyColor(fam) + '18;color:' + familyColor(fam) + ';border:1px solid ' + familyColor(fam) + '44;border-radius:4px;padding:2px 6px;font-size:10px;cursor:default;" title="' + fam + '">' + evt + ': ' + c + '</span>';
           }
         });
       }
     });
-    // Add unmatched count
     var unmatched = counts['(unmatched)'] || 0;
     if (unmatched > 0) {
-      html += '<span style="background:#6c708622;color:#6c7086;border:1px solid #6c708644;border-radius:4px;padding:2px 6px;font-size:10px;cursor:default;">unmatched: ' + unmatched + '</span>';
+      html += '<span style="background:#565f8918;color:#565f89;border:1px solid #565f8944;border-radius:4px;padding:2px 6px;font-size:10px;cursor:default;">unmatched: ' + unmatched + '</span>';
     }
     html += '</div>';
     var statsEl = document.getElementById('hermes-stats');
     if (statsEl) statsEl.innerHTML = html;
   }
 
-  /** Update the detail panel — called on every hover */
+  /** Update the detail panel &#8212; called on every hover */
   function showDetail(match, el) {
     var detail = document.getElementById('hermes-detail');
     if (!detail) return;
+
+    if (frameworkViewActive) return;
+
+    // If no match but we have an element, build generic params
+    if (!match && el) {
+      match = { event: '', family: '', params: buildGenericParams(el) };
+    }
 
     var famColor = familyColor(match ? match.family : '');
     var cssSel = el ? getCSSSelector(el) : '';
@@ -812,96 +1411,120 @@
     var html = '';
 
     if (match) {
-      // Family + Event badges
+      var isUnmatched = !match.event;
+      // Event badge + family
       html += '<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">';
-      html += '<span style="background:' + famColor + ';color:#1e1e2e;border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;">' + match.event + '</span>';
-      html += '<span style="color:' + famColor + ';font-size:11px;">' + match.family + '</span>';
-      html += '</div>';
-
-      // Element tag + CSS selector
-      html += '<div style="font-size:11px;color:#a6adc8;margin-bottom:4px;">Element: <span style="color:#cdd6f4;">&lt;' + (el.tagName || '').toLowerCase();
-      if (el && el.id) html += '#' + el.id;
-      html += '&gt;</span></div>';
-
-      if (cssSel) {
-        html += '<div style="font-size:10px;color:#6c7086;margin-bottom:4px;word-break:break-all;">CSS: <span style="color:#a6adc8;">' + cssSel + '</span></div>';
+      if (isUnmatched) {
+        html += '<span style="background:#6c7086;color:#1a1b26;border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;">unmatched</span>';
+        html += '<span style="color:#6c7086;font-size:11px;">Uncategorized</span>';
+      } else {
+        html += '<span style="background:' + famColor + ';color:#1a1b26;border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;">' + match.event + '</span>';
+        html += '<span style="color:' + famColor + ';font-size:11px;">' + match.family + '</span>';
       }
 
-      // 3 mandatory parameters FIRST
-      html += '<div style="margin-top:4px;font-size:11px;color:#a6adc8;">Parameters:</div>';
+      // Add to Framework button
+      var alreadyAdded = false;
+      for (var fi = 0; fi < frameworkItems.length; fi++) {
+        if (frameworkItems[fi].cssSel === cssSel) { alreadyAdded = true; break; }
+      }
+      if (alreadyAdded) {
+        html += '<span style="margin-left:auto;color:#73daca;font-size:10px;">added</span>';
+      } else {
+        html += '<button id="hermes-add-btn" style="margin-left:auto;background:#292e42;border:none;color:#bb9af7;border-radius:5px;padding:3px 8px;cursor:pointer;font-size:11px;">Add to Framework</button>';
+      }
+      html += '</div>';
+
+      // Element tag
+      html += '<div style="font-size:11px;color:#565f89;margin-bottom:3px;">&lt;' + (el.tagName || '').toLowerCase();
+      if (el && el.id) html += '#' + el.id;
+      html += '&gt;</div>';
+
+      // CSS selector
+      if (cssSel) {
+        html += '<div style="font-size:10px;color:#565f89;margin-bottom:4px;word-break:break-all;font-family:monospace;">' + cssSel + '</div>';
+      }
+
+      // Inferred type hint for unmatched elements
+      if (isUnmatched && match.params && match.params.inferred_type) {
+        html += '<div style="margin-top:4px;font-size:10px;color:#6c7086;">Looks like: ' + match.params.inferred_type + '</div>';
+      }
+
+      // Parameters
+      html += '<div style="margin-top:4px;font-size:11px;color:#565f89;">Parameters</div>';
       html += '<table style="font-size:11px;width:100%;border-collapse:collapse;margin-top:2px;">';
 
-      // Always show the 3 core params first
       var coreParams = ['link_click_url', 'web_element_location', 'click_text'];
       coreParams.forEach(function(key) {
         var val = String(match.params[key] || '');
         if (val.length > 60) val = val.substring(0, 60) + '...';
-        html += '<tr><td style="padding:2px 4px;color:#a6e3a1;border-bottom:1px solid #313244;width:120px;">' + key + '</td><td style="padding:2px 4px;color:#cdd6f4;border-bottom:1px solid #313244;word-break:break-all;">' + val + '</td></tr>';
+        html += '<tr><td style="padding:2px 4px;color:#9ece6a;border-bottom:1px solid #1f2035;width:120px;">' + key + '</td><td style="padding:2px 4px;color:#c0caf5;border-bottom:1px solid #1f2035;word-break:break-all;">' + val + '</td></tr>';
       });
 
-      // Then extra params (non-core)
       for (var key in match.params) {
         if (match.params.hasOwnProperty(key) && coreParams.indexOf(key) === -1) {
           var val = String(match.params[key] || '');
           if (val.length > 60) val = val.substring(0, 60) + '...';
-          html += '<tr><td style="padding:2px 4px;color:#6c7086;border-bottom:1px solid #313244;width:120px;">' + key + '</td><td style="padding:2px 4px;color:#cdd6f4;border-bottom:1px solid #313244;word-break:break-all;">' + val + '</td></tr>';
+          html += '<tr><td style="padding:2px 4px;color:#565f89;border-bottom:1px solid #1f2035;width:120px;">' + key + '</td><td style="padding:2px 4px;color:#c0caf5;border-bottom:1px solid #1f2035;word-break:break-all;">' + val + '</td></tr>';
         }
       }
       html += '</table>';
-    } else if (el) {
-      // Element exists but no match (shouldn't happen with catch-all, but handle gracefully)
-      html += '<div style="font-size:11px;color:#6c7086;">&lt;' + (el.tagName || '').toLowerCase() + '&gt; <span style="color:#a6adc8;">' + getClickText(el).substring(0, 40) + '</span></div>';
-      if (cssSel) {
-        html += '<div style="font-size:10px;color:#6c7086;word-break:break-all;">CSS: <span style="color:#a6adc8;">' + cssSel + '</span></div>';
-      }
-      html += '<div style="margin-top:4px;font-size:11px;color:#fab387;">No specific event matched — catch-all rule would fire.</div>';
     } else {
-      // No element passed
-      html += '<div style="color:#6c7086;font-size:11px;">Canvas area (no interactive element).</div>';
+      html += '<div style="color:#565f89;font-size:11px;">Canvas area (no interactive element).</div>';
     }
 
     detail.innerHTML = html;
+
+    // Wire the Add to Framework button
+    var addBtn = document.getElementById('hermes-add-btn');
+    if (addBtn && match && el) {
+      addBtn.onclick = function(e) {
+        e.stopPropagation();
+        var added = addToFramework(match, el);
+        if (added) {
+          showDetail(match, el); // re-render to show "added" state
+        }
+      };
+    }
   }
 
   function handleHover(e) {
     var el = e.target;
-    if (!el || el === panel || (panel && panel.contains(el))) return;
+    if (!el || el === panel || (panel && panel.contains(el)) || (csvModal && csvModal.contains(el))) return;
 
     // Clear previous outline
     if (inspectedEl && inspectedEl !== el) {
       inspectedEl.style.outline = '';
     }
 
-    // Get match and update panel — ALWAYS update the panel on hover
+    // Get match and update panel &#8212; ALWAYS update the panel on hover
     var match = matchElement(el);
     if (match) {
       el.style.outline = '2px solid ' + familyColor(match.family) + '80';
       el.style.outlineOffset = '1px';
-      inspectedEl = el;
-      currentMatch = match;
     } else {
-      // Still show the element info even if no match
+      // Still show element info even if no match
+      match = { event: '', family: '', params: buildGenericParams(el) };
       el.style.outline = '2px solid #6c708680';
       el.style.outlineOffset = '1px';
-      inspectedEl = el;
-      currentMatch = null;
     }
+    inspectedEl = el;
+    currentMatch = match;
     showDetail(match, el);
   }
 
   function handleClick(e) {
-    if (e.target === panel || (panel && panel.contains(e.target))) return;
+    if (e.target === panel || (panel && panel.contains(e.target)) || (csvModal && csvModal.contains(e.target))) return;
     e.preventDefault();
     e.stopPropagation();
 
     var match = matchElement(e.target);
-    if (match) {
-      showDetail(match, e.target);
-      console.log('🎯 Click Tracker:', JSON.stringify({ event: match.event, family: match.family, params: match.params }, null, 2));
-      console.log('   CSS Selector:', getCSSSelector(e.target));
-    } else {
-      showDetail(null, e.target);
-      console.log('🎯 Click Tracker: No event match for', e.tagName, getClickText(e.target).substring(0, 50));
+    if (!match) {
+      match = { event: '', family: '', params: buildGenericParams(e.target) };
+    }
+    var added = addToFramework(match, e.target);
+    showDetail(match, e.target);
+    if (added) {
+      console.log('[Tracker] Added to framework:', match.event || 'unmatched', getCSSSelector(e.target));
     }
   }
 
@@ -910,6 +1533,8 @@
     if (overlay) { overlay.remove(); overlay = null; }
     if (inspectedEl) { inspectedEl.style.outline = ''; inspectedEl = null; }
     currentMatch = null;
+    frameworkItems = [];
+    frameworkViewActive = false;
     document.removeEventListener('mouseover', handleHover, true);
     document.removeEventListener('click', handleClick, true);
   }
@@ -923,8 +1548,8 @@
     var pageEvent = classifyPage();
     if (pageEvent) {
       var alert = document.createElement('div');
-      alert.style.cssText = 'margin-bottom:10px;padding:8px;background:#f38ba822;border:1px solid #f38ba8;border-radius:8px;font-size:12px;color:#f38ba8;';
-      alert.innerHTML = '⚠️ 404 page — <strong>404</strong> event would fire on load.';
+      alert.style.cssText = 'margin-bottom:8px;padding:6px 10px;background:#f7768e18;border:1px solid #f7768e44;border-radius:6px;font-size:11px;color:#f7768e;';
+      alert.innerHTML = '404 page &#8212; <strong>404</strong> event would fire on load.';
       var body = document.getElementById('hermes-panel-body');
       if (body && body.firstChild) {
         body.insertBefore(alert, body.firstChild.nextSibling);
@@ -935,8 +1560,8 @@
     document.addEventListener('mouseover', handleHover, true);
     document.addEventListener('click', handleClick, true);
 
-    console.log('🎯 Universal Click Tracker v2 active. Hover any element to inspect.');
-    console.log('📋 ' + TAXONOMY.rules.length + ' taxonomy rules + catch-all coverage');
+    console.log('[Universal Click Tracker] Active. Hover to inspect, click to add to framework.');
+    console.log('[Universal Click Tracker] ' + TAXONOMY.rules.length + ' taxonomy rules + catch-all coverage.');
   }
 
   if (document.readyState === 'loading') {
