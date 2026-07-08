@@ -149,6 +149,17 @@
     ['ul.top-feature-story', 'OT-top-feature-story'],
     ['ul.top-social a *', 'top-green-bar-social-icons'],
   ];
+    ['navigation', 'nav, [role=\'navigation\'], [class*=\'nav-\'], [class*=\'navbar\'], [class*=\'navigation\'], [class*=\'menu-item\']'],
+    ['footer', 'footer, [class*=\'footer\'], [id*=\'footer\']'],
+    ['header', 'header, [class*=\'header\'], [id*=\'header\']'],
+    ['hero', '[class*=\'hero\'], [class*=\'banner\'], [class*=\'spotlight\']'],
+    ['breadcrumb', '[class*=\'breadcrumb\'], [aria-label*=\'breadcrumb\'], [class*=\'bread-crumb\']'],
+    ['search', 'form[role=\'search\'], [class*=\'search\'], [id*=\'search\'], [class*=\'funnelback\']'],
+    ['main-content', 'main, [role=\'main\'], article, [class*=\'content-area\'], [class*=\'main-content\']'],
+    ['sidebar', 'aside, [role=\'complementary\'], [class*=\'sidebar\'], [class*=\'side-bar\']'],
+    ['card', '[class*=\'card\'], [class*=\'tile\'], [class*=\'grid-item\']'],
+    ['tabs-accordion', '[class*=\'tab\'], [role=\'tabpanel\'], [class*=\'accordion\']'],
+
 
 
 

@@ -251,3 +251,13 @@ The AI will return two things:
 ## Open Questions
 
 > **If you plan to use these generated triggers with a visual inspection tool, note:** The Framework Inspector bookmarklet (`qa-inspector.min.js`) is a standalone visual scanner with its own built-in matching rules — it does **not** load GTM JSON files or external configurations. The GENERATE-TRIGGERS prompt above outputs standard GTM container export JSON, which must be imported into GTM via Admin > Import Container to take effect. There is no separate "QA JSON" format needed.
+
+## Portability
+
+The `web_element_location` values use a **three-layer location detection**:
+
+1. **OHIO-specific** (~110 rules) — exact CSS selectors from the live GTM variable. These match OHIO.edu's Drupal theme.
+2. **Generic higher-ed** (10 rules) — common university website patterns (`<nav>`, `<footer>`, `<header>`, `[class*="hero"]`, `[class*="search"]`, etc.). These fire on any .edu site when OHIO-specific rules don't match.
+3. **Fallback** — `body` if nothing else matches.
+
+When reviewing generated triggers for a non-OHIO site, the location labels will come from the generic layer rather than the OHIO-specific layer. This is expected behavior. See `PORTABILITY.md` for the full mapping.

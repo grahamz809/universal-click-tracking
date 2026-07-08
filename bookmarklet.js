@@ -474,6 +474,38 @@
   else if (elementUrl === '#' || elementUrl.includes('#') && !elementUrl.includes('some-unique-id')) 
   { label = 'jump-link'
   }
+  // ---- Generic higher-ed location rules (portability layer) ----
+  // These fire when OHIO-specific rules don't match — works on any university site
+  else if(element.closest('nav, [role="navigation"], [class*="nav-"], [class*="navbar"], [class*="navigation"], [class*="menu-item"]'))
+  { label = 'navigation'
+  }
+  else if(element.closest('footer, [class*="footer"], [id*="footer"]'))
+  { label = 'footer'
+  }
+  else if(element.closest('header, [class*="header"], [id*="header"]'))
+  { label = 'header'
+  }
+  else if(element.closest('[class*="hero"], [class*="banner"], [class*="spotlight"]'))
+  { label = 'hero'
+  }
+  else if(element.closest('[class*="breadcrumb"], [aria-label*="breadcrumb"], [class*="bread-crumb"]'))
+  { label = 'breadcrumb'
+  }
+  else if(element.closest('form[role="search"], [class*="search"], [id*="search"], [class*="funnelback"]'))
+  { label = 'search'
+  }
+  else if(element.closest('main, [role="main"], article, [class*="content-area"], [class*="main-content"]'))
+  { label = 'main-content'
+  }
+  else if(element.closest('aside, [role="complementary"], [class*="sidebar"], [class*="side-bar"]'))
+  { label = 'sidebar'
+  }
+  else if(element.closest('[class*="card"], [class*="tile"], [class*="grid-item"]'))
+  { label = 'card'
+  }
+  else if(element.closest('[class*="tab"], [role="tabpanel"], [class*="accordion"]'))
+  { label = 'tabs-accordion'
+  }
   else{ label = 'body'}
   return label
 
