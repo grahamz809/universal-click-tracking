@@ -4,14 +4,14 @@
 
 The **Framework Inspector** is a lightweight, standalone visual scanner. When you click it on any OHIO.edu page, it instantly draws colored outlines around every interactive element it can classify and shows a floating panel with an event-type legend and element counts. Hover any outlined element to see its event name, text content, and page location in a tooltip.
 
-This is an **alternative view** to the Taxonomy Inspector bookmarklet (documented in the main README):
+This is an **alternative view** to the Click Tracker Framework bookmarklet (documented in the main README):
 
 | Tool | Approach | Best For |
 |------|----------|----------|
-| **Taxonomy Inspector** | Full interactive panel with capture, CSV export, Airtable sync | Deep auditing, building a framework, exporting data |
+| **Click Tracker Framework** | Full interactive panel with capture, CSV export, Airtable sync | Deep auditing, building a framework, exporting data |
 | **Framework Inspector** | Quick one-pass visual scan with colored outlines and hover tooltips | A fast "show me everything at once" visual check |
 
-They use **different matching rules** — the Framework Inspector has a simpler set (8 event types) compared to the full Taxonomy Inspector (16 events). Results may differ slightly. Use the tool that matches your workflow.
+They use **different matching rules** — the Framework Inspector has a simpler set (8 event types) compared to the full Click Tracker Framework (16 events). Results may differ slightly. Use the tool that matches your workflow.
 
 ---
 
@@ -48,7 +48,7 @@ Elements that don't match any rule are left alone (no outline).
 
 ## Installation
 
-The Framework Inspector is a **standalone bookmarklet**. You install it the same way as the Taxonomy Inspector — drag a link to your bookmarks bar, or paste a code snippet.
+The Framework Inspector is a **standalone bookmarklet**. You install it the same way as the Click Tracker Framework — drag a link to your bookmarks bar, or paste a code snippet.
 
 ### Quick Install — Drag to Bookmarks
 
@@ -112,22 +112,22 @@ Click the **✕** in the panel's header to close it. The colored outlines remain
 
 ---
 
-## When to Use This vs. the Taxonomy Inspector
+## When to Use This vs. the Click Tracker Framework
 
 | Situation | Recommended Tool |
 |-----------|-----------------|
 | I want a quick visual scan of all elements on one page | Framework Inspector |
-| I need to capture specific elements and export to CSV | Taxonomy Inspector |
-| I want to see the full 16-event taxonomy classification | Taxonomy Inspector |
+| I need to capture specific elements and export to CSV | Click Tracker Framework |
+| I want to see the full 16-event taxonomy classification | Click Tracker Framework |
 | I just need a fast overview of what's on the page | Framework Inspector |
-| I need to sync data to Airtable | Taxonomy Inspector |
+| I need to sync data to Airtable | Click Tracker Framework |
 | I want to check if elements consistently match across pages | Either tool |
 
 ---
 
 ## Important Notes
 
-- **This tool uses its own matching rules.** It has 8 event types — a subset of the full 16-event taxonomy. Results are directional and may differ from the Taxonomy Inspector.
+- **This tool uses its own matching rules.** It has 8 event types — a subset of the full 16-event taxonomy. Results are directional and may differ from the Click Tracker Framework.
 - **The tooltip appears above the element.** On elements near the top of the page, it may be partially cut off. Scroll the element lower on the page if needed.
 - **Colored outlines persist** until the page is refreshed or the bookmarklet is clicked again (which re-scans).
 - **Not a replacement for GTM testing.** This tool shows you what a simplified rule set thinks elements are. It does not load or test your actual GTM container configuration. Always use GTM Preview mode before publishing.
