@@ -237,11 +237,13 @@ The framework was tested on two other major Ohio university websites to confirm 
 ```
 universal-click-tracking/
 ├── README.md                          ← This file
+├── GENERATE-TRIGGERS.md              ← Workflow: turn captured elements into GTM triggers
+├── QA-BOOKMARKLET.md                 ← Visual QA tool for inspecting GTM JSON against live pages
 ├── engagement-first-framework.html    ← Install page + interactive demo (open in browser)
 ├── PORTABILITY.md                     ← OSU & MiamiOH validation details
 ├── qr-code.png                        ← QR code for this repository
-├── bookmarklet.js                     ← Source code for the bookmarklet tool
-├── bookmarklet.min.js                 ← Minified bookmarklet (ready to use)
+├── bookmarklet.js                     ← Source code for the Taxonomy Inspector bookmarklet
+├── bookmarklet.min.js                 ← Minified Taxonomy Inspector (served via CDN)
 └── taxonomy-map.js                    ← Taxonomy mapping used for tag generation
 ```
 
