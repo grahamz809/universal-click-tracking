@@ -1,0 +1,2650 @@
+{
+  "exportFormatVersion": 2,
+  "exportTime": "2026-07-14T18:38:40.349329Z",
+  "containerVersion": {
+    "path": "accounts/0/containers/0/versions/0",
+    "accountId": "0",
+    "containerId": "0",
+    "containerVersionId": "0",
+    "name": "OHIO Universal Click-Tracking - Generated Container",
+    "description": "Generated from the OHIO.edu Universal Click-Tracking Taxonomy. 13 GA4 event tags, 40 triggers with CSS selectors from captured elements. After import, connect GA4 event tags to your existing GA4 Configuration tag.",
+    "container": {
+      "path": "accounts/0/containers/0",
+      "accountId": "0",
+      "containerId": "0",
+      "name": "OHIO Universal Click Tracking",
+      "publicId": "GTM-KQLPNRRW",
+      "usageContext": [
+        "WEB"
+      ],
+      "fingerprint": "0",
+      "tagManagerUrl": "https://tagmanager.google.com/"
+    },
+    "tag": [
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "tagId": "1",
+        "name": "GA4 Event - chat",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-JR43SKW92E"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "chat"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "web_element_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{web_element_location}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "click_text"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click Text}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "link_url"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click URL}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          }
+        ],
+        "firingTriggerId": [
+          "40"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "tagId": "2",
+        "name": "GA4 Event - contact_click",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-JR43SKW92E"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "contact_click"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "web_element_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{web_element_location}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "click_text"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click Text}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "link_url"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click URL}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          }
+        ],
+        "firingTriggerId": [
+          "19",
+          "20",
+          "21"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "tagId": "3",
+        "name": "GA4 Event - cta_button",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-JR43SKW92E"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "cta_button"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "web_element_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{web_element_location}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "click_text"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click Text}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "link_url"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click URL}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          }
+        ],
+        "firingTriggerId": [
+          "3",
+          "4",
+          "5",
+          "6",
+          "29"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "tagId": "4",
+        "name": "GA4 Event - cta_link",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-JR43SKW92E"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "cta_link"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "web_element_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{web_element_location}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "click_text"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click Text}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "link_url"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click URL}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          }
+        ],
+        "firingTriggerId": [
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "tagId": "5",
+        "name": "GA4 Event - custom_filter_search",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-JR43SKW92E"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "custom_filter_search"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "web_element_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{web_element_location}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "click_text"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click Text}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "link_url"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click URL}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "form_id"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Form ID}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "form_classes"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Form Classes}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          }
+        ],
+        "firingTriggerId": [
+          "31",
+          "32"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "tagId": "6",
+        "name": "GA4 Event - exit_link",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-JR43SKW92E"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "exit_link"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "web_element_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{web_element_location}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "click_text"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click Text}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "link_url"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click URL}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          }
+        ],
+        "firingTriggerId": [
+          "38"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "tagId": "7",
+        "name": "GA4 Event - generate_lead",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-JR43SKW92E"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "generate_lead"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "web_element_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{web_element_location}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "click_text"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click Text}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "link_url"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click URL}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "form_id"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Form ID}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "form_classes"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Form Classes}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          }
+        ],
+        "firingTriggerId": [
+          "1",
+          "2"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "tagId": "8",
+        "name": "GA4 Event - global_nav",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-JR43SKW92E"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "global_nav"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "web_element_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{web_element_location}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "click_text"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click Text}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "link_url"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click URL}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          }
+        ],
+        "firingTriggerId": [
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "18"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "tagId": "9",
+        "name": "GA4 Event - internal_search",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-JR43SKW92E"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "internal_search"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "web_element_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{web_element_location}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "click_text"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click Text}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "link_url"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click URL}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "form_id"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Form ID}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "form_classes"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Form Classes}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          }
+        ],
+        "firingTriggerId": [
+          "30"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "tagId": "10",
+        "name": "GA4 Event - news_content",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-JR43SKW92E"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "news_content"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "web_element_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{web_element_location}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "click_text"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click Text}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "link_url"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click URL}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          }
+        ],
+        "firingTriggerId": [
+          "33",
+          "34",
+          "35",
+          "36"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "tagId": "11",
+        "name": "GA4 Event - tool_interaction",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-JR43SKW92E"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "tool_interaction"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "web_element_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{web_element_location}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "click_text"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click Text}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "link_url"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click URL}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "form_id"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Form ID}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "form_classes"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Form Classes}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          }
+        ],
+        "firingTriggerId": [
+          "39"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "tagId": "12",
+        "name": "GA4 Event - video",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-JR43SKW92E"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "video"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "web_element_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{web_element_location}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "click_text"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click Text}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "link_url"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click URL}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "video_url"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Video URL}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "video_title"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Video Title}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "video_status"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Video Status}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "video_percent"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Video Percent}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          }
+        ],
+        "firingTriggerId": [
+          "37"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "tagId": "13",
+        "name": "GA4 Event - web_element",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "G-JR43SKW92E"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "web_element"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "web_element_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{web_element_location}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "click_text"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click Text}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "link_url"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{Click URL}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          }
+        ],
+        "firingTriggerId": [
+          "22",
+          "23",
+          "24",
+          "25",
+          "26",
+          "27",
+          "28"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      }
+    ],
+    "trigger": [
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "1",
+        "name": "Trigger - generate_lead - Request Information - Apply",
+        "type": "FORM_SUBMISSION",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "true"
+        },
+        "waitForTagsTimeout": {
+          "type": "TEMPLATE",
+          "value": "2000"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "true"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "#rfi form button[type=submit], #rfi .form_button_submit"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "2",
+        "name": "Trigger - generate_lead - Apply Now - RN to BSN - Online-Programs",
+        "type": "FORM_SUBMISSION",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "true"
+        },
+        "waitForTagsTimeout": {
+          "type": "TEMPLATE",
+          "value": "2000"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "true"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "form#form_749eb3ef-eb5d-4c02-ad4e-4494209f68d2 input[type=submit], button#pop-up-submit"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "3",
+        "name": "Trigger - cta_button - Apply Now",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "a.button.green, a.button.green *"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "4",
+        "name": "Trigger - cta_button - Plan a Visit - Visit",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "a.button.white, a.button.white *"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "5",
+        "name": "Trigger - cta_button - Browse All Programs - Academics",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "a.button.moss, a.button.moss *"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "6",
+        "name": "Trigger - cta_button - Find Your Major - Academics",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": ".icon-tiles a.icons--link, .icon-tiles a.icons--link *"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "7",
+        "name": "Trigger - cta_link - Computer Science - B.S. - Programs",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "a.program-link, a.program-link *"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "8",
+        "name": "Trigger - cta_link - Campus Life Overview - Campus-Life",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": ".quicklinks a, .quicklinks a *"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "9",
+        "name": "Trigger - cta_link - Ohio University by the Numbers - About",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": ".fast-facts a, .fast-facts a *"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "10",
+        "name": "Trigger - cta_link - View All Events - Events",
+        "type": "CLICK",
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "#snowstop, button#snowstop, [id=snowstop]"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "11",
+        "name": "Trigger - cta_link - Support Ohio University - Giving",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": ".image-tiles a, .image-tiles a *"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "12",
+        "name": "Trigger - cta_link - Financial Aid - search.ohio.edu - Search-Results",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": ".search-results__link, a.search-results__link"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "13",
+        "name": "Trigger - global_nav - Academics - Academics",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": ".menu-item a:not([href=#]), #main-menu .menu-item a"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "14",
+        "name": "Trigger - global_nav - Engineering Programs - Academics",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "nav.breadcrumb ol li a, nav.breadcrumb a"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "15",
+        "name": "Trigger - global_nav - About Ohio University - About",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "#global-footer a, footer a"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "16",
+        "name": "Trigger - global_nav - Ohio University Home",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "#header-top #logo > a > img, #logo img"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "17",
+        "name": "Trigger - global_nav - University Directory - Directory",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": ".aux-menu a, .aux-menu a *"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "18",
+        "name": "Trigger - global_nav - Event Calendar - Events",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "#calendar-tabs a, #calendar-tabs button"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "19",
+        "name": "Trigger - contact_click - (740) 593-1000 - Contact",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "a[href^=tel], [href^=tel]"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "20",
+        "name": "Trigger - contact_click - admissions@ohio.edu - Contact",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "a[href^=mailto], [href^=mailto]"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "21",
+        "name": "Trigger - contact_click - Dr. Jane Doe - Faculty Profile - Directory",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": ".personal-links a, .personal-links a *"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "22",
+        "name": "Trigger - web_element - What is the application deadline? - Admissions",
+        "type": "CLICK",
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "summary.faq-button, summary.faq-button *"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "23",
+        "name": "Trigger - web_element - Next image - Gallery",
+        "type": "CLICK",
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "button.arrow.next, button.arrow.next *"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "24",
+        "name": "Trigger - web_element - Programs - Academics",
+        "type": "CLICK",
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "section.explore-tabs button.tab[id^=explore-tab-]"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "25",
+        "name": "Trigger - web_element - View Gallery - About",
+        "type": "CLICK",
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "div.gallery-wrapper *, div.gallery-wrapper button"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "26",
+        "name": "Trigger - web_element - Admission Requirements - Admissions",
+        "type": "CLICK",
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": ".collapsible-heading, [class*=collapsible-heading]"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "27",
+        "name": "Trigger - web_element - Meet Our Faculty - Academics",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": ".expert-callout a, .expert-callout a *"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "28",
+        "name": "Trigger - web_element - Dr. John Smith - Professor of Biology - Directory",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": ".view-profiles a.profile-card, .view-profiles a.profile-card *"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "29",
+        "name": "Trigger - cta_button - Facebook",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": ".icons--link, a.icons--link, .social-icons a"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "30",
+        "name": "Trigger - internal_search - Search - Search",
+        "type": "FORM_SUBMISSION",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "true"
+        },
+        "waitForTagsTimeout": {
+          "type": "TEMPLATE",
+          "value": "2000"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "true"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "form#funnelback-block-search-form input[type=submit], #funnelback-block-search-form button"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "31",
+        "name": "Trigger - custom_filter_search - Filter - Graduate Programs - Programs",
+        "type": "CLICK",
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": ".view-programs .form-submit, #edit-submit-programs"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "32",
+        "name": "Trigger - custom_filter_search - Filter - Online Programs - Graduate",
+        "type": "CLICK",
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "input[type=checkbox]:checked, .form-checkbox input"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "33",
+        "name": "Trigger - news_content - Ohio University Launches New Sustainability Initiative - News",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "a.news-item, a.news-item *"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "34",
+        "name": "Trigger - news_content - Research Breakthrough in Biomedical Engineering - Ohio-Today",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": ".feature-stories a, [class*=feature-stories] a"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "35",
+        "name": "Trigger - news_content - Alumni Class Notes - Fall 2024 - News",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": ".alumni-news-story a, a.alumni-news-story"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "36",
+        "name": "Trigger - news_content - Green Scenes - Sustainable Campus Initiatives - Green-Scenes",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "a.green-scenes-story, .green-scenes-story a"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "37",
+        "name": "Trigger - video - hero-video",
+        "type": "YOU_TUBE_VIDEO",
+        "parameter": [
+          {
+            "type": "BOOLEAN",
+            "key": "captureStart",
+            "value": "true"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "captureComplete",
+            "value": "true"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "capturePause",
+            "value": "true"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "captureProgress",
+            "value": "true"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "progressThresholdsPercent",
+            "value": "10,25,50,75,90"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "fixMissingApi",
+            "value": "true"
+          }
+        ],
+        "filter": [
+          {
+            "type": "MATCH_REGEX",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Video URL}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "youtube.com|youtu.be"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "38",
+        "name": "Trigger - exit_link - Apply via Common App - Apply",
+        "type": "LINK_CLICK",
+        "waitForTags": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "checkValidation": {
+          "type": "BOOLEAN",
+          "value": "false"
+        },
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "a[href^=http]:not([href*=ohio.edu]), a[target=_blank]"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "39",
+        "name": "Trigger - tool_interaction - Calculate Your Total Rewards - Hr",
+        "type": "CLICK",
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "#mainContentContainer form button.calculate, .salary-calculator form"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "triggerId": "40",
+        "name": "Trigger - chat - Chat with Admissions",
+        "type": "CLICK",
+        "autoEventFilter": [
+          {
+            "type": "CSS_SELECTOR",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Click Element}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "button#chat-button, .chat-button, [aria-label*=chat]"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "variable": [
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "variableId": "1",
+        "name": "web_element_location",
+        "type": "jsm",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "javascript",
+            "value": "function() {\n  var el = {{Click Element}};\n  if (!el || !el.closest) return undefined;\n  try {\n    if (el.closest(\"form#funnelback-block-search-form input[type=submit], #funnelback-block-search-form button\")) return \"top-green-bar-search\";\n    if (el.closest(\"form#form_749eb3ef-eb5d-4c02-ad4e-4494209f68d2 input[type=submit], button#pop-up-submit\")) return \"pop-up\";\n    if (el.closest(\"#mainContentContainer form button.calculate, .salary-calculator form\")) return \"compensation-estimator\";\n    if (el.closest(\".view-profiles a.profile-card, .view-profiles a.profile-card *\")) return \"profile-card\";\n    if (el.closest(\"div.hero-video-container iframe, .video-embed-field iframe\")) return \"hero-video\";\n    if (el.closest(\"#rfi form button[type=submit], #rfi .form_button_submit\")) return \"slate_rfi\";\n    if (el.closest(\".icon-tiles a.icons--link, .icon-tiles a.icons--link *\")) return \"icon\";\n    if (el.closest(\"a[href^=http]:not([href*=ohio.edu]), a[target=_blank]\")) return \"body\";\n    if (el.closest(\"button#chat-button, .chat-button, [aria-label*=chat]\")) return \"chat\";\n    if (el.closest(\".menu-item a:not([href=#]), #main-menu .menu-item a\")) return \"main-menu\";\n    if (el.closest(\".collapsible-heading, [class*=collapsible-heading]\")) return \"collapsible-headings\";\n    if (el.closest(\".view-programs .form-submit, #edit-submit-programs\")) return \"program-finder\";\n    if (el.closest(\"input[type=checkbox]:checked, .form-checkbox input\")) return \"program-finder\";\n    if (el.closest(\"section.explore-tabs button.tab[id^=explore-tab-]\")) return \"explore-tabs\";\n    if (el.closest(\"div.gallery-wrapper *, div.gallery-wrapper button\")) return \"image-gallery\";\n    if (el.closest(\".feature-stories a, [class*=feature-stories] a\")) return \"OT-feature-story\";\n    if (el.closest(\".search-results__link, a.search-results__link\")) return \"search.ohio.edu\";\n    if (el.closest(\".icons--link, a.icons--link, .social-icons a\")) return \"social-icons\";\n    if (el.closest(\"a.green-scenes-story, .green-scenes-story a\")) return \"OT-green-scenes-story\";\n    if (el.closest(\"#snowstop, button#snowstop, [id=snowstop]\")) return \"snow-stop\";\n    if (el.closest(\".alumni-news-story a, a.alumni-news-story\")) return \"OT-alumni-news-story\";\n    if (el.closest(\"nav.breadcrumb ol li a, nav.breadcrumb a\")) return \"breadcrumbs\";\n    if (el.closest(\"summary.faq-button, summary.faq-button *\")) return \"faq\";\n    if (el.closest(\"#calendar-tabs a, #calendar-tabs button\")) return \"calendar-tabs\";\n    if (el.closest(\"#header-top #logo > a > img, #logo img\")) return \"global-OHIO-logo\";\n    if (el.closest(\".personal-links a, .personal-links a *\")) return \"personal-links\";\n    if (el.closest(\"button.arrow.next, button.arrow.next *\")) return \"image-slideshow-arrows\";\n    if (el.closest(\".expert-callout a, .expert-callout a *\")) return \"experts-callout\";\n    if (el.closest(\"a.button.green, a.button.green *\")) return \"button\";\n    if (el.closest(\"a.button.white, a.button.white *\")) return \"button\";\n    if (el.closest(\"a.program-link, a.program-link *\")) return \"program-link\";\n    if (el.closest(\".image-tiles a, .image-tiles a *\")) return \"image-tiles\";\n    if (el.closest(\"a[href^=mailto], [href^=mailto]\")) return \"main-content\";\n    if (el.closest(\"a.button.moss, a.button.moss *\")) return \"button\";\n    if (el.closest(\".quicklinks a, .quicklinks a *\")) return \"quick-links\";\n    if (el.closest(\".fast-facts a, .fast-facts a *\")) return \"fast-facts\";\n    if (el.closest(\"#global-footer a, footer a\")) return \"footer\";\n    if (el.closest(\".aux-menu a, .aux-menu a *\")) return \"top-green-bar\";\n    if (el.closest(\"a.news-item, a.news-item *\")) return \"news-content\";\n    if (el.closest(\"a[href^=tel], [href^=tel]\")) return \"main-content\";\n  } catch (e) {}\n  return undefined;\n}"
+          }
+        ]
+      }
+    ],
+    "builtInVariable": [
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "type": "CLICK_ELEMENT",
+        "name": "Click Element"
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "type": "CLICK_URL",
+        "name": "Click URL"
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "type": "CLICK_TEXT",
+        "name": "Click Text"
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "type": "FORM_ID",
+        "name": "Form ID"
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "type": "FORM_CLASSES",
+        "name": "Form Classes"
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "type": "VIDEO_URL",
+        "name": "Video URL"
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "type": "VIDEO_TITLE",
+        "name": "Video Title"
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "type": "VIDEO_STATUS",
+        "name": "Video Status"
+      },
+      {
+        "accountId": "0",
+        "containerId": "0",
+        "type": "VIDEO_PERCENT",
+        "name": "Video Percent"
+      }
+    ],
+    "fingerprint": "0",
+    "tagManagerUrl": "https://tagmanager.google.com/"
+  }
+}
