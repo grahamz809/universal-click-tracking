@@ -244,6 +244,7 @@ The AI will return two things:
 - **The generated JSON uses placeholder account/container IDs.** You or your developer need to update these to match your real GTM account before importing.
 - **GA4 Event tags will need to be connected to your actual GA4 Configuration tag.** The AI doesn't know your existing tag IDs — this connection happens after import.
 - **The AI isn't perfect.** Always review the generated triggers before testing. CSS selectors might need tweaking, and the AI might occasionally assign the wrong trigger type. That's why we test in Preview mode first.
+- **Known GTM import quirk: LINK_CLICK/CLICK triggers need `filter`, not `autoEventFilter`.** GTM's JSON format uses the `filter` field for CSS selector conditions on LINK_CLICK (Just Links) and CLICK (All Elements) triggers. The `autoEventFilter` field is only valid for FORM_SUBMISSION and CUSTOM_EVENT triggers. If import drops your CSS selectors (leaving triggers as blanket "All Link Clicks"), check that LINK_CLICK/CLICK triggers use `"filter"` and not `"autoEventFilter"`. The sample file `OHIO_click_tracking_GTM_container.json` in the repo has the correct structure.
 - **GTM Preview mode is still the official QA step.** This workflow automates the trigger creation, but you still need to verify the triggers actually fire on your site before publishing.
 
 ---
