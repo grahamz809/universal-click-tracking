@@ -95,7 +95,7 @@
     <p>Drag this link to your bookmarks bar, then click it on <strong>any OHIO.edu page</strong> to see which events would fire:</p>
 
     <div style="margin: 16px 0; text-align: center;">
-      <a id="bookmarklet-link" href="javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/grahamz809/universal-click-tracking@80a717e/bookmarklet.min.js';document.body.appendChild(s);})();" class="btn btn-primary" style="font-size:16px;padding:14px 32px;">
+      <a id="bookmarklet-link" href="javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/grahamz809/universal-click-tracking@9626e12/bookmarklet.min.js';document.body.appendChild(s);})();" class="btn btn-primary" style="font-size:16px;padding:14px 32px;">
         🎯 Click Tracker Framework
       </a>
     </div>
@@ -126,13 +126,513 @@
     <p style="font-size:12px;color:#6c7086;">Uses a simplified rule set (8 event types) — results may differ slightly from the main Click Tracker Framework.</p>
 
     <div style="margin: 16px 0; text-align: center;">
-      <a id="qa-bookmarklet-link" href="javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/grahamz809/universal-click-tracking@80a717e/qa-inspector.min.js';document.body.appendChild(s);})();" class="btn btn-primary" style="font-size:16px;padding:14px 32px;">
+      <a id="qa-bookmarklet-link" href="javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/grahamz809/universal-click-tracking@9626e12/qa-inspector.min.js';document.body.appendChild(s);})();" class="btn btn-primary" style="font-size:16px;padding:14px 32px;">
         🔍 Framework Inspector
       </a>
     </div>
 
     <p style="font-size:13px;">Manual install — copy this into a bookmark URL field:</p>
-    <div class="code-block" style="font-size:11px;max-height:80px;overflow-y:auto;">javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/grahamz809/universal-click-tracking@80a717e/qa-inspector.min.js';document.body.appendChild(s);})();</div>
+    <div class="code-block" style="font-size:11px;max-height:80px;overflow-y:auto;">javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/grahamz809/universal-click-tracking@9626e12/qa-inspector.min.js';document.body.appendChild(s);})();</div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- HOW IT WORKS -->
+  <!-- ================================================================ -->
+  <div class="card">
+    <h2>⚙️ How the Matching Works</h2>
+    <p>The tool runs taxonomy rules (priority order) plus a <strong>catch-all</strong> at the end that ensures every link and interactive element on the page is captured. Every match always includes the 3 universal parameters + CSS selector.</p>
+
+    <div style="margin-bottom:8px;padding:8px;background:#45475a;border-radius:6px;">
+      <h3 style="color:#a6e3a1;margin:0 0 4px 0;">Universal Parameters (every event)</h3>
+      <table class="event-table">
+        <thead><tr><th>Parameter</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><code>link_click_url</code></td><td><code>el.href</code> (links) or <code>form.action</code> (forms) or empty</td></tr>
+          <tr><td><code>web_element_location</code></td><td>Page region detection: breadcrumb, aux-menu, main-nav, hero, footer, body</td></tr>
+          <tr><td><code>click_text</code></td><td><code>el.textContent</code> trimmed (max 150 chars)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <table class="event-table">
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th>Family</th>
+          <th>Match Strategy</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="badge badge-conversion">generate_lead</span></td><td>Conversion</td><td>form tag, form_button_submit, [data-form-type]</td></tr>
+        <tr><td><span class="badge badge-conversion">event_rsvp</span></td><td>Conversion</td><td>Text match: "RSVP", "Register", "Confirm"</td></tr>
+        <tr><td><span class="badge badge-conversion">file_download</span></td><td>Conversion</td><td>[download] attr or .pdf/.docx/.xlsx URL</td></tr>
+        <tr><td><span class="badge badge-engagement">cta_link</span></td><td>Engagement</td><td>Button-class links, "Learn More", card links, arrows, body text links</td></tr>
+        <tr><td><span class="badge badge-engagement">global_nav</span></td><td>Engagement</td><td>Inside main-nav, aux-menu, breadcrumb, footer elements</td></tr>
+        <tr><td><span class="badge badge-engagement">contact_click</span></td><td>Engagement</td><td>tel:, mailto:, phone/email pattern</td></tr>
+        <tr><td><span class="badge badge-engagement">web_element</span></td><td>Engagement</td><td>Accordion, tabs, carousel, expand/collapse, info indicators, modals</td></tr>
+        <tr><td><span class="badge badge-discovery">internal_search</span></td><td>Discovery</td><td>form[action*=search], search input/button, funnelback block</td></tr>
+        <tr><td><span class="badge badge-discovery">custom_filter_search</span></td><td>Discovery</td><td>[data-module], .program-finder, .filter</td></tr>
+        <tr><td><span class="badge badge-content">news_content</span></td><td>Content & Media</td><td>Inside article, .news, .story, "View all stories"</td></tr>
+        <tr><td><span class="badge badge-content">video</span></td><td>Content & Media</td><td>iframe youtube/vimeo, "Play video" text, hero video</td></tr>
+        <tr><td><span class="badge badge-utility">tool_interaction</span></td><td>Utility & Support</td><td>[data-tool], .calculator, .interactive-tool</td></tr>
+        <tr><td><span class="badge badge-utility">chat</span></td><td>Utility & Support</td><td>[class*="chat"], [aria-label*="chat"]</td></tr>
+        <tr><td><span class="badge badge-utility">exit_link</span></td><td>Utility & Support</td><td>External hostname (not ohio.edu)</td></tr>
+        <tr><td><span class="badge badge-utility">404</span></td><td>Utility & Support</td><td>Page title/status (page-level, not element)</td></tr>
+        <tr><td style="color:#a6e3a1;">⏣ catch-all</td><td>Engagement</td><td><strong>Every</strong> unmatched link → <code>cta_link</code>, every unmatched button → <code>web_element</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- DEMO: CONVERSION -->
+  <!-- ================================================================ -->
+  <h2>🔴 Conversion Events — Demo</h2>
+
+  <div class="card">
+    <h3>📝 generate_lead — Form Submission</h3>
+    <p>Hover the Submit button below to see the <strong>generate_lead</strong> rule match:</p>
+    <form id="demo-form" onsubmit="event.preventDefault();alert('Form submitted! Check the bookmarklet panel.')" style="display:flex;flex-direction:column;gap:8px;max-width:400px;">
+      <input type="text" placeholder="Your name" style="padding:8px;border-radius:6px;border:1px solid #585b70;background:#45475a;color:#cdd6f4;font-size:14px;">
+      <input type="email" placeholder="Your email" style="padding:8px;border-radius:6px;border:1px solid #585b70;background:#45475a;color:#cdd6f4;font-size:14px;">
+      <button type="submit" class="btn btn-primary" style="align-self:flex-start;">Submit Inquiry</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>⬇️ file_download — PDF Download</h3>
+    <p>These links would fire <strong>file_download</strong>:</p>
+    <div class="demo-row">
+      <a href="/files/viewbook.pdf" class="btn btn-green btn-sm">Download Viewbook (PDF)</a>
+      <a href="/files/application.docx" class="btn btn-white btn-sm">Application Form (DOCX)</a>
+      <a href="/files/brochure.pdf" download class="btn btn-green btn-sm">Program Brochure</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📅 event_rsvp — RSVP Confirmation</h3>
+    <a href="/events/showcase" class="btn btn-primary btn-sm">RSVP for OHIO Showcase</a>
+    <a href="/events/visit" class="btn btn-white btn-sm" style="margin-left:8px;">Register for Campus Visit</a>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- DEMO: ENGAGEMENT -->
+  <!-- ================================================================ -->
+  <h2>🔵 Engagement Events — Demo</h2>
+
+  <div class="card">
+    <h3>🔗 cta_link — Button Links & Inline CTAs</h3>
+    <div class="demo-row">
+      <a href="/apply" class="btn btn-primary">Apply Now</a>
+      <a href="/visit" class="btn btn-green">Plan a Visit</a>
+      <a href="/admissions/admitted" class="btn btn-white">Admitted? Get Started</a>
+      <button class="btn btn-primary" onclick="alert('CTA button clicked!')">Request Info</button>
+    </div>
+    <div style="margin-top:12px;">
+      <a href="/programs" class="demo-link card-link">Learn more about our 250+ academic programs →</a>
+      <a href="/guarantee" class="demo-link card-link">Read about the OHIO Guarantee+ →</a>
+      <a href="#rfi" class="demo-link">Jump to Request Info form</a>
+      <br><br>
+      <a href="/admissions" class="demo-link">Browse all our degrees &amp; programs ➜</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🧭 global_nav — Navigation (main-nav, aux-menu, breadcrumb, footer)</h3>
+    <p style="font-size:12px;color:#6c7086;">The bookmarklet properly distinguishes breadcrumb, main-nav, aux-menu, hero, footer, and body locations.</p>
+    <div class="demo-nav">
+      <a href="/about">About OHIO</a>
+      <a href="/academics">Academics</a>
+      <a href="/admissions">Admission</a>
+      <a href="/life">Life At OHIO</a>
+      <a href="/athletics">Athletics</a>
+    </div>
+    <div style="padding:8px;background:#313244;border-radius:6px;margin-bottom:8px;font-size:12px;">
+      <span style="color:#f9e2af;">Breadcrumb:</span>
+      <a href="/" style="color:#89b4fa;">OHIO</a> &raquo;
+      <a href="/ucm" style="color:#89b4fa;">UCM</a> &raquo;
+      <a href="/ucm/web" style="color:#89b4fa;">Web</a> &raquo;
+      <span style="color:#a6adc8;">Demo Page</span>
+    </div>
+    <footer class="demo-footer">
+      <a href="/apply">Apply</a> ·
+      <a href="/give">Give</a> ·
+      <a href="/visit">Visit</a> ·
+      <a href="/news">News</a>
+    </footer>
+  </div>
+
+  <div class="card">
+    <h3>📞 contact_click — Phone/Email</h3>
+    <div class="demo-row">
+      <a href="tel:+17405934100" class="demo-link">📞 740.593.4100</a>
+      <a href="mailto:admissions@ohio.edu" class="demo-link">✉️ admissions@ohio.edu</a>
+      <a href="https://maps.google.com/?q=Ohio+University" class="demo-link">📍 Ohio University (Athens Campus)</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🧩 web_element — UI Components (accordion, tabs, info popovers)</h3>
+    <p>Accordion (expand/collapse):</p>
+    <div class="accordion">
+      <div class="accordion-header" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block';">🎓 Why choose OHIO? <span style="float:right;">▼</span></div>
+      <div class="accordion-body">Top-ranked programs, hands-on learning, and a supportive community.</div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-header" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block';">💰 Tuition & Aid <span style="float:right;">▼</span></div>
+      <div class="accordion-body">The OHIO Guarantee locks in tuition and fees for four years.</div>
+    </div>
+
+    <p style="margin-top:12px;">Tabs:</p>
+    <div class="tab-container">
+      <div class="tab active" onclick="switchTab(this,'tab1')">Freshman</div>
+      <div class="tab" onclick="switchTab(this,'tab2')">Transfer</div>
+      <div class="tab" onclick="switchTab(this,'tab3')">International</div>
+    </div>
+    <div class="tab-content active" id="tab1">Information for first-year applicants.</div>
+    <div class="tab-content" id="tab2">Information for transfer students.</div>
+    <div class="tab-content" id="tab3">Information for international applicants.</div>
+
+    <p style="margin-top:12px;">Info popover:</p>
+    <div style="background:#45475a;padding:12px;border-radius:8px;display:flex;gap:12px;align-items:center;">
+      <span>🏛️ College Green at sunset</span>
+      <button class="btn btn-sm btn-white" onclick="alert('Caption toggled!')">Expand caption</button>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- DEMO: DISCOVERY -->
+  <!-- ================================================================ -->
+  <h2>🟢 Discovery Events — Demo</h2>
+
+  <div class="card">
+    <h3>🔍 internal_search — Site Search</h3>
+    <form action="https://search.ohio.edu/s/search.html" style="display:flex;gap:8px;max-width:400px;">
+      <input type="search" placeholder="What are you looking for?" style="flex:1;padding:8px;border-radius:6px;border:1px solid #585b70;background:#45475a;color:#cdd6f4;font-size:14px;">
+      <button type="submit" class="btn btn-primary btn-sm">Search</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>🔎 custom_filter_search — Program Finder</h3>
+    <div class="program-finder" style="background:#45475a;padding:16px;border-radius:8px;">
+      <p style="color:#bac2de;font-size:13px;margin-bottom:8px;">What are you interested in studying?</p>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <input type="text" placeholder="e.g. Nursing, Engineering, Art" style="flex:1;padding:8px;border-radius:6px;border:1px solid #585b70;background:#313244;color:#cdd6f4;font-size:14px;">
+        <button class="btn btn-primary btn-sm" style="background:#a6e3a1;color:#1e1e2e;">Search</button>
+      </div>
+      <div class="demo-row" style="gap:6px;">
+        <span class="badge badge-discovery" style="background:#585b70;color:#cdd6f4;cursor:pointer;" onclick="this.style.background=this.style.background==='#a6e3a1'?'#585b70':'#a6e3a1'">Bachelor's</span>
+        <span class="badge badge-discovery" style="background:#585b70;color:#cdd6f4;cursor:pointer;" onclick="this.style.background=this.style.background==='#a6e3a1'?'#585b70':'#a6e3a1'">Master's</span>
+        <span class="badge badge-discovery" style="background:#585b70;color:#cdd6f4;cursor:pointer;" onclick="this.style.background=this.style.background==='#a6e3a1'?'#585b70':'#a6e3a1'">Online</span>
+        <span class="badge badge-discovery" style="background:#585b70;color:#cdd6f4;cursor:pointer;" onclick="this.style.background=this.style.background==='#a6e3a1'?'#585b70':'#a6e3a1'">On-Campus</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- DEMO: CONTENT & MEDIA -->
+  <!-- ================================================================ -->
+  <h2>🟡 Content & Media Events — Demo</h2>
+
+  <div class="card">
+    <h3>📰 news_content — News/Article Clicks</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="news-card" style="background:#45475a;padding:14px;border-radius:8px;">
+        <span style="font-size:11px;color:#a6adc8;">RANKINGS</span>
+        <h4 style="margin:4px 0;font-size:15px;"><a href="/news/marching-band" class="demo-link">OHIO's Marching Band Earns National Recognition</a></h4>
+        <p style="font-size:12px;color:#6c7086;">After over 100 years of tradition...</p>
+      </div>
+      <div class="news-card" style="background:#45475a;padding:14px;border-radius:8px;">
+        <span style="font-size:11px;color:#a6adc8;">RESEARCH</span>
+        <h4 style="margin:4px 0;font-size:15px;"><a href="/news/nmr-spectrometer" class="demo-link">New 600 MHz NMR Spectrometer Unveiled</a></h4>
+        <p style="font-size:12px;color:#6c7086;">A new high-tech spectrometer...</p>
+      </div>
+    </div>
+    <div style="margin-top:8px;">
+      <a href="/news" class="btn btn-primary btn-sm" style="background:#f9e2af;color:#1e1e2e;">View All Stories ➜</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🎬 video — Video Playback</h3>
+    <div class="video-placeholder" onclick="alert('Video play tracked!')">
+      <div class="play-btn">▶️</div>
+      <p style="color:#a6adc8;">Watch full video — Forever Ohio</p>
+    </div>
+    <a href="https://youtube.com/watch?v=example" class="demo-link">Watch on YouTube ➜</a>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- DEMO: UTILITY & SUPPORT -->
+  <!-- ================================================================ -->
+  <h2>🟠 Utility & Support Events — Demo</h2>
+
+  <div class="card">
+    <h3>🔧 tool_interaction — Interactive Tools</h3>
+    <div class="spotlight">
+      <h4>📊 Net Price Calculator</h4>
+      <p style="font-size:13px;color:#bac2de;">Estimate your cost of attendance based on your financial situation.</p>
+      <button class="btn btn-sm btn-primary" style="margin-top:8px;" onclick="alert('Tool interaction tracked!')">Calculate My Cost</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>💬 chat — Chat Widget</h3>
+    <button class="btn btn-white btn-sm" data-chat-widget onclick="alert('Chat open tracked!')">Open Chat</button>
+    <button class="btn btn-white btn-sm" style="margin-left:8px;" aria-label="Chat with admissions" onclick="alert('Chat open tracked!')">💬 Live Chat</button>
+  </div>
+
+  <div class="card">
+    <h3>🚪 exit_link — External Links</h3>
+    <div class="demo-row">
+      <a href="https://ohiobobcats.com" class="demo-link">🏈 OHIO Athletics (ohiobobcats.com)</a>
+      <a href="https://catmail.ohio.edu" class="demo-link">📧 Catmail</a>
+      <a href="/apply" class="demo-link">✅ Apply (stays on domain — NOT exit)</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>❌ 404 — Page Not Found</h3>
+    <p>404 is a page-level event (fires once on load). The bookmarklet auto-detects 404 pages from the page title.</p>
+    <a href="/this-page-does-not-exist" class="demo-link">Test: Visit a 404 page ➜</a>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- WEB ELEMENT COVERAGE DEMO -->
+  <!-- ================================================================ -->
+  <h2>🧩 OHIO Web Element Coverage Demo</h2>
+
+  <div class="card">
+    <h3>🃏 Fact Cards</h3>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <div class="fact-card" style="background:#45475a;border-radius:8px;padding:16px;flex:1;min-width:200px;">
+        <div class="fact-heading" style="font-size:24px;font-weight:700;color:#cba6f7;">#1</div>
+        <div class="fact-body" style="font-size:13px;color:#bac2de;">Best Value Public University in Ohio</div>
+        <a href="#" class="demo-link" style="display:block;margin-top:8px;">Learn more ➜</a>
+      </div>
+      <div class="fact-card" style="background:#45475a;border-radius:8px;padding:16px;flex:1;min-width:200px;">
+        <div class="fact-heading" style="font-size:24px;font-weight:700;color:#cba6f7;">200+</div>
+        <div class="fact-body" style="font-size:13px;color:#bac2de;">Academic Programs Available</div>
+        <a href="#" class="demo-link" style="display:block;margin-top:8px;">Browse programs ➜</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🏷️ Card Links</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+      <a href="#" class="card-link-content" style="background:#45475a;border-radius:8px;padding:16px;text-decoration:none;color:#cdd6f4;">
+        <div style="font-size:32px;margin-bottom:4px;">📚</div>
+        <h4 style="margin:0;font-size:15px;">Academic Advising</h4>
+        <p style="font-size:12px;color:#bac2de;">Get guidance on your academic journey</p>
+      </a>
+      <a href="#" class="card-link-content" style="background:#45475a;border-radius:8px;padding:16px;text-decoration:none;color:#cdd6f4;">
+        <div style="font-size:32px;margin-bottom:4px;">💼</div>
+        <h4 style="margin:0;font-size:15px;">Career Services</h4>
+        <p style="font-size:12px;color:#bac2de;">Prepare for your future career</p>
+      </a>
+      <a href="#" class="card-link-content" style="background:#45475a;border-radius:8px;padding:16px;text-decoration:none;color:#cdd6f4;">
+        <div style="font-size:32px;margin-bottom:4px;">🏠</div>
+        <h4 style="margin:0;font-size:15px;">Housing & Dining</h4>
+        <p style="font-size:12px;color:#bac2de;">Find your home on campus</p>
+      </a>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- TEST INSTRUCTIONS -->
+  <!-- ================================================================ -->
+  <div class="card" style="border: 2px solid #cba6f7;">
+    <h2>🧪 What to Try on This Demo Page</h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div>
+        <h3 style="color:#f38ba8;margin-top:0;">Verify Location Detection</h3>
+        <ol style="padding-left:20px;color:#bac2de;font-size:14px;line-height:2;">
+          <li>Hover breadcrumb links → location should be <strong>"breadcrumb"</strong></li>
+          <li>Hover nav links above → location should be <strong>"main-nav"</strong></li>
+          <li>Hover footer links → location should be <strong>"footer"</strong></li>
+          <li>Hover hero area → location should be <strong>"hero"</strong></li>
+          <li>Hover body links → location should be <strong>"body"</strong></li>
+        </ol>
+      </div>
+      <div>
+        <h3 style="color:#89b4fa;margin-top:0;">Things to Notice</h3>
+        <ol style="padding-left:20px;color:#bac2de;font-size:14px;line-height:2;">
+          <li>Hover ANY link → it matches (catch-all at work)</li>
+          <li>Check every match has <code>link_click_url</code>, <code>web_element_location</code>, <code>click_text</code></li>
+          <li>Check each match shows its CSS selector</li>
+          <li>Click <strong>CSV</strong> → opens the export dialog</li>
+          <li>Hover quickly between elements → panel updates every time</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Tab switching
+function switchTab(el, tabId) {
+  var parent = el.closest('.tab-container');
+  parent.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  var container = parent.parentElement;
+  container.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+  document.getElementById(tabId).classList.add('active');
+}
+
+  // Inline bookmarklet (base64 encoded) — works from file:// and raw GitHub URLs
+  (function() {
+    var b64 = "amF2YXNjcmlwdDooZnVuY3Rpb24oKXt2YXIgcz1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCdzY3JpcHQnKTtzLnNyYz0naHR0cHM6Ly9jZG4uanNkZWxpdnIubmV0L2doL2dyYWhhbXo4MDkvdW5pdmVyc2FsLWNsaWNrLXRyYWNraW5nQDk2MjZlMTIvYm9va21hcmtsZXQubWluLmpzJztkb2N1bWVudC5ib2R5LmFwcGVuZENoaWxkKHMpO30pKCk7";
+    var code = atob(b64);
+    document.getElementById('bookmarklet-code').textContent = code;
+    document.getElementById('bookmarklet-link').href = code;
+  })();
+  // QA Inspector bookmarklet
+  (function() {
+    var qaB64 = "amF2YXNjcmlwdDooZnVuY3Rpb24oKXt2YXIgcz1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCdzY3JpcHQnKTtzLnNyYz0naHR0cHM6Ly9jZG4uanNkZWxpdnIubmV0L2doL2dyYWhhbXo4MDkvdW5pdmVyc2FsLWNsaWNrLXRyYWNraW5nQDk2MjZlMTIvcWEtaW5zcGVjdG9yLm1pbi5qcyc7ZG9jdW1lbnQuYm9keS5hcHBlbmRDaGlsZChzKTt9KSgpOw==";
+    var qaCode = atob(qaB64);
+    var qaEl = document.getElementById('qa-bookmarklet-code');
+    var qaLink = document.getElementById('qa-bookmarklet-link');
+    if (qaEl) qaEl.textContent = qaCode;
+    if (qaLink) qaLink.href = qaCode;
+  })();
+</script>E html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engagement-First Framework — Universal Click Tracking Tool</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: #1e1e2e; color: #cdd6f4; line-height: 1.6; }
+  .container { max-width: 960px; margin: 0 auto; padding: 24px; }
+
+  h1 { font-size: 28px; color: #cba6f7; margin-bottom: 8px; }
+  h2 { font-size: 20px; color: #89b4fa; margin: 24px 0 12px; }
+  h3 { font-size: 16px; color: #a6e3a1; margin: 16px 0 8px; }
+  p { margin-bottom: 12px; color: #a6adc8; }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; color: #1e1e2e; margin-right: 4px; }
+  .badge-conversion { background: #f38ba8; }
+  .badge-engagement { background: #89b4fa; }
+  .badge-discovery { background: #a6e3a1; }
+  .badge-content { background: #f9e2af; }
+  .badge-utility { background: #fab387; }
+
+  .card { background: #313244; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+  .card p { color: #bac2de; }
+
+  .btn { display: inline-block; padding: 10px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; cursor: pointer; border: none; font-size: 14px; }
+  .btn-primary { background: #cba6f7; color: #1e1e2e; }
+  .btn-primary:hover { background: #b4befe; }
+  .btn-green { background: #a6e3a1; color: #1e1e2e; }
+  .btn-white { background: #cdd6f4; color: #1e1e2e; }
+  .btn-sm { padding: 6px 14px; font-size: 12px; }
+
+  .demo-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 12px 0; }
+  .demo-link { color: #89b4fa; text-decoration: none; cursor: pointer; }
+  .demo-link:hover { text-decoration: underline; color: #b4befe; }
+  .demo-link.card-link { display: block; padding: 12px; background: #45475a; border-radius: 8px; margin-bottom: 8px; }
+  .demo-link.card-link:hover { background: #585b70; text-decoration: none; }
+
+  .demo-nav { background: #45475a; padding: 12px 24px; border-radius: 8px; margin-bottom: 16px; }
+  .demo-nav a { color: #89b4fa; text-decoration: none; margin-right: 16px; font-size: 14px; }
+  .demo-nav a:hover { text-decoration: underline; }
+
+  footer.demo-footer { margin-top: 24px; padding: 16px; background: #313244; border-radius: 8px; font-size: 13px; }
+  footer.demo-footer a { color: #89b4fa; text-decoration: none; }
+
+  .event-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+  .event-table th { text-align: left; padding: 8px 12px; background: #45475a; color: #a6adc8; font-weight: 600; border-bottom: 2px solid #585b70; }
+  .event-table td { padding: 8px 12px; border-bottom: 1px solid #313244; }
+
+  .code-block { background: #181825; padding: 12px 16px; border-radius: 8px; font-family: 'SF Mono', 'Cascadia Code', monospace; font-size: 12px; overflow-x: auto; margin: 12px 0; color: #a6e3a1; word-break: break-all; }
+  .code-block .comment { color: #6c7086; }
+
+  .step { margin-bottom: 16px; padding-left: 20px; position: relative; }
+  .step::before { content: attr(data-step); position: absolute; left: -8px; top: 0; background: #cba6f7; color: #1e1e2e; width: 20px; height: 20px; border-radius: 50%; text-align: center; font-size: 11px; font-weight: 700; line-height: 20px; }
+
+  .accordion { background: #45475a; border-radius: 8px; margin-bottom: 4px; }
+  .accordion-header { padding: 10px 14px; cursor: pointer; font-weight: 600; font-size: 14px; color: #cdd6f4; }
+  .accordion-header:hover { background: #585b70; border-radius: 8px; }
+  .accordion-body { padding: 10px 14px; display: none; }
+
+  .tab-container { display: flex; margin: 12px 0; }
+  .tab { padding: 8px 16px; background: #45475a; cursor: pointer; border-radius: 8px 8px 0 0; margin-right: 2px; font-size: 13px; }
+  .tab.active { background: #585b70; color: #cba6f7; }
+  .tab-content { display: none; padding: 12px; background: #585b70; border-radius: 0 8px 8px 8px; font-size: 13px; }
+  .tab-content.active { display: block; }
+
+  .checkbox-label { display: flex; align-items: center; gap: 8px; cursor: pointer; margin: 8px 0; font-size: 14px; }
+
+  .spotlight { background: linear-gradient(135deg, #45475a 0%, #313244 100%); border-left: 4px solid #cba6f7; padding: 16px; border-radius: 8px; margin: 12px 0; }
+  .spotlight h4 { color: #cba6f7; margin-bottom: 4px; }
+
+  .video-placeholder { background: #181825; border-radius: 8px; padding: 40px; text-align: center; cursor: pointer; margin: 12px 0; }
+  .video-placeholder:hover { background: #313244; }
+  .video-placeholder .play-btn { font-size: 48px; }
+
+  .param-highlight { display: inline-block; background: #a6e3a11a; color: #a6e3a1; border: 1px solid #a6e3a144; border-radius: 4px; padding: 1px 6px; font-size: 11px; margin: 1px 2px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🎯 Universal Click-Tracking Framework</h1>
+  <p style="font-size:14px;color:#a6adc8;">
+    Interactive demo page for the <strong>5-family</strong> click-tracking framework with <strong>catch-all coverage</strong>.
+    <br>Every matched element includes 3 universal parameters: <span class="param-highlight">link_click_url</span> <span class="param-highlight">web_element_location</span> <span class="param-highlight">click_text</span>
+    <br>Plus CSS selector output and CSV export grouped by family.
+  </p>
+
+  <!-- ================================================================ -->
+  <!-- BOOKMARKLET INSTALL -->
+  <!-- ================================================================ -->
+  <div class="card">
+    <h2>📌 Install the Bookmarklet Tool</h2>
+    <p>Drag this link to your bookmarks bar, then click it on <strong>any OHIO.edu page</strong> to see which events would fire:</p>
+
+    <div style="margin: 16px 0; text-align: center;">
+      <a id="bookmarklet-link" href="javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/grahamz809/universal-click-tracking@9626e12/bookmarklet.min.js';document.body.appendChild(s);})();" class="btn btn-primary" style="font-size:16px;padding:14px 32px;">
+        🎯 Click Tracker Framework
+      </a>
+    </div>
+
+    <p style="font-size:13px;">Can't drag? Copy-paste this into a new bookmark's URL field:</p>
+    <div class="code-block" id="bookmarklet-code" style="font-size:11px;max-height:120px;overflow-y:auto;"></div>
+
+    <div style="margin-top:12px;padding:10px;background:#45475a;border-radius:8px;font-size:13px;">
+      <strong>💡 How to use it:</strong>
+      <ol style="margin-top:6px;padding-left:20px;color:#bac2de;">
+        <li>Click the bookmark on any page (OHIO.edu, OSU, MiamiOH, etc.)</li>
+        <li>A floating panel appears showing match counts by event</li>
+        <li><strong>Hover</strong> any element → see its event name, family, CSS selector, and 3 standard parameters</li>
+        <li><strong>Click</strong> any element → it's added to your framework list</li>
+        <li>Click <strong>CSV</strong> → opens an export dialog to copy data into Excel or download as a .csv file</li>
+        <li>Click <strong>Framework</strong> → shows your captured elements grouped by family</li>
+        <li>Use <strong>–</strong> to minimize the panel, or <strong>✕</strong> to close it</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- QA INSPECTOR INSTALL -->
+  <!-- ================================================================ -->
+  <div class="card">
+    <h2>📌 Alternative: Framework Inspector (Quick Visual Scan)</h2>
+    <p>A lighter-weight tool that scans the page in one pass and draws colored outlines around every classified element. Hover any outlined element to see its event name and location in a tooltip.</p>
+    <p style="font-size:12px;color:#6c7086;">Uses a simplified rule set (8 event types) — results may differ slightly from the main Click Tracker Framework.</p>
+
+    <div style="margin: 16px 0; text-align: center;">
+      <a id="qa-bookmarklet-link" href="javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/grahamz809/universal-click-tracking@9626e12/qa-inspector.min.js';document.body.appendChild(s);})();" class="btn btn-primary" style="font-size:16px;padding:14px 32px;">
+        🔍 Framework Inspector
+      </a>
+    </div>
+
+    <p style="font-size:13px;">Manual install — copy this into a bookmark URL field:</p>
+    <div class="code-block" style="font-size:11px;max-height:80px;overflow-y:auto;">javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/grahamz809/universal-click-tracking@9626e12/qa-inspector.min.js';document.body.appendChild(s);})();</div>
   </div>
 
   <!-- ================================================================ -->

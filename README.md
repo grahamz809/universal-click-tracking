@@ -109,7 +109,7 @@ That's it. A panel will appear on the right side of the page. (The first click m
 If you prefer to create the bookmark by hand, copy this tiny snippet and paste it into a new bookmark's URL field:
 
 ```
-javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/grahamz809/universal-click-tracking@80a717e/bookmarklet.min.js';document.body.appendChild(s);})();
+javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/grahamz809/universal-click-tracking@9626e12/bookmarklet.min.js';document.body.appendChild(s);})();
 ```
 
 **Step 1:** Right-click your bookmarks bar and choose "Add Page" or "New Bookmark."
