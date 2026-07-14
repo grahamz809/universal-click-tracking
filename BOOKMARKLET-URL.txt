@@ -1,0 +1,19 @@
+═════════════════════════════════════════════════════════════════
+  CLICK TRACKER FRAMEWORK — BOOKMARKLET URL
+═════════════════════════════════════════════════════════════════
+
+Copy the line below (the one starting with "javascript:").
+Open your browser's Bookmark Manager (Cmd+Shift+O on Mac)
+→ New Bookmark → paste into URL field.
+
+For Name, enter: Click Tracker Framework
+
+───────────────────────────────────────────────────────────────
+javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/grahamz809/universal-click-tracking@d3d2fe0/bookmarklet.min.js';document.body.appendChild(s);})();
+───────────────────────────────────────────────────────────────
+
+After installing, open any page (ohio.edu, osu.edu, miamioh.edu)
+and click the bookmark to launch the tracking panel.
+
+TIP — To also install the QA Inspector (visual overlay), use:
+https://github.com/grahamz809/universal-click-tracking/blob/main/QA-BOOKMARKLET.md
